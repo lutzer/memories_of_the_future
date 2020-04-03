@@ -24,7 +24,6 @@ module.exports = (env, argv) => {
     plugins: [
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
-        title: 'Planetary Sequencer',
         template: 'src/index.html'
       })
     ],
