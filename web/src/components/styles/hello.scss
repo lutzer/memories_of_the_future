@@ -1,5 +1,7 @@
+@import 'vars';
+
 .hello {
   &.colour {
-    color: green;
+    color: $font-color;
   }
 }

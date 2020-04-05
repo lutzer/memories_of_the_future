@@ -1,0 +1,7 @@
+@import 'vars';
+
+.map {
+  &.text {
+    color: $font-color
+  }
+}

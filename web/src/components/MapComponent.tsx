@@ -2,6 +2,8 @@ import React from "react";
 import {Component} from 'react';
 import ReactMapGL from 'react-map-gl';
 
+import './styles/map.scss'
+
 class MapComponent extends Component {
 
   state = {
@@ -16,10 +18,13 @@ class MapComponent extends Component {
 
   render() {
     return (
-      <ReactMapGL
+      <div>
+        <h1 className="map text">Map</h1>
+        <ReactMapGL
         {...this.state.viewport}
-        onViewportChange={(viewport) => this.setState({viewport})}
-      />
+        onViewportChange={(viewport) => this.setState({viewport})}/>
+      </div>
+      
     );
   }
 }
