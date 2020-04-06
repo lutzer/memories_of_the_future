@@ -1,0 +1,10 @@
+{
+  "projects": [
+    "project1",
+    "project2"
+  ],
+  "stories": [
+    "story1",
+    "story2"
+  ]
+}

@@ -8,7 +8,6 @@
     "watch": "npx ts-node-dev src/index.ts",
     "build": "npx tsc",
     "test": "npx tsc; npx mocha test/*.js"
-
   },
   "repository": {
     "type": "git",
@@ -21,10 +20,13 @@
   },
   "homepage": "https://github.com/lutzer/memories_of_the_future#readme",
   "dependencies": {
+    "@types/lowdb": "^1.0.9",
     "koa": "^2.11.0",
     "koa-json": "^2.0.2",
     "koa-router": "^8.0.8",
-    "koa-static": "^5.0.0"
+    "koa-static": "^5.0.0",
+    "lowdb": "^1.0.0",
+    "uuid": "^7.0.3"
   },
   "engines": {
     "node": ">=0.12"
