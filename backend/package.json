@@ -1,0 +1,44 @@
+{
+  "name": "motf-backend",
+  "version": "1.0.0",
+  "description": "## Requirements",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "watch": "npx ts-node-dev src/index.ts",
+    "build": "npx tsc",
+    "test": "npx tsc; npx mocha test/*.js"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lutzer/memories_of_the_future.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lutzer/memories_of_the_future/issues"
+  },
+  "homepage": "https://github.com/lutzer/memories_of_the_future#readme",
+  "dependencies": {
+    "koa": "^2.11.0",
+    "koa-json": "^2.0.2",
+    "koa-router": "^8.0.8",
+    "koa-static": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=0.12"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.11.3",
+    "@types/koa-json": "^2.0.18",
+    "@types/koa-router": "^7.4.0",
+    "@types/koa-static": "^4.0.1",
+    "@types/node": "^13.11.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "nyc": "^15.0.1",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.8.3"
+  }
+}
