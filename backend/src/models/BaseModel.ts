@@ -10,7 +10,7 @@ class BaseModel {
     Object.assign(this.data, data)
   }
 
-  validate() {
+  validate() : boolean {
     return true
   }
 }

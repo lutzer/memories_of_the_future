@@ -19,6 +19,13 @@ class StoryModel extends BaseModel {
 
   constructor(data : any) {
     super(data)
+    Object.assign(this.data, data)
+  }
+
+  validate() : boolean {
+    if (this.data.projectId == null)
+      return false
+    return true
   }
 } 
 

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "watch": "npx ts-node-dev src/index.ts",
+    "watch": "DEVELOPMENT=true npx ts-node-dev src/index.ts",
     "build": "npx tsc",
     "test": "npx tsc; npx mocha test/*.js"
   },
@@ -22,9 +22,11 @@
   "dependencies": {
     "@types/lowdb": "^1.0.9",
     "koa": "^2.11.0",
+    "koa-body": "^4.1.1",
     "koa-json": "^2.0.2",
     "koa-router": "^8.0.8",
     "koa-static": "^5.0.0",
+    "lodash": "^4.17.15",
     "lowdb": "^1.0.0",
     "uuid": "^7.0.3"
   },
@@ -39,6 +41,7 @@
     "@types/node": "^13.11.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "koa-proxy": "^1.0.0-alpha.3",
     "nyc": "^15.0.1",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.3"

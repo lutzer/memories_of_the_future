@@ -3,7 +3,7 @@ import FileSync from 'lowdb/adapters/FileSync'
 
 import { config } from './config'
 
-const getDatabase = () => {
+const getDatabase = () : DatabaseAdapter => {
   const adapter = new FileSync(config.databaseFile)
   const db = low(adapter)
   
