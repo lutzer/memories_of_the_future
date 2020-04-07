@@ -6,8 +6,6 @@ import { getDatabase } from './database'
 import { config } from './config'
 import { router } from './router'
 
-
-
 const app = new Koa()
 
 // connect to database
@@ -32,8 +30,7 @@ app.use(koaJson())
 // serve api routes
 app.use(router.routes())
 
-// start server
+//start server
 const server = app.listen(config.port, config.address);
-const address = config.address + ":" + config.port
 
-export { server, address }
+export { server, config }

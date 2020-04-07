@@ -30,8 +30,7 @@ router.post('/projects/', bodyParser(), async (context : KoaCtxWIdthDb) => {
   let project = new ProjectModel(context.request.body)
   if (project.validate()) {
     context.body = { project: project.data }
-    const db : any = context.db
-    db.get('projects').push(project.data).write()
+    context.db.get('projects').push(project.data).write()
 
   } else {
     context.throw(400,'Project data invalid.');
@@ -45,11 +44,10 @@ router.get('/stories/', async (context : KoaCtxWIdthDb) => {
 
 router.post('/stories/', bodyParser(), async (context : KoaCtxWIdthDb) => {
   let story = new StoryModel(context.request.body)
-  let projects = context.db.get('projects')
-  if (story.validate()/* && _.find(projects, { id : story.data.projectId })*/) {
+  let projects = context.db.get('projects').value()
+  if (story.validate() && _.find(projects, { id : story.data.projectId })) {
     context.body = { story: story.data }
-    const db : any = context.db
-    db.get('stories').push(story.data).write()
+    context.db.get('stories').push(story.data).write()
   } else {
     context.throw(400,'Story data invalid.');
   }

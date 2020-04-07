@@ -1,7 +1,8 @@
 const chai = require('chai')
 const chaiHttp = require('chai-http')
-const { server } = require('../dist/index')
 const expect = chai.expect
+
+const { server } = require('../dist/index')
 
 chai.use(chaiHttp);
 
@@ -9,8 +10,14 @@ const connect = () => { return chai.request(server) }
 
 describe('Project Routes', () => {
 
-  after(() => {
-    server.close()
+  after( async () => {
+    await server.close()
+  });
+
+  it('should get Projects', async () => {
+    let result = await connect().get('/api/projects/')
+    expect(result).to.have.status(200);
+    expect(result.body).to.have.key('projects')
   });
 
   it('should be able to add a project with a name', async () => {
@@ -26,7 +33,6 @@ describe('Project Routes', () => {
     let result = await connect().post('/api/projects').send({})
     expect(result).to.have.status(400);
   })
-
 });
 
 describe('Story routes', () => {
@@ -34,7 +40,7 @@ describe('Story routes', () => {
   it('should get Stories', async () => {
     let result = await connect().get('/api/stories/')
     expect(result).to.have.status(200);
-    expect(result.body.msg).equal('Stories');
+    expect(result.body).to.have.key('stories')
   });
 
   it('should not be able to post a story without a projectId', async () => {
@@ -48,5 +54,4 @@ describe('Story routes', () => {
     })
     expect(result).to.have.status(400);
   });
-
 })

@@ -3,8 +3,15 @@ import FileSync from 'lowdb/adapters/FileSync'
 
 import { config } from './config'
 
+type Schema = {
+  projects: any[],
+  stories : any[]
+};
+
+interface DatabaseAdapter extends low.LowdbSync<Schema> {}
+
 const getDatabase = () : DatabaseAdapter => {
-  const adapter = new FileSync(config.databaseFile)
+  const adapter = new FileSync<Schema>(config.databaseFile)
   const db = low(adapter)
   
   // set defaults
@@ -16,6 +23,5 @@ const getDatabase = () : DatabaseAdapter => {
   return db
 }
 
-interface DatabaseAdapter extends low.LowdbSync<any> {}
 
 export { getDatabase, DatabaseAdapter }
