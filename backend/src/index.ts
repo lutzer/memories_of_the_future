@@ -13,7 +13,7 @@ const app = new Koa()
 // connect to database
 app.context.db = getDatabase()
 
-if (process.env['DEVELOPMENT']) {
+// if (process.env['DEVELOPMENT']) {
   const koaProxy = require('koa-proxy')
 
   // serve proxy during development
@@ -21,11 +21,10 @@ if (process.env['DEVELOPMENT']) {
     host: config.frontendProxyUrl,
     match: /^(?!\/api\/)/
   }))
-} else {
-
-  // serve static files (web frontend)
-  app.use(serveStatic(config.staticDirectory))
-}
+// } else {
+//   // serve static files (web frontend)
+//   app.use(serveStatic(config.staticDirectory))
+// }
 
 // enable pretty json response for development
 app.use(koaJson())
