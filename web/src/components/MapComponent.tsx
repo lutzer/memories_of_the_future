@@ -3,6 +3,7 @@ import {Component} from 'react';
 import ReactMapGL from 'react-map-gl';
 import {render} from 'react-dom';
 import './styles/map.scss'
+import {OverlayComponent} from "./OverlayComponent"
 const MAPBOX_TOKEN="pk.eyJ1Ijoibmlub2dsb250aSIsImEiOiJjazhvYzR1aWUwMWZqM2xtejA2b2Jvd2FrIn0.oIyykX1DyYDJ6jZKNyg0Nw"
 
 class MapComponent extends Component {
@@ -25,10 +26,8 @@ class MapComponent extends Component {
         {...this.state.viewport}
         onViewportChange={(viewport) => this.setState({viewport})} 
         mapboxApiAccessToken={MAPBOX_TOKEN}
-
-
-
         />
+        <OverlayComponent/>
       </div>
       
     );
