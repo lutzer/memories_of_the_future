@@ -16,35 +16,42 @@ const router = new Router({
   prefix : config.apiBasePath
 })
 
-router.get('/projects/', async (ctx : KoaCtxWIdthDb) => {
-  const projects = ctx.db.get('projects').value()
-  ctx.body = { projects : projects }
+router.get('/projects/', async (context : KoaCtxWIdthDb) => {
+  let projects : any[] = context.db.get('projects').value()
+  // remove password from output
+  projects = projects.map((val) => {
+    delete val.password;
+    return val
+  })
+  context.body = { projects : projects }
 })
 
-router.post('/projects/', bodyParser(), async (ctx : KoaCtxWIdthDb) => {
-  let project = new ProjectModel(ctx.request.body)
+router.post('/projects/', bodyParser(), async (context : KoaCtxWIdthDb) => {
+  let project = new ProjectModel(context.request.body)
   if (project.validate()) {
-    ctx.body = { project: project.data }
-    ctx.db.get('projects').add(project.data)
+    context.body = { project: project.data }
+    const db : any = context.db
+    db.get('projects').push(project.data).write()
+
   } else {
-    ctx.throw(400,'Project data invalid.');
+    context.throw(400,'Project data invalid.');
   }
 })
 
-router.get('/stories/', async (ctx : KoaCtxWIdthDb) => {
-  const stories = ctx.db.get('stories').value()
-  ctx.body = { msg : 'Stories'}
+router.get('/stories/', async (context : KoaCtxWIdthDb) => {
+  const stories = context.db.get('stories').value()
+  context.body = { stories : stories }
 })
 
-router.post('/stories/', bodyParser(), async (ctx : KoaCtxWIdthDb) => {
-  let story = new StoryModel(ctx.request.body)
-  let projects = ctx.db.get('projects')
-  // check if id exists in project array
-  if (story.validate() && _.find(projects, { id : story.data.projectId })) {
-    ctx.body = { story: story.data }
-    ctx.db.get('stories').add(story.data)
+router.post('/stories/', bodyParser(), async (context : KoaCtxWIdthDb) => {
+  let story = new StoryModel(context.request.body)
+  let projects = context.db.get('projects')
+  if (story.validate()/* && _.find(projects, { id : story.data.projectId })*/) {
+    context.body = { story: story.data }
+    const db : any = context.db
+    db.get('stories').push(story.data).write()
   } else {
-    ctx.throw(400,'Story data invalid.');
+    context.throw(400,'Story data invalid.');
   }
 })
 

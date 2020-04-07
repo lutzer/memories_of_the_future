@@ -4,10 +4,11 @@
   "description": "## Requirements",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "watch": "DEVELOPMENT=true npx ts-node-dev src/index.ts",
+    "server": "node index.js",
+    "start": "DEVELOPMENT=true npx ts-node-dev src/index.ts",
     "build": "npx tsc",
-    "test": "npx tsc; npx mocha test/*.js"
+    "test": "npx tsc; npx mocha test/*.js",
+    "test-data": "npx tsc; npx mocha test/createTestData.spec.js"
   },
   "repository": {
     "type": "git",

@@ -9,8 +9,8 @@ const getDatabase = () : DatabaseAdapter => {
   
   // set defaults
   db.defaults({ 
-    projects: ['project1', 'project2'], 
-    stories: ['story1', 'story2']
+    projects: [], 
+    stories: []
   }).write()
   
   return db

@@ -5,10 +5,10 @@ class StoryModel extends BaseModel {
   data : any = {
     ...this.data,
     projectId : null,
-    location : null,
+    location : null, // [ long, lat ]
 
     author : 'unknown',
-    name : 'untitled',
+    title : 'untitled',
     picture : null,
     recording : null,
 
@@ -24,6 +24,8 @@ class StoryModel extends BaseModel {
 
   validate() : boolean {
     if (this.data.projectId == null)
+      return false
+    if (this.data.location == null)
       return false
     return true
   }
