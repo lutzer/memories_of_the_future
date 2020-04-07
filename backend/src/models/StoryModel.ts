@@ -1,5 +1,7 @@
 import { BaseModel } from './BaseModel'
 
+type Tupel = [number, number]
+
 class StoryModel extends BaseModel {
 
   data : any = {

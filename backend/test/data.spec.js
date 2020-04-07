@@ -1,20 +1,23 @@
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const expect = chai.expect
-
-// delete database file first
-const { config } = require('../dist/config')
 const fs = require('fs')
-fs.unlinkSync(config.databaseFile)
 
 // start server
-const { server } = require('../dist/index')
+const { app, config } = require('../dist/index')
 
 chai.use(chaiHttp);
 
-const connect = () => { return chai.request(server) }
-
 describe('Create Test Data', () => {
+
+  var server = null
+
+  function connect() { return chai.request(server) }
+
+  before( async () => {
+    fs.unlinkSync(config.databaseFile)
+    server = await app.listen()
+  })
 
   after( async () => {
     await server.close()

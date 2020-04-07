@@ -88,7 +88,7 @@ module.exports = (env, argv) => {
     },
     devServer: {
       port: 3001,
-      open: true,
+      open: false,
       stats: {
         children: false, // Hide children information
         maxModules: 0
