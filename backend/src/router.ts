@@ -13,15 +13,20 @@ const router = new Router({
   prefix : config.apiBasePath
 })
 
+/* Project Routes */
+
 router.get('/projects/', async (context) => {
   const db = await getDatabase()
-  let projects : any[] = db.get('projects').value()
-  // remove password from output
-  projects = projects.map((val) => {
-    delete val.password;
-    return val
+  const projects = db.get('projects').map((val) => {
+    return _.omit(val, 'password')
   })
-  context.body = { projects : projects }
+  context.body = { projects : projects.value() }
+})
+
+router.get('/projects/:id', async (context) => {
+  const db = await getDatabase()
+  const project = db.get('projects').find({ id : context.params.id }).value()
+  context.body = { project : _.omit(project, 'password') }
 })
 
 router.post('/projects/', bodyParser(), async (context) => {
@@ -36,13 +41,23 @@ router.post('/projects/', bodyParser(), async (context) => {
   }
 })
 
+/* Story Routes */
+
 router.get('/stories/', async (context) => {
   const db = await getDatabase()
-  const stories = db.get('stories').value()
-  context.body = { stories : stories }
+  const stories = db.get('stories')
+  if (_.has(context.request.query, 'project')) {
+    context.body = { stories : stories.filter({projectId: context.request.query.project }).value() }
+  } else
+    context.body = { stories : stories.value() }
 })
 
-router.post('/stories/', bodyParser(), async (context) => {
+router.get('/stories/:id', async (context) => {
+  const db = await getDatabase()
+  context.body = { story : db.get('stories').find({ id : context.params.id })}
+})
+
+router.post('/stories/'/*?projectId*/, bodyParser(), async (context) => {
   const db = await getDatabase()
   let story = new StoryModel(context.request.body)
   // check if project with project id exists in database
@@ -54,5 +69,9 @@ router.post('/stories/', bodyParser(), async (context) => {
     context.throw(400,'Story data invalid.');
   }
 })
+
+/* Upload Routes */
+
+
 
 export { router }
