@@ -3,16 +3,12 @@ import serveStatic from 'koa-static'
 import koaJson from 'koa-json'
 import koaProxy from 'koa-proxy'
 
-import { getDatabase } from './database'
 import { config } from './config'
 import { router } from './router'
 
 const devMode = process.argv.includes('-dev')
 
-const app = new Koa()
-
-// connect to database
-app.context.db = getDatabase()
+const app = new Koa();
 
 if (devMode) {
   // serve proxy during development
@@ -30,5 +26,6 @@ app.use(koaJson())
 
 // serve api routes
 app.use(router.routes())
+
 
 export { app, config }

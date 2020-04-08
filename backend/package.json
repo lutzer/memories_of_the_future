@@ -7,8 +7,8 @@
     "server": "node index.js",
     "start": "npx ts-node-dev index.dev.ts -- -dev",
     "build": "npx tsc",
-    "test": "npx tsc; npx mocha test/*.spec.js",
-    "test-data": "npx tsc; npx mocha test/data.spec.js"
+    "test": "npx tsc && npx mocha test/*.spec.js",
+    "create-test-data": "npx tsc && npx mocha test/data.spec.js"
   },
   "repository": {
     "type": "git",
