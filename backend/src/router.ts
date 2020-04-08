@@ -84,13 +84,12 @@ router.post('/upload/story/:id', upload.fields([
   const db = await getDatabase()
   const story = db.get('stories').find({id : context.params.id}).value()
   const files = context.request.files
-  var uploadList = []
-  if (_.has(files, 'image')) {
-    uploadList.push({ name: files.image[0].originalname, path: files.image[0].path })
-  }
-  if (_.has(files, 'recording')) {
-    uploadList.push({ name: files.recording[0].originalname, path: files.recording[0].path })
-  }
+  
+  const uploadList = Object.keys(files).map( (key) => {
+    const file = files[key]
+    return { name: file[0].originalname, path: file[0].path }
+  })
+
   // story exists, copy files to dir and update story
   if (story) {
     context.body = { uploads : uploadList }
