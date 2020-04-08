@@ -1,5 +1,5 @@
 import low from 'lowdb'
-import FileASync from 'lowdb/adapters/FileASync'
+import FileSync from 'lowdb/adapters/FileSync'
 
 import { config } from './config'
 
@@ -8,10 +8,10 @@ type Schema = {
   stories : any[]
 };
 
-interface DatabaseAdapter extends low.LowdbAsync<Schema> {}
+interface DatabaseAdapter extends low.LowdbSync<Schema> {}
 
 const getDatabase = async () : Promise<DatabaseAdapter> => {
-  const adapter = new FileASync<Schema>(config.databaseFile)
+  const adapter = new FileSync<Schema>(config.databaseFile)
   const db = await low(adapter)
   
   // set defaults
