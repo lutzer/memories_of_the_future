@@ -1,12 +1,22 @@
 import { BaseModel } from './BaseModel'
+import { generateRandomString } from './../utils'
+
+type ProjectModelSchema = {
+  id : string,
+  name : string,
+  description : string,
+  password: string,
+  visible : boolean,
+  createdAt : number
+}
 
 class ProjectModel extends BaseModel {
 
-  data : any = {
+  data : ProjectModelSchema = {
     ...this.data,
     name : 'unnamed',
     description : '',
-    password : 'password',
+    password : generateRandomString(),
     visible : true,
     createdAt : Date.now()
   }
@@ -23,4 +33,4 @@ class ProjectModel extends BaseModel {
   }
 } 
 
-export { ProjectModel }
+export { ProjectModel, ProjectModelSchema }

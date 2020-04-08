@@ -2,10 +2,12 @@ import low from 'lowdb'
 import FileSync from 'lowdb/adapters/FileSync'
 
 import { config } from './config'
+import { ProjectModelSchema } from './models/ProjectModel';
+import { StoryModelSchema } from './models/StoryModel';
 
 type Schema = {
-  projects: any[],
-  stories : any[]
+  projects: ProjectModelSchema[],
+  stories : StoryModelSchema[]
 };
 
 interface DatabaseAdapter extends low.LowdbSync<Schema> {}

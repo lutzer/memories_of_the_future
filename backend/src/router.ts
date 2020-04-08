@@ -88,26 +88,31 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
   { name: 'image', maxCount: 1}
 ]), async (context) => {
   const db = await getDatabase()
-  const story = db.get('stories').find({id : context.params.id}).value()
+  const storyDbEntry = db.get('stories').find({id : context.params.id})
+  // storyDbEntry.set
+  const story = storyDbEntry.value()
   const files = context.request.files
   
   const uploadList = Object.keys(files).map( (key) => {
     const file = files[key]
-    let newPath = story ? config.fileDirectory + '/' + story.id  + '.' + extname(file[0].originalname) : ''
-    return { name: file[0].originalname, tmpPath: file[0].path, path: newPath }
+    let newPath = story ? config.fileDirectory + '/' + story.id  + extname(file[0].originalname) : ''
+    return { type: key, name: file[0].originalname, tmpPath: file[0].path, path: newPath }
   })
 
 
   // story exists, move files to dir and update story
   if (story) {
-    await Promise.all(uploadList.map( async (val) => {
-      await moveFile(val.tmpPath, val.path)
+    await Promise.all(uploadList.map( async (file) => {
+      story[file.type] = file.path
+      await moveFile(file.tmpPath, file.path)
     }))
+    //update db
+    storyDbEntry.assign(story).write()
     context.body = { uploads : uploadList }
   // story does not exist, remove files
   } else {
-    await Promise.all(uploadList.map( async (val) => {
-      await deleteFile(val.tmpPath)
+    await Promise.all(uploadList.map( async (file) => {
+      await deleteFile(file.tmpPath)
     }))
     context.throw(400,'Story does not exist');
   }

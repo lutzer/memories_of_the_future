@@ -22,4 +22,8 @@ const errorMiddleware = async (context : Koa.BaseContext, next : Koa.Next) => {
   }
 }
 
-export { deleteFile, moveFile, fileFilter, errorMiddleware }
+const generateRandomString = () => {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+
+export { deleteFile, moveFile, fileFilter, errorMiddleware, generateRandomString }

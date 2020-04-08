@@ -90,13 +90,27 @@ describe('File Upload', () => {
       expect(result).to.have.status(400);
     });
 
-    it('should not be able to upload an tiff file', async () => {
+    it('should not be able to upload a tiff file', async () => {
       let storyId = await createStory()
       // upload  file
       result = await connect().post('/api/upload/story/'+storyId).attach(
         'image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.tiff'
       )
       expect(result).to.not.have.status(200);
+    });
+
+    it('should be able to upload an image and add it in the story data entry', async () => {
+      let storyId = await createStory()
+      // upload  file
+      result = await connect().post('/api/upload/story/'+storyId).attach(
+        'image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png'
+      )
+      expect(result).to.have.status(200);
+      const path = result.body.uploads[0].path
+      uploads.push(path)
+      result =  await connect().get('/api/stories/' + storyId)
+      expect(result).to.have.status(200);
+      expect(result.body.story.image).to.be.equal(path)
     });
   })
 
