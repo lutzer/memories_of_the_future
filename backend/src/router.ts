@@ -1,10 +1,11 @@
 import Koa from 'koa'
 import bodyParser from 'koa-body'
-import Router from 'koa-router'
+import Router from '@koa/router'
+import multer from '@koa/multer'
 import _ from 'lodash'
 
 import { getDatabase } from './database'
-import { DatabaseAdapter } from './database'
+import { deleteFile } from './utils'
 import { config } from './config'
 import { ProjectModel } from './models/ProjectModel'
 import { StoryModel } from './models/StoryModel'
@@ -12,6 +13,10 @@ import { StoryModel } from './models/StoryModel'
 const router = new Router({
   prefix : config.apiBasePath
 })
+
+const upload = multer({
+  dest: config.uploadTmpDirectory
+});
 
 /* Project Routes */
 
@@ -72,6 +77,32 @@ router.post('/stories/'/*?projectId*/, bodyParser(), async (context) => {
 
 /* Upload Routes */
 
+router.post('/upload/story/:id', upload.fields([
+  { name: 'recording', maxCount: 1},
+  { name: 'image', maxCount: 1}
+]), async (context) => {
+  const db = await getDatabase()
+  const story = db.get('stories').find({id : context.params.id}).value()
+  const files = context.request.files
+  var uploadList = []
+  if (_.has(files, 'image')) {
+    uploadList.push({ name: files.image[0].originalname, path: files.image[0].path })
+  }
+  if (_.has(files, 'recording')) {
+    uploadList.push({ name: files.recording[0].originalname, path: files.recording[0].path })
+  }
+  // story exists, copy files to dir and update story
+  if (story) {
+    context.body = { uploads : uploadList }
+  // story does not exist, remove files
+  } else {
+    await Promise.all(uploadList.map( async (val) => {
+      await deleteFile(val.path)
+    }))
+    context.throw(400,'Story does not exist');
+  }
+  
+})
 
 
 export { router }
