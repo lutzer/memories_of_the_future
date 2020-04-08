@@ -89,6 +89,15 @@ describe('File Upload', () => {
         .attach('image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png')
       expect(result).to.have.status(400);
     });
+
+    it('should not be able to upload an tiff file', async () => {
+      let storyId = await createStory()
+      // upload  file
+      result = await connect().post('/api/upload/story/'+storyId).attach(
+        'image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.tiff'
+      )
+      expect(result).to.not.have.status(200);
+    });
   })
 
 });

@@ -27,5 +27,4 @@ app.use(koaJson())
 // serve api routes
 app.use(router.routes())
 
-
 export { app, config }
