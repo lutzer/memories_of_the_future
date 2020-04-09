@@ -4,6 +4,7 @@
 
 * node and npm/npx must be installed
 * node version >= 12.x
+* audio conversion requires ffmpeg to be installed
 
 ## Deployment
 

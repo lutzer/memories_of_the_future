@@ -6,10 +6,10 @@ import _ from 'lodash'
 import { extname } from 'path'
 
 import { getDatabase } from './database'
-import { deleteFile, fileFilter, errorMiddleware, moveFile } from './utils'
+import { deleteFile, fileFilter, errorMiddleware, moveFile, convertToMp3 } from './utils'
 import { config } from './config'
 import { ProjectModel } from './models/ProjectModel'
-import { StoryModel } from './models/StoryModel'
+import { StoryModel, StoryModelSchema } from './models/StoryModel'
 
 const router = new Router({
   prefix : config.apiBasePath
@@ -81,33 +81,41 @@ router.post('/stories/'/*?projectId*/, bodyParser(), async (context) => {
   }
 })
 
-/* Upload Routes */
+/* Upload Story Routes */
+
+// converts audio file asynchronously after upload
+function convertAudio(path: string, story: _.ObjectChain<StoryModelSchema>) {
+  convertToMp3(path).catch( (err) => {
+    console.error(err)
+  }).then( (path) => {
+    story.set('recording', path).write()
+    // console.info('converted file' + path)
+  })
+}
 
 router.post('/upload/story/:id', errorMiddleware, upload.fields([
   { name: 'recording', maxCount: 1},
   { name: 'image', maxCount: 1}
 ]), async (context) => {
   const db = await getDatabase()
-  const storyDbEntry = db.get('stories').find({id : context.params.id})
-  // storyDbEntry.set
-  const story = storyDbEntry.value()
-  const files = context.request.files
+  const story = db.get('stories').find({id : context.params.id})
   
-  const uploadList = Object.keys(files).map( (key) => {
-    const file = files[key]
-    let newPath = story ? config.fileDirectory + '/' + story.id  + extname(file[0].originalname) : ''
-    return { type: key, name: file[0].originalname, tmpPath: file[0].path, path: newPath }
-  })
-
+  const uploadList = ['recording', 'image'].reduce( (acc, key) : object[] => {
+    if (!_.has(context.request.files, key))
+      return acc;
+    const file = context.request.files[key]
+    let newPath = story.isObject().value() ? config.fileDirectory + '/' + story.get('id').value() + extname(file[0].originalname) : ''
+    return _.concat(acc,{ type: key, name: file[0].originalname, tmpPath: file[0].path, path: newPath })
+  }, [])
 
   // story exists, move files to dir and update story
-  if (story) {
+  if (story.isObject().value()) {
     await Promise.all(uploadList.map( async (file) => {
-      story[file.type] = file.path
+      story.set(file.type, file.path).write()
       await moveFile(file.tmpPath, file.path)
+      if (file.type == 'recording')
+        convertAudio(file.path, story)
     }))
-    //update db
-    storyDbEntry.assign(story).write()
     context.body = { uploads : uploadList }
   // story does not exist, remove files
   } else {

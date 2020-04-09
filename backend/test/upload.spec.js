@@ -61,7 +61,7 @@ describe('File Upload', () => {
       let storyId = await createStory()
       // upload  file
       result = await connect().post('/api/upload/story/'+storyId).attach(
-        'recording', fs.readFileSync(__dirname + '/files/sound.wav'), 'sound.wav'
+        'recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3'
       )
       expect(result).to.have.status(200);
       expect(result.body.uploads).to.be.lengthOf(1)
@@ -75,7 +75,7 @@ describe('File Upload', () => {
       // upload  file
       result = await connect().post('/api/upload/story/'+storyId)
         .attach('image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png')
-        .attach('recording', fs.readFileSync(__dirname + '/files/sound.wav'), 'sound.wav')
+        .attach('recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3')
 
       expect(result).to.have.status(200);
       expect(result.body.uploads).to.be.lengthOf(2)
@@ -111,6 +111,20 @@ describe('File Upload', () => {
       result =  await connect().get('/api/stories/' + storyId)
       expect(result).to.have.status(200);
       expect(result.body.story.image).to.be.equal(path)
+    });
+
+    it('should be able to upload recording and add it in the story data entry', async () => {
+      let storyId = await createStory()
+      // upload  file
+      result = await connect().post('/api/upload/story/'+storyId).attach(
+        'recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3'
+      )
+      expect(result).to.have.status(200);
+      const path = result.body.uploads[0].path
+      uploads.push(path)
+      result =  await connect().get('/api/stories/' + storyId)
+      expect(result).to.have.status(200);
+      expect(result.body.story.recording).to.be.equal(path)
     });
   })
 
