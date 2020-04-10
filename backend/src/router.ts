@@ -104,11 +104,17 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
   if (story.isObject().value()) {
     uploadList.forEach( (file) => {
       if (file.type == 'recording')
-        handleAudioUpload(file, story.get('id').value()).then( (path) => {
+        handleAudioUpload(file, story.get('id').value())
+          .catch(() => {
+            deleteFile(file.path)
+          }).then( (path) => {
           story.set('recording', path).write()
         })
       else if (file.type == 'image')
-        handleImageUpload(file, story.get('id').value()).then( (path) => {
+        handleImageUpload(file, story.get('id').value())
+          .catch(() => {
+            deleteFile(file.path)
+          }).then( (path) => {
           story.set('image', path).write()
         })
     })

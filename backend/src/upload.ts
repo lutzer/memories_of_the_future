@@ -46,6 +46,8 @@ const convertToMp3 = async function(path : string, extension : string = null) : 
 // }
 
 async function handleImageUpload(file: FileUpload, storyId: string) : Promise<string> {
+  if (!_.includes(['.gif','.png','jpg','jpeg'], extname(file.name)))
+    throw new Error('File format not supported')
   // move file
   const newPath = config.fileDirectory + '/' + storyId + extname(file.name)
   await moveFile(file.path, newPath)
@@ -53,6 +55,8 @@ async function handleImageUpload(file: FileUpload, storyId: string) : Promise<st
 }
 
 async function handleAudioUpload(file: FileUpload, storyId: string) : Promise<string> {
+  if (!_.includes(['.mp3','.ogg','.wav'], extname(file.name)))
+    throw new Error('File format not supported')
   // convert to mp3
   const path = await convertToMp3(file.path, extname(file.name))
   // delete old file
