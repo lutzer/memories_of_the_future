@@ -43,10 +43,11 @@ router.get('/projects/:id', async (context) => {
 router.post('/projects/', bodyParser(), async (context) => {
   const db = await getDatabase()
   let project = new ProjectModel(context.request.body)
-  if (project.validate()) {
+  // check if project with this name already exists
+  let nameExists = db.get('projects').find({ name : project.data.name}).isObject().value()
+  if (project.validate() && !nameExists) {
     context.body = { project: project.data }
     db.get('projects').push(project.data).write()
-
   } else {
     context.throw(400,'Project data invalid.');
   }

@@ -6,7 +6,7 @@ const { resolve, extname } = require('path')
 
 const { app } = require('../dist/index')
 const { handleImageUpload, handleAudioUpload, FileUpload } = require('../dist/upload')
-const { deleteFile, copyFile } = require('../dist/utils')
+const { deleteFile, copyFile, generateRandomString } = require('../dist/utils')
 
 chai.use(chaiHttp);
 
@@ -88,9 +88,9 @@ describe('File Upload', () => {
     function connect() { return chai.request(server) }
 
     async function createStory() {
-    // add project
-    let result = await connect().post('/api/projects').send({
-        name: 'testName'
+      // add project
+      let result = await connect().post('/api/projects').send({
+        name: generateRandomString()
       })
       // add story
       result = await connect().post('/api/stories').send({

@@ -3,6 +3,7 @@ const chaiHttp = require('chai-http')
 const expect = chai.expect
 
 const { app } = require('../dist/index')
+const { generateRandomString } = require('../dist/utils')
 
 chai.use(chaiHttp);
 
@@ -29,22 +30,36 @@ describe('Routes', () => {
     });
 
     it('should be able to add a project with a name', async () => {
+      let name = generateRandomString()
       let result = await connect().post('/api/projects').send({
-        name: 'testName'
+        name: name
       })
       expect(result).to.have.status(200);
-      expect(result.body.project.name).equal('testName');
+      expect(result.body.project.name).equal(name);
       expect(result.body.project.id).is.not.empty
     })
 
-    it('should get a project by id', async () => {
+    it('should not be able to add two projects with same name', async () => {
+      let name = generateRandomString()
       let result = await connect().post('/api/projects').send({
-        name: 'getbyidname'
+        name: name
+      })
+      expect(result).to.have.status(200);
+      result = await connect().post('/api/projects').send({
+        name: name
+      })
+      expect(result).to.have.status(400);
+    })
+
+    it('should get a project by id', async () => {
+      let name = generateRandomString()
+      let result = await connect().post('/api/projects').send({
+        name: name
       })
       expect(result).to.have.status(200);
       let id = result.body.project.id
       result = await connect().get('/api/projects/' + id)
-      expect(result.body.project.name).to.equal('getbyidname')
+      expect(result.body.project.name).to.equal(name)
       expect(result.body.project.id).to.equal(id)
       expect(result.body.project).to.not.haveOwnProperty('password')
     })
@@ -55,8 +70,9 @@ describe('Routes', () => {
     })
 
     it('should not display the password of an added project', async () => {
+      let name = generateRandomString()
       let result = await connect().post('/api/projects').send({
-        name: 'testName'
+        name: name
       })
       expect(result).to.have.status(200);
       result = await connect().get('/api/projects/')
@@ -81,7 +97,7 @@ describe('Routes', () => {
   
     it('should not be able to post a story without an existing projectId', async () => {
       let result = await connect().post('/api/stories').send({
-        projectId : "1234",
+        projectId : generateRandomString(),
         location : [0,0]
       })
       expect(result).to.have.status(400);
@@ -89,7 +105,7 @@ describe('Routes', () => {
 
     it('should get a story by id', async () => {
       let result = await connect().post('/api/projects').send({
-        name: 'testName'
+        name: generateRandomString()
       })
       expect(result).to.have.status(200);
       let projectId = result.body.project.id
@@ -108,7 +124,7 @@ describe('Routes', () => {
 
     it('should be able to post a story with an existing projectId and location', async () => {
       let result = await connect().post('/api/projects').send({
-        name: 'testName'
+        name: generateRandomString()
       })
       expect(result).to.have.status(200);
       let projectId = result.body.project.id
@@ -122,7 +138,7 @@ describe('Routes', () => {
     it('should get Stories for a specific project', async () => {
       // add project
       let result = await connect().post('/api/projects').send({
-        name: 'testName'
+        name: generateRandomString()
       })
       expect(result).to.have.status(200);
       let projectId = result.body.project.id
