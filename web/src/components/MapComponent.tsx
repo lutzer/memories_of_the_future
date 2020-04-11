@@ -22,6 +22,12 @@ class MapComponent extends Component {
   render() {
     return (
       <div>
+        <div id="formContainer">
+          <form>
+            <label htmlFor=""></label>
+            <input type="text"/>
+          </form>
+        </div>
         <ReactMapGL
         {...this.state.viewport}
         onViewportChange={(viewport) => this.setState({viewport})} 
