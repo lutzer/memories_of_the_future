@@ -106,6 +106,7 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
       if (file.type == 'recording')
         handleAudioUpload(file, story.get('id').value())
           .catch(() => {
+            console.warn("Error uploading file: " + file.name)
             deleteFile(file.path)
           }).then( (path) => {
           story.set('recording', path).write()
@@ -113,6 +114,7 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
       else if (file.type == 'image')
         handleImageUpload(file, story.get('id').value())
           .catch(() => {
+            console.warn("Could uploading file: " + file.name)
             deleteFile(file.path)
           }).then( (path) => {
           story.set('image', path).write()
