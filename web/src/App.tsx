@@ -5,22 +5,11 @@ import { Route, Switch, Link } from "react-router-dom";
 import axios from "axios";
 import { MapComponent } from "./components/MapComponent";
 
-type AppProps = {
-    project?: {}
-}
-type AppState = {
-    id:string,
-    name: string,
-    description: string,
-    password: string,
-    visible: Boolean,
-    createdAt: String,
-}
 
 
-class App extends Component<AppProps, AppState> {
+class App extends Component {
 
-  state : AppState = {
+  state  = {
       id: "",
       name: "",
       description: "",

@@ -6,14 +6,13 @@ import { App } from "./App";
 import axios from "axios";
 
 
-axios.get("/api/projects").then((response) => {
-  const project = response.data.projects
-  console.log(project);
-
   ReactDOM.render(
-    <BrowserRouter>
-      <App project = {project}/>
-    </BrowserRouter>,
+    <MainComponent/>,
     document.getElementById("container")
   );
-});
+  
+
+  /*axios.get("/api/projects").then((response) => {
+  const project = response.data.projects;
+  console.log(project);
+*/
