@@ -12,7 +12,7 @@ module.exports = (env, argv) => {
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
 
-    entry: './src/index.tsx',
+    entry: './src/index.js',
   
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
@@ -35,9 +35,17 @@ module.exports = (env, argv) => {
     ],
     module: {
       rules: [
+
+        {test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+            loader: "babel-loader"
+        },
+      },
         {
           test: /\.ts(x?)$/,
           exclude: /node_modules/,
+
           use: [
               {
                   loader: "ts-loader"

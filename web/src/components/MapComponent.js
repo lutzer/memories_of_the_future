@@ -4,7 +4,7 @@ import ReactMapGL from 'react-map-gl';
 import {render} from 'react-dom';
 import './styles/map.scss'
 import {OverlayComponent} from "./OverlayComponent"
-import { config } from './../config'
+import { config } from '../config'
 
 class MapComponent extends Component {
 
@@ -12,7 +12,7 @@ class MapComponent extends Component {
 
     viewport: {
       width: "100vw",
-      height: "100vh",
+      height: "80vh",
       latitude: 37.7577,
       longitude: -122.4376,
       zoom: 2
@@ -21,13 +21,8 @@ class MapComponent extends Component {
 
   render() {
     return (
-      <div>
-        <div id="formContainer">
-          <form>
-            <label htmlFor=""></label>
-            <input type="text"/>
-          </form>
-        </div>
+   
+        <div>
         <ReactMapGL
         {...this.state.viewport}
         onViewportChange={(viewport) => this.setState({viewport})} 
