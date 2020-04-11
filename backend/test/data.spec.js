@@ -32,7 +32,7 @@ describe('Create Test Data', () => {
     expect(result.body.project.id).to.be.string
   })
 
-  it('should add another project with 3 stories for testing', async () => {
+  it('should add another project with 3 stories', async () => {
     let result = await connect().post('/api/projects').send({
       name : "Project1",
       description: "Lorem ipsum"
@@ -61,7 +61,6 @@ describe('Create Test Data', () => {
       location: [51.563887, 10.803122]
     })
     expect(result).to.have.status(200);
-
   })
 
 });

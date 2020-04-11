@@ -28,23 +28,6 @@ const convertToMp3 = async function(path : string, extension : string = null) : 
   return newPath
 }
 
-/* Upload Story Routes */
-
-// converts audio file asynchronously after upload
-// function convertAudio(file: string,  storyId: string) {
-//   convertToMp3(path).catch( (err) => {
-//     console.error(err)
-//   }).then( async (newPath) => {
-//     // update story
-//     const db = await getDatabase()
-//     const story = db.get('stories').find({id : storyId})
-//     story.set('recording', newPath).write()
-//     // delete old file
-//     if (path != newPath) 
-//       await deleteFile(path)
-//   })
-// }
-
 async function handleImageUpload(file: FileUpload, storyId: string) : Promise<string> {
   if (!_.includes(['.gif','.png','jpg','jpeg'], extname(file.name)))
     throw new Error('File format not supported')

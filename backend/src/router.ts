@@ -81,6 +81,8 @@ router.post('/stories/'/*?projectId*/, bodyParser(), async (context) => {
   }
 })
 
+/* Upload Routes */
+
 router.post('/upload/story/:id', errorMiddleware, upload.fields([
   { name: 'recording', maxCount: 1},
   { name: 'image', maxCount: 1}
@@ -105,18 +107,18 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
     uploadList.forEach( (file) => {
       if (file.type == 'recording')
         handleAudioUpload(file, story.get('id').value())
-          .catch(() => {
-            console.warn("Error uploading file: " + file.name)
-            deleteFile(file.path)
-          }).then( (path) => {
+        .catch(() => {
+          console.warn("Error uploading file: " + file.name)
+          deleteFile(file.path)
+        }).then( (path) => {
           story.set('recording', path).write()
         })
       else if (file.type == 'image')
         handleImageUpload(file, story.get('id').value())
-          .catch(() => {
-            console.warn("Could uploading file: " + file.name)
-            deleteFile(file.path)
-          }).then( (path) => {
+        .catch(() => {
+          console.warn("Error uploading file: " + file.name)
+          deleteFile(file.path)
+        }).then( (path) => {
           story.set('image', path).write()
         })
     })

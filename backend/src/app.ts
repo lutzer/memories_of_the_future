@@ -16,13 +16,12 @@ if (devMode) {
     host: config.frontendProxyUrl,
     match: /^(?!\/api\/)/
   }))
+  // enable pretty json response for development
+  app.use(koaJson())
 } else {
   // serve static files (web frontend)
   app.use(serveStatic(config.staticDirectory))
 }
-
-// enable pretty json response for development
-app.use(koaJson())
 
 // serve api routes
 app.use(router.routes())
