@@ -12,6 +12,11 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.9.0",
+<<<<<<< HEAD
+=======
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-react": "^7.9.4",
+>>>>>>> dev/web
     "@types/html-webpack-plugin": "^3.2.2",
     "@types/react": "^16.9.32",
     "@types/react-dom": "^16.9.6",
