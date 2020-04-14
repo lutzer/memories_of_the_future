@@ -28,10 +28,15 @@ const upload = multer({
 
 router.get('/projects/', async (context) => {
   const db = await getDatabase()
-  const projects = db.get('projects').map((val) => {
-    return _.omit(val, 'password')
-  })
-  context.body = { projects : projects.value() }
+  if (_.has(context.request.query, 'name')) {
+    const project = db.get('projects').find({ name : context.request.query.name })
+    context.body = { project : project.value() }
+  } else {
+    const projects = db.get('projects').map((val) => {
+      return _.omit(val, 'password')
+    })
+    context.body = { projects : projects.value() }
+  }
 })
 
 router.get('/projects/:id', async (context) => {
