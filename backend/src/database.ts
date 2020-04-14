@@ -2,13 +2,22 @@ import low from 'lowdb'
 import FileSync from 'lowdb/adapters/FileSync'
 
 import { config } from './config'
+import { ProjectModelSchema } from './models/ProjectModel';
+import { StoryModelSchema } from './models/StoryModel';
 
-const getDatabase = () : DatabaseAdapter => {
-  const adapter = new FileSync(config.databaseFile)
-  const db = low(adapter)
+type Schema = {
+  projects: ProjectModelSchema[],
+  stories : StoryModelSchema[]
+};
+
+interface DatabaseAdapter extends low.LowdbSync<Schema> {}
+
+const getDatabase = async () : Promise<DatabaseAdapter> => {
+  const adapter = new FileSync<Schema>(config.databaseFile)
+  const db = await low(adapter)
   
   // set defaults
-  db.defaults({ 
+  await db.defaults({ 
     projects: [], 
     stories: []
   }).write()
@@ -16,6 +25,5 @@ const getDatabase = () : DatabaseAdapter => {
   return db
 }
 
-interface DatabaseAdapter extends low.LowdbSync<any> {}
 
 export { getDatabase, DatabaseAdapter }

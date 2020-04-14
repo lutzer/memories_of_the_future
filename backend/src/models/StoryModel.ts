@@ -1,15 +1,30 @@
 import { BaseModel } from './BaseModel'
 
+type StoryModelSchema = {
+  id : string,
+  projectId : string,
+  location : [ number, number ]
+  
+  author : string,
+  title : string,
+  image : string,
+  recording : string,
+
+  color : string,
+  visible: boolean,
+  createdAt : number
+}
+
 class StoryModel extends BaseModel {
 
-  data : any = {
+  data : StoryModelSchema = {
     ...this.data,
     projectId : null,
     location : null, // [ long, lat ]
 
     author : 'unknown',
     title : 'untitled',
-    picture : null,
+    image : null,
     recording : null,
 
     color : '#ffffff',
@@ -31,4 +46,4 @@ class StoryModel extends BaseModel {
   }
 } 
 
-export { StoryModel }
+export { StoryModel, StoryModelSchema }
