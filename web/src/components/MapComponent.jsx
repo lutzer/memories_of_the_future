@@ -4,11 +4,12 @@ import ReactMapGL from 'react-map-gl';
 import {render} from 'react-dom';
 import './styles/map.scss'
 import {OverlayComponent} from "./OverlayComponent"
-import { config } from './../config'
+import { config } from '../config'
 
 class MapComponent extends Component {
-
-  state = {
+  constructor() {
+    super();
+  this.state = {
 
     viewport: {
       width: "100vw",
@@ -18,6 +19,8 @@ class MapComponent extends Component {
       zoom: 2
     }
   };
+
+}
 
   render() {
     return (
