@@ -1,16 +1,26 @@
 import React from "react";
 import { Component } from "react";
-import { render } from "react-dom";
+//import { render } from "react-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 class OverlayComponent extends Component {
+  state = {
+    projectName: "",
+  };
+  componentWillMount() {}
   render() {
     return (
-      <div className= "overlayContainer">
-        <h4>Enter Project Name</h4>;
-        <input type="text"
-         name="projectName"
-         id="projectName"
-         />
+      <div id="formContainer">
+        <form>
+          <label htmlFor="">Enter The Project Name</label>
+          <input
+            type="text"
+            name="projectName"
+            id="projectName"
+            value={this.state.projectName}
+          />
+          <Link to="/api/projects">Submit</Link>
+        </form>
       </div>
     );
   }
