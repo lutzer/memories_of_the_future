@@ -3,29 +3,35 @@ import { Component
 } from 'react';
 import ReactMapGL from 'react-map-gl';
 import axios from "axios"
+import { useParams } from "react-router-dom";
+
+const projectDefaults = {
+    id : "",
+    name : "" ,
+    description : '',
+    visible : true,
+    createdAt : 0
+}
 
 class ProjectsComponent extends Component {
-    constructor(params) {
+    constructor(props) {
         super(props);
         this.state = {
-            id : "",
-            name : "" ,
-            description : '',
-            visible : true,
-            createdAt : 0
+            project : projectDefaults,
+            stories : []
         }
     }
     
     //GET THE PROJECT FROM API
     getProject () {
-        axios.get(`http://localhost:3000/api/projects/?name=this.state.name`)
+        const { projectName } = this.props.match.params
+        axios.get(`http://localhost:3000/api/projects/?name=${projectName}`)
         .then(responseFromApi => {
-            this.setState({
-                id : responseFromApi.data.id,
-                name : responseFromApi.data.name,
-
-            })
-        })
+            this.setState({ project: Object.assign({}, projectDefaults, responseFromApi.data.project ) })
+            return axios.get(`http://localhost:3000/api/stories/?project=${this.state.project.id}`)
+        }).then( (response) => {
+           console.log(response.data) 
+        })  
     }
 
     componentDidMount() {
@@ -33,9 +39,10 @@ class ProjectsComponent extends Component {
     }
     
     render() {
+
         return (
             <div key= {this.state._id}>
-              <h3>{this.state.name}</h3>
+              <h3>{this.state.project.name}</h3>
             </div>
         )
     }

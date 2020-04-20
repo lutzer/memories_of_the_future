@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { MapComponent } from "./components/MapComponent";
 import { ProjectsComponent} from "./components/ProjectsComponent"
 import { OverlayComponent } from "./components/OverlayComponent";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
 class App extends Component {
   render() {
@@ -11,7 +11,7 @@ class App extends Component {
         <Router>
           <Switch>
          
-             <Route path="/:projectName" component = { ProjectsComponent}/>
+            <Route path="/:projectName" component = { ProjectsComponent }/>
             <Route path="/" component = { MapComponent }/>
               
             
