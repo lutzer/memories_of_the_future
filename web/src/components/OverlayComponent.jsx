@@ -1,6 +1,5 @@
 import React from "react";
 import { Component } from "react";
-//import { render } from "react-dom";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 class OverlayComponent extends Component {
@@ -15,7 +14,6 @@ class OverlayComponent extends Component {
 
   handleInputChange(event) {
     this.setState({ projectName: event.target.value });
-    console.log("heeey");
   }
 
   render() {

@@ -4,4 +4,16 @@
   &.text {
     color: $font-color
   }
+
 }
+
+.marker-btn {
+    background: none;
+    border: none;
+    cursor: pointer
+  }
+  
+  .marker-btn img {
+    width: 20px;
+    height: 20px;
+  }

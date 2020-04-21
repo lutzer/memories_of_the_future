@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { MapComponent } from "./components/MapComponent";
-import { ProjectsComponent} from "./components/ProjectsComponent"
+import { ProjectsComponent } from "./components/ProjectsComponent";
 import { OverlayComponent } from "./components/OverlayComponent";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
@@ -10,11 +10,17 @@ class App extends Component {
       <div className="App">
         <Router>
           <Switch>
-         
-            <Route path="/:projectName" component = { ProjectsComponent }/>
-            <Route path="/" component = { MapComponent }/>
-              
-            
+            <Route path="/:projectName" component={ProjectsComponent} />
+
+            <Route
+              path="/"
+              render={() => (
+                <div>
+                  <OverlayComponent />
+                  <MapComponent />
+                </div>
+              )}
+            />
           </Switch>
         </Router>
       </div>
@@ -23,4 +29,3 @@ class App extends Component {
 }
 
 export { App };
-

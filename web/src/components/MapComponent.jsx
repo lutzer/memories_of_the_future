@@ -1,6 +1,6 @@
 import React from "react";
 import {Component} from 'react';
-import ReactMapGL from 'react-map-gl';
+import ReactMapGL, { Marker } from 'react-map-gl';
 import {render} from 'react-dom';
 import './styles/map.scss'
 import {OverlayComponent} from "./OverlayComponent"
@@ -14,9 +14,9 @@ class MapComponent extends Component {
     viewport: {
       width: "100vw",
       height: "100vh",
-      latitude: 37.7577,
-      longitude: -122.4376,
-      zoom: 2
+      latitude: 52.51763153076172,
+      longitude: 13.40965747833252,
+      zoom: 3
     }
   };
 
@@ -25,13 +25,12 @@ class MapComponent extends Component {
   render() {
     return (
       <div>
-       <div>
-         <OverlayComponent/>
-       </div>
+      
         <ReactMapGL
         {...this.state.viewport}
         onViewportChange={(viewport) => this.setState({viewport})} 
         mapboxApiAccessToken={config.mapboxToken}
+        mapStyle="mapbox://styles/ninoglonti/ck99qscv60l0g1imgpdteyqfw"
         />
       </div>
       

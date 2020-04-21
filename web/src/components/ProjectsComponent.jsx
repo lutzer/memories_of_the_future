@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Component } from "react";
-import ReactMapGL from "react-map-gl";
-import axios from "axios";
+import ReactMapGL, { Marker, Popup } from "react-map-gl";
+import "./styles/map.scss";
 import { useParams } from "react-router-dom";
+import { config } from "../config";
+import axios from "axios";
 
+//++++++++Project Details
 const projectDefaults = {
   id: "",
   name: "",
@@ -12,12 +15,22 @@ const projectDefaults = {
   createdAt: 0,
 };
 
+//+++++++++Map Details
+const mapViewport = {
+  width: "100vw",
+  height: "100vh",
+  latitude: 52.51763153076172,
+  longitude: 13.40965747833252,
+  zoom: 10,
+};
+
 class ProjectsComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       project: projectDefaults,
       stories: [],
+      viewport: mapViewport,
     };
   }
 
@@ -39,7 +52,9 @@ class ProjectsComponent extends Component {
         );
       })
       .then((response) => {
-        console.log(response.data);
+        this.setState({
+          stories: response.data.stories,
+        });
       });
   }
 
@@ -49,13 +64,46 @@ class ProjectsComponent extends Component {
   render() {
     return (
       <div>
-        <div key={this.state._id}>
-          <h3>{this.state.project.name}</h3>
-          <h2>{this.state.project.id}</h2>
-        </div>
-        <div>
-      {this.state.stories.map((story) => <h1>{story.author}</h1>)}
-        </div>
+        <ReactMapGL
+          {...this.state.viewport}
+          onViewportChange={(viewport) => this.setState({ viewport })}
+          mapboxApiAccessToken={config.mapboxToken}
+          mapStyle="mapbox://styles/ninoglonti/ck99qscv60l0g1imgpdteyqfw"
+        >
+          {this.state.stories.map((story) => (
+            <Marker
+              key={story.id}
+              latitude={story.location[0]}
+              longitude={story.location[1]}
+            >
+              <button
+                className="marker-btn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.state.stories(story);
+                }}
+              >
+                <img src="./marker.png" alt="Map Marker" />
+              </button>
+            </Marker>
+          ))}
+
+          {this.state.stories.map((story) => (
+            <Popup
+              key={story.id}
+              latitude={story.location[0]}
+              longitude={story.location[1]}
+              onClose={() => {
+                this.state.stories(null);
+              }}
+            >
+              <div>
+                <h2>{story.author}</h2>
+                <p>{story.title}</p>
+              </div>
+            </Popup>
+          ))}
+        </ReactMapGL>
       </div>
     );
   }
