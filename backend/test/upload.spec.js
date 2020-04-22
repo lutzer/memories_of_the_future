@@ -2,9 +2,10 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 const expect = chai.expect
 const fs = require('fs')
-const { resolve, extname } = require('path')
+const { resolve, extname, basename } = require('path')
 
 const { app } = require('../dist/index')
+const { config } = require('../dist/config')
 const { handleImageUpload, handleAudioUpload, FileUpload } = require('../dist/upload')
 const { deleteFile, copyFile, generateRandomString } = require('../dist/utils')
 
@@ -109,7 +110,7 @@ describe('File Upload', () => {
       await server.close()
       // delete all uploaded files
       uploads.forEach( (upload) => {
-        fs.unlinkSync(upload)
+        fs.unlinkSync(config.fileDirectory + '/' + basename(upload))
       })
     });
 
@@ -141,7 +142,7 @@ describe('File Upload', () => {
         await sleep(200)
         result =  await connect().get('/api/stories/' + storyId)
         expect(result).to.have.status(200);
-        expect(fs.existsSync(result.body.story.image)).to.be.true
+        expect(fs.existsSync(config.fileDirectory + '/' + basename(result.body.story.image))).to.be.true
         uploads.push(result.body.story.image)
       });
 
@@ -155,7 +156,7 @@ describe('File Upload', () => {
         await sleep(200)
         result =  await connect().get('/api/stories/' + storyId)
         expect(result).to.have.status(200);
-        expect(fs.existsSync(result.body.story.recording)).to.be.true
+        expect(fs.existsSync(config.fileDirectory + '/' + basename(result.body.story.recording))).to.be.true
         uploads.push(result.body.story.recording)
       });
 
@@ -199,8 +200,8 @@ describe('File Upload', () => {
         await sleep(200)
         result = await connect().get('/api/stories/' + storyId)
         expect(result).to.have.status(200);
-        expect(fs.existsSync(result.body.story.image)).to.be.true
-        expect(fs.existsSync(result.body.story.recording)).to.be.true
+        expect(fs.existsSync(config.fileDirectory + '/' + basename(result.body.story.image))).to.be.true
+        expect(fs.existsSync(config.fileDirectory + '/' + basename(result.body.story.recording))).to.be.true
         uploads.push(result.body.story.image, result.body.story.recording)
       });
 

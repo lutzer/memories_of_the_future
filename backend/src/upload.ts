@@ -1,7 +1,6 @@
 import { promisify } from 'util'
 import { exec } from 'child_process'
 import _ from 'lodash'
-import { getDatabase } from './database'
 import { deleteFile, moveFile } from './utils'
 import { config } from './config'
 import { extname, parse } from 'path'
@@ -51,4 +50,9 @@ async function handleAudioUpload(file: FileUpload, storyId: string) : Promise<st
   return newPath
 }
 
-export { FileUpload, convertToMp3, handleImageUpload, handleAudioUpload }
+function getFileUrl(path : string) : string {
+  const fileData = parse(path)
+  return config.fileBasePath + '/' + fileData.base
+}
+
+export { FileUpload, convertToMp3, handleImageUpload, handleAudioUpload, getFileUrl }
