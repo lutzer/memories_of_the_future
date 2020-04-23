@@ -8,12 +8,13 @@
 }
 
 .marker-btn {
-    background: none;
-    border: none;
-    cursor: pointer
+  background: $font-color;
+  border-radius: 50%;
+  padding: 1.2em;
+  cursor: pointer;
+  background-image: url('/marker.png');
+
   }
   
-  .marker-btn img {
-    width: 20px;
-    height: 20px;
-  }
+
+

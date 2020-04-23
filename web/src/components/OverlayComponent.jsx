@@ -19,7 +19,7 @@ class OverlayComponent extends Component {
   render() {
     return (
       <div id="formContainer">
-        <label htmlFor="">Enter The Project Name</label>
+        <label className="prName" htmlFor="">Enter The Project Name</label>
         <input
           type="text"
           name="projectName"

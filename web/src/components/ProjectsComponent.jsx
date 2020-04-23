@@ -83,7 +83,6 @@ class ProjectsComponent extends Component {
                   this.state.stories(story);
                 }}
               >
-                <img src="./marker.png" alt="Map Marker" />
               </button>
             </Marker>
           ))}
@@ -110,3 +109,6 @@ class ProjectsComponent extends Component {
 }
 
 export { ProjectsComponent };
+
+/*                <img src="../assets/marker.png" alt="Map Marker" />
+*/ 
