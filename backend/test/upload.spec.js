@@ -4,7 +4,7 @@ const expect = chai.expect
 const fs = require('fs')
 const { resolve, extname, basename } = require('path')
 
-const { app } = require('../dist/index')
+const { app } = require('../dist/app')
 const { config } = require('../dist/config')
 const { handleImageUpload, handleAudioUpload, FileUpload } = require('../dist/upload')
 const { deleteFile, copyFile, generateRandomString } = require('../dist/utils')

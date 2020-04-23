@@ -4,7 +4,8 @@ const expect = chai.expect
 const fs = require('fs')
 
 // start server
-const { app, config } = require('../dist/index')
+const { app } = require('../dist/app')
+const { config } = require('../dist/config')
 
 chai.use(chaiHttp);
 
