@@ -5,6 +5,7 @@ import koaProxy from 'koa-proxy'
 
 import { config } from './config'
 import { router } from './router'
+import { staticRouter } from './staticRouter'
 
 const devMode = process.argv.includes('-dev')
 
@@ -14,14 +15,14 @@ if (devMode) {
   // serve proxy during development
   app.use(koaProxy({
     host: config.frontendProxyUrl,
-    match: /^(?!\/api\/)/
+    match: /^(?!(\/api\/)|(\/files\/))/
   }))
   // enable pretty json response for development
   app.use(koaJson())
-} else {
-  // serve static files (web frontend)
-  app.use(serveStatic(config.staticDirectory))
 }
+
+// serve static routes
+app.use(staticRouter.routes())
 
 // serve api routes
 app.use(router.routes())

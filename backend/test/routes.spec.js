@@ -2,7 +2,7 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 const expect = chai.expect
 
-const { app } = require('../dist/index')
+const { app } = require('../dist/app')
 const { generateRandomString } = require('../dist/utils')
 
 chai.use(chaiHttp);

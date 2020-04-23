@@ -4,6 +4,8 @@ const config = {
   address: 'localhost',
   port : 3000,
   apiBasePath : '/api',
+  fileBasePath : '/files',
+
   staticDirectory : resolve(__dirname, '../../web/dist/'),
   databaseFile: resolve(__dirname,'../data/data.json'),
 

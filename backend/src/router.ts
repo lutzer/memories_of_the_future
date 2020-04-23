@@ -1,4 +1,3 @@
-import Koa from 'koa'
 import bodyParser from 'koa-body'
 import Router from '@koa/router'
 import multer from '@koa/multer'
@@ -9,7 +8,7 @@ import { deleteFile, fileFilter, errorMiddleware, moveFile } from './utils'
 import { config } from './config'
 import { ProjectModel } from './models/ProjectModel'
 import { StoryModel } from './models/StoryModel'
-import { handleAudioUpload, handleImageUpload, FileUpload } from './upload'
+import { handleAudioUpload, handleImageUpload, FileUpload, getFileUrl } from './upload'
 
 const router = new Router({
   prefix : config.apiBasePath
@@ -116,16 +115,16 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
         .catch(() => {
           console.warn("Error uploading file: " + file.name)
           deleteFile(file.path)
-        }).then( (path) => {
-          story.set('recording', path).write()
+        }).then( (path : string) => {
+          story.set('recording', getFileUrl(path)).write()
         })
       else if (file.type == 'image')
         handleImageUpload(file, story.get('id').value())
         .catch(() => {
           console.warn("Error uploading file: " + file.name)
           deleteFile(file.path)
-        }).then( (path) => {
-          story.set('image', path).write()
+        }).then( (path : string) => {
+          story.set('image', getFileUrl(path)).write()
         })
     })
     context.body = { msg : `${uploadList.length} files uploaded to story ${story.get('id').value()}` }

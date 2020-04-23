@@ -2,9 +2,10 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 const expect = chai.expect
 const fs = require('fs')
-const { resolve, extname } = require('path')
+const { resolve, extname, basename } = require('path')
 
-const { app } = require('../dist/index')
+const { app } = require('../dist/app')
+const { config } = require('../dist/config')
 const { handleImageUpload, handleAudioUpload, FileUpload } = require('../dist/upload')
 const { deleteFile, copyFile, generateRandomString } = require('../dist/utils')
 
@@ -81,12 +82,6 @@ describe('File Upload', () => {
 
   describe('File Upload Routes', () => {
 
-    var server = null
-
-    var uploads = []
-
-    function connect() { return chai.request(server) }
-
     async function createStory() {
       // add project
       let result = await connect().post('/api/projects').send({
@@ -101,6 +96,12 @@ describe('File Upload', () => {
       return result.body.story.id
     }
 
+    var server = null
+
+    var uploads = []
+
+    function connect() { return chai.request(server) }
+
     before( async () => {
       server = await app.listen()
     })
@@ -109,7 +110,7 @@ describe('File Upload', () => {
       await server.close()
       // delete all uploaded files
       uploads.forEach( (upload) => {
-        fs.unlinkSync(upload)
+        fs.unlinkSync(config.fileDirectory + '/' + basename(upload))
       })
     });
 
@@ -141,7 +142,7 @@ describe('File Upload', () => {
         await sleep(200)
         result =  await connect().get('/api/stories/' + storyId)
         expect(result).to.have.status(200);
-        expect(fs.existsSync(result.body.story.image)).to.be.true
+        expect(fs.existsSync(config.fileDirectory + '/' + basename(result.body.story.image))).to.be.true
         uploads.push(result.body.story.image)
       });
 
@@ -155,7 +156,8 @@ describe('File Upload', () => {
         await sleep(200)
         result =  await connect().get('/api/stories/' + storyId)
         expect(result).to.have.status(200);
-        expect(fs.existsSync(result.body.story.recording)).to.be.true
+        expect(result.body.story.recording.slice(-4)).to.equal('.mp3')
+        expect(fs.existsSync(config.fileDirectory + '/' + basename(result.body.story.recording))).to.be.true
         uploads.push(result.body.story.recording)
       });
 
@@ -199,10 +201,69 @@ describe('File Upload', () => {
         await sleep(200)
         result = await connect().get('/api/stories/' + storyId)
         expect(result).to.have.status(200);
-        expect(fs.existsSync(result.body.story.image)).to.be.true
-        expect(fs.existsSync(result.body.story.recording)).to.be.true
+        expect(fs.existsSync(config.fileDirectory + '/' + basename(result.body.story.image))).to.be.true
+        expect(fs.existsSync(config.fileDirectory + '/' + basename(result.body.story.recording))).to.be.true
         uploads.push(result.body.story.image, result.body.story.recording)
+      })
+    })
+
+    describe('/files/*', () => {
+
+      async function createStory() {
+        // add project
+        let result = await connect().post('/api/projects').send({
+          name: generateRandomString()
+        })
+        // add story
+        result = await connect().post('/api/stories').send({
+          author: 'peter',
+          projectId : result.body.project.id,
+          location : [0,0]
+        })
+        return result.body.story.id
+      }
+
+      var server = null
+
+      var uploads = []
+
+      function connect() { return chai.request(server) }
+
+      before( async () => {
+        server = await app.listen()
+      })
+
+      after( async () => {
+        await server.close()
+        // delete all uploaded files
+        uploads.forEach( (upload) => {
+          fs.unlinkSync(config.fileDirectory + '/' + basename(upload))
+        })
       });
+
+      it('should be able to get image from files dir', async () => {
+        const storyId = await createStory()
+        var result = await connect().post('/api/upload/story/'+storyId)
+          .attach('image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png')
+        expect(result).to.have.status(200);
+        result =  await connect().get('/api/stories/' + storyId)
+        expect(result).to.have.status(200);
+        uploads.push(result.body.story.image)
+        connect().get(result.body.story.image)
+        expect(result).to.have.status(200);
+      })
+
+      it('should be able to get recording from files dir', async () => {
+        const storyId = await createStory()
+        var result = await connect().post('/api/upload/story/'+storyId)
+        .attach('recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3')
+        expect(result).to.have.status(200);
+        result =  await connect().get('/api/stories/' + storyId)
+        expect(result).to.have.status(200);
+        uploads.push(result.body.story.recording)
+        connect().get(result.body.story.recording)
+        expect(result).to.have.status(200);
+      })
 
     })
   })

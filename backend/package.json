@@ -8,7 +8,7 @@
     "start": "npx ts-node-dev index.dev.ts -- -dev",
     "build": "npx tsc",
     "test": "npx tsc && npx mocha test/*.spec.js",
-    "create-test-data": "npx tsc && npx mocha test/data.spec.js"
+    "create-test-data": "npx tsc && npx mocha test/create-data.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
     "koa-json": "^2.0.2",
+    "koa-send": "^5.0.0",
     "koa-static": "^5.0.0",
     "lodash": "^4.17.15",
     "lowdb": "^1.0.0",
