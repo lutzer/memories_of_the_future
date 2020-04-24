@@ -9,7 +9,7 @@ const StoriesDefaults = {
 
   author: "",
   title: "",
-  picture: null,
+  image: null,
   recording: null,
 
   color: "#ffffff",
@@ -29,7 +29,7 @@ class StoriesComponent extends Component {
   render() {
     return (
       <div>
-        <h1>{this.story}</h1>
+       
       </div>
     );
   }

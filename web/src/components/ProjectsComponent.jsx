@@ -31,6 +31,7 @@ class ProjectsComponent extends Component {
       project: projectDefaults,
       stories: [],
       viewport: mapViewport,
+      selectedStory: null,
     };
   }
 
@@ -58,9 +59,14 @@ class ProjectsComponent extends Component {
       });
   }
 
-  componentDidMount() {
+
+
+ componentDidMount() {
     this.getProject();
   }
+
+ 
+
   render() {
     return (
       <div>
@@ -70,6 +76,7 @@ class ProjectsComponent extends Component {
           mapboxApiAccessToken={config.mapboxToken}
           mapStyle="mapbox://styles/ninoglonti/ck99qscv60l0g1imgpdteyqfw"
         >
+
           {this.state.stories.map((story) => (
             <Marker
               key={story.id}
@@ -78,16 +85,46 @@ class ProjectsComponent extends Component {
             >
               <button
                 className="marker-btn"
-                onClick={(e) => {
-                  e.preventDefault();
-                  this.state.stories(story);
-                }}
+                onClick= {e => 
+                  {
+                    e.preventDefault(); 
+                    this.setState({ selectedStory : story })}
+                  }
               >
+               Click
               </button>
             </Marker>
           ))}
 
-          {this.state.stories.map((story) => (
+         
+         {this.state.selectedStory ? (
+           <Popup 
+           key={this.state.selectedStory.id}
+           latitude={this.state.selectedStory.location[0]}
+           longitude={this.state.selectedStory.location[1]}
+           onClose={()  => 
+            {this.setState({selectedStory: null})
+          }}
+           >
+             <div>
+         <h2>{this.state.selectedStory.author}</h2>
+         <p>{this.state.selectedStory.title}</p>
+             </div>
+           </Popup>
+         ) : null}
+
+
+        </ReactMapGL>
+      </div>
+    );
+  }
+}
+
+export { ProjectsComponent };
+
+
+/*   
+  {this.state.stories.map((story) => (
             <Popup
               key={story.id}
               latitude={story.location[0]}
@@ -101,14 +138,31 @@ class ProjectsComponent extends Component {
                 <p>{story.title}</p>
               </div>
             </Popup>
-          ))}
-        </ReactMapGL>
-      </div>
-    );
-  }
+          ))}             
+ */
+
+/*handleClick = (event) => {
+  event.preventDefault();
+  this.setState({
+    selectedStory: this.state.stories.map((story) => {
+      console.log("heeeeeey", selectedStory);
+         story
+    }) 
+  })
 }
+*/
 
-export { ProjectsComponent };
+  /*
+   {this.state.selecedStory ? (
+            <Popup
+              key={story.id}
+              latitude={story.location[0]}
+              longitude={story.location[1]}
+            >
+              <div></div>
+            </Popup>
+          ) : null}
 
-/*                <img src="../assets/marker.png" alt="Map Marker" />
-*/ 
+  */ 
+
+  /**/
