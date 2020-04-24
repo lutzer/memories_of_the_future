@@ -123,23 +123,7 @@ class ProjectsComponent extends Component {
 export { ProjectsComponent };
 
 
-/*   
-  {this.state.stories.map((story) => (
-            <Popup
-              key={story.id}
-              latitude={story.location[0]}
-              longitude={story.location[1]}
-              onClose={() => {
-                this.state.stories(null);
-              }}
-            >
-              <div>
-                <h2>{story.author}</h2>
-                <p>{story.title}</p>
-              </div>
-            </Popup>
-          ))}             
- */
+
 
 /*handleClick = (event) => {
   event.preventDefault();
@@ -152,17 +136,3 @@ export { ProjectsComponent };
 }
 */
 
-  /*
-   {this.state.selecedStory ? (
-            <Popup
-              key={story.id}
-              latitude={story.location[0]}
-              longitude={story.location[1]}
-            >
-              <div></div>
-            </Popup>
-          ) : null}
-
-  */ 
-
-  /**/
