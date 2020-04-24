@@ -4,6 +4,7 @@ import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import "./styles/map.scss";
 import { useParams } from "react-router-dom";
 import { config } from "../config";
+import Sound from "react-sound";
 import axios from "axios";
 
 //++++++++Project Details
@@ -59,13 +60,9 @@ class ProjectsComponent extends Component {
       });
   }
 
-
-
- componentDidMount() {
+  componentDidMount() {
     this.getProject();
   }
-
- 
 
   render() {
     return (
@@ -76,7 +73,6 @@ class ProjectsComponent extends Component {
           mapboxApiAccessToken={config.mapboxToken}
           mapStyle="mapbox://styles/ninoglonti/ck99qscv60l0g1imgpdteyqfw"
         >
-
           {this.state.stories.map((story) => (
             <Marker
               key={story.id}
@@ -85,35 +81,44 @@ class ProjectsComponent extends Component {
             >
               <button
                 className="marker-btn"
-                onClick= {e => 
-                  {
-                    e.preventDefault(); 
-                    this.setState({ selectedStory : story })}
-                  }
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.setState({ selectedStory: story });
+                }}
               >
-               Click
+                Click
               </button>
             </Marker>
           ))}
 
-         
-         {this.state.selectedStory ? (
-           <Popup 
-           key={this.state.selectedStory.id}
-           latitude={this.state.selectedStory.location[0]}
-           longitude={this.state.selectedStory.location[1]}
-           onClose={()  => 
-            {this.setState({selectedStory: null})
-          }}
-           >
-             <div>
-         <h2>{this.state.selectedStory.author}</h2>
-         <p>{this.state.selectedStory.title}</p>
-             </div>
-           </Popup>
-         ) : null}
+          {this.state.selectedStory ? (
+            <Popup
+              key={this.state.selectedStory.id}
+              latitude={this.state.selectedStory.location[0]}
+              longitude={this.state.selectedStory.location[1]}
+              onClose={() => {
+                this.setState({ selectedStory: null });
+              }}
+            >
+              <div>
+                <h2>{this.state.selectedStory.author}</h2>
+                <p>{this.state.selectedStory.title}</p>
 
-
+                <img src={this.state.selectedStory.image} alt="story image" />
+                
+                <>
+                  <h1>My Little Player</h1>
+                  <audio>
+                    <source src={this.state.selectedStory.recording}></source>
+                  </audio>
+                  </>
+                <Sound
+                  url={this.state.selectedStory.recording}
+                  playStatus={Sound.status.PLAYING}
+                />
+              </div>
+            </Popup>
+          ) : null}
         </ReactMapGL>
       </div>
     );
@@ -121,9 +126,6 @@ class ProjectsComponent extends Component {
 }
 
 export { ProjectsComponent };
-
-
-
 
 /*handleClick = (event) => {
   event.preventDefault();
@@ -136,3 +138,5 @@ export { ProjectsComponent };
 }
 */
 
+/*  
+              />*/
