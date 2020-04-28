@@ -1,6 +1,10 @@
 @import 'vars';
 
 .map {
+  position:absolute;
+        top:0;
+        bottom:0;
+        width:100%;
   &.text {
     color: $font-color
   }
@@ -15,6 +19,31 @@
   background-image: url('/marker.png');
 
   }
+  .mapboxgl-popup-content{
+    position: fixed ;
+    bottom: 0;
+    text-align: center ;
+    width: 100% ;
+    opacity: 0.8 ;
+    background-color: white ;
+  }
+
+
+  .popup img{
+    width: 20%;
+    height: auto;
+  }
   
+  .no-height {
+    height: 0 !important;
+  }
+  .audioPlayer {
+    width: 435px;
+    margin: 0 auto;
+    overflow: hidden;
+    background-color: #EAEDEF;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
 
 

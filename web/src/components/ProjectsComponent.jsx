@@ -4,7 +4,6 @@ import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import "./styles/map.scss";
 import { useParams } from "react-router-dom";
 import { config } from "../config";
-import Sound from "react-sound";
 import axios from "axios";
 
 //++++++++Project Details
@@ -93,6 +92,7 @@ class ProjectsComponent extends Component {
 
           {this.state.selectedStory ? (
             <Popup
+              className="popup"
               key={this.state.selectedStory.id}
               latitude={this.state.selectedStory.location[0]}
               longitude={this.state.selectedStory.location[1]}
@@ -105,17 +105,12 @@ class ProjectsComponent extends Component {
                 <p>{this.state.selectedStory.title}</p>
 
                 <img src={this.state.selectedStory.image} alt="story image" />
-                
-                <>
-                  <h1>My Little Player</h1>
-                  <audio>
-                    <source src={this.state.selectedStory.recording}></source>
-                  </audio>
-                  </>
-                <Sound
-                  url={this.state.selectedStory.recording}
-                  playStatus={Sound.status.PLAYING}
-                />
+
+                <audio controls src={ this.state.selectedStory.recording}>
+                  Your browser does not support the
+                  <code>audio</code> element.
+                </audio>
+           
               </div>
             </Popup>
           ) : null}
@@ -127,16 +122,5 @@ class ProjectsComponent extends Component {
 
 export { ProjectsComponent };
 
-/*handleClick = (event) => {
-  event.preventDefault();
-  this.setState({
-    selectedStory: this.state.stories.map((story) => {
-      console.log("heeeeeey", selectedStory);
-         story
-    }) 
-  })
-}
-*/
 
-/*  
-              />*/
+
