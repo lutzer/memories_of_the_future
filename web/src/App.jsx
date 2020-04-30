@@ -11,16 +11,8 @@ class App extends Component {
         <Router>
           <Switch>
             <Route path="/:projectName" component={ProjectsComponent} />
-
-            <Route
-              path="/"
-              render={() => (
-                <div>
-                  <OverlayComponent />
-                  <MapComponent />
-                </div>
-              )}
-            />
+            <Route path="/" component={MapComponent}/>
+            
           </Switch>
         </Router>
       </div>
@@ -29,3 +21,16 @@ class App extends Component {
 }
 
 export { App };
+
+{/* 
+  <Route
+  path="/"
+  render={() => (
+  <div className="startView">
+  <OverlayComponent />
+  <MapComponent />
+  </div>
+  )}
+
+  /> 
+  */}

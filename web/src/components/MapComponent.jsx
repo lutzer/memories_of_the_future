@@ -24,8 +24,8 @@ class MapComponent extends Component {
 
   render() {
     return (
-      <div>
-      
+      <div className="startMap">
+       <OverlayComponent />
         <ReactMapGL
         {...this.state.viewport}
         onViewportChange={(viewport) => this.setState({viewport})} 
