@@ -85,7 +85,7 @@ class ProjectsComponent extends Component {
                   this.setState({ selectedStory: story });
                 }}
               >
-                Click
+                
               </button>
             </Marker>
           ))}

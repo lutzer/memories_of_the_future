@@ -1,6 +1,8 @@
 import React from "react";
 import { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Button } from 'semantic-ui-react'
+
 
 class OverlayComponent extends Component {
   constructor() {
@@ -27,7 +29,11 @@ class OverlayComponent extends Component {
           value={this.state.projectName}
           onChange={this.handleInputChange}
         />
-        <Link to={'/'+this.state.projectName}>Submit</Link>
+        <Link to={'/'+this.state.projectName}>
+          <Button>
+            Search
+          </Button>
+          </Link>
       </div>
     );
   }
