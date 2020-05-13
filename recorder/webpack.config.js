@@ -2,11 +2,14 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { GenerateSW } = require('workbox-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
 
   const isDevelopment = argv.mode === 'development';
   const builDir = './dist/'
+  const assetFolder = 'assets'
 
   return {
     // Enable sourcemaps for debugging webpack's output.
@@ -32,7 +35,11 @@ module.exports = (env, argv) => {
         new MiniCssExtractPlugin({
           filename: "css/[name].[contenthash:8].css",
           chunkFilename: "css/[name].[contenthash:8].chunk.css"
-        })
+      }),
+      new CopyPlugin([
+        { from: 'src/manifest.json', to: path.resolve(__dirname, builDir) },
+      ]),
+      isDevelopment ? () => {} : new GenerateSW()
     ],
     module: {
       rules: [
@@ -73,7 +80,13 @@ module.exports = (env, argv) => {
         {
           test: /\.(png|svg|jpg|gif)$/,
           use: [
-            'file-loader',
+            { 
+              loader: 'file-loader',
+              options: {
+                name: '[name].[ext]',
+                outputPath: assetFolder
+              },
+            }
           ],
         }
       ]

@@ -1,0 +1,14 @@
+{
+  "name": "Memories of the Future",
+  "short_name": "motf_recorder",
+  "lang": "en-US",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "black",
+  "theme_color": "white",
+  "icons": [{
+    "src": "assets/logo.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }]
+}
