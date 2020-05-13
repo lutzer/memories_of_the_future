@@ -1,10 +1,13 @@
 import React from "react";
-import './styles/main.scss'
+import { RecorderComponent } from "./RecorderComponent";
+import { StoryComponent } from "./StoryComponent";
 
 const MainComponent = () => {
   return (
     <div>
-      <h1>Hello World</h1>
+      <h1>Memories of the Future</h1>
+      <RecorderComponent/>
+      <StoryComponent/>
     </div> 
   )
 }
