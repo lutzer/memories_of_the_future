@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = (env, argv) => {
 
   const isDevelopment = argv.mode === 'development';
-  const builDir = './www/'
+  const builDir = './dist/'
 
   return {
     // Enable sourcemaps for debugging webpack's output.
@@ -25,7 +25,7 @@ module.exports = (env, argv) => {
     plugins: [
       isDevelopment? () => {} : new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
-        template: isDevelopment ? 'src/index.dev.html':'src/index.html',
+        template: isDevelopment ? 'src/index.dev.html' : 'src/index.html',
         filename: 'index.html'
       }),
       isDevelopment ? () => {} :

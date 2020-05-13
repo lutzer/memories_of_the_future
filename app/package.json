@@ -1,24 +1,13 @@
 {
-  "name": "com.drl.memories_of_the_future",
-  "displayName": "HelloCordova",
+  "name": "memories_of_the_future_app",
   "version": "1.0.0",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx webpack-dev-server --mode development --hot",
-    "build-android": "npx webpack -p --mode=production && cordova build android",
-    "browser": "npx webpack -p --mode=production && cordova build browser && cordova serve",
-    "android": "npx webpack -p --mode=production && cordova build android && cordova emulate android"
+    "start": "npx webpack-dev-server --mode development --hot"
   },
-  "keywords": [
-    "ecosystem:cordova"
-  ],
-  "author": "Apache Cordova Team",
-  "license": "Apache-2.0",
   "dependencies": {
-    "cordova-android": "^8.1.0",
-    "cordova-browser": "^6.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },
@@ -44,14 +33,5 @@
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"
-  },
-  "cordova": {
-    "plugins": {
-      "cordova-plugin-whitelist": {}
-    },
-    "platforms": [
-      "android",
-      "browser"
-    ]
   }
 }
