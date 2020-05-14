@@ -1,44 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { getAudioRecorder } from './../media/recorder'
+import { getAudioRecorder, AudioRecording, AudioRecorder } from './../media/recorder'
 import { getDatabase } from '../storage/database'
 
 enum RecorderState {
   INIT, RECORDING, BUSY, STOPPED, ERROR,
 }
 
-const RecorderComponent = () => {
+const RecorderComponent = ({onSave} : {onSave : (rec: AudioRecording) => void}) => {
   const [recorderState, setRecorderState] = useState(RecorderState.INIT)
-  const [recorder, setRecorder] = useState(null)
+  const [recorder, setRecorder] = useState<AudioRecorder>(null)
+  const [recording, setRecording] = useState<AudioRecording>(null)
 
-  function startRecording() {
-    (async function () {
-      try {
-        const recorder = await getAudioRecorder()
-        setRecorderState(RecorderState.RECORDING)
-        setRecorder(recorder)
-        recorder.start()
-      } catch (err) {
-        console.error(err)
-        setRecorderState(RecorderState.ERROR)
-      }
-    })()
+  async function startRecording() {
+    try {
+      const recorder = await getAudioRecorder()
+      setRecorderState(RecorderState.RECORDING)
+      setRecorder(recorder)
+      recorder.start()
+    } catch (err) {
+      console.error(err)
+      setRecorderState(RecorderState.ERROR)
+    }
   }
 
-  function stopRecording() {
-    (async function () {
-      setRecorderState(RecorderState.BUSY)
-      const audio = await recorder.stop();
-      audio.play();
-      setRecorderState(RecorderState.STOPPED)
-    })()
+  async function stopRecording() {
+    setRecorderState(RecorderState.BUSY)
+    const recordedAudio = await recorder.stop();
+    setRecording(recordedAudio)
+    setRecorderState(RecorderState.STOPPED)
   }
 
-  if (recorderState == RecorderState.INIT || recorderState == RecorderState.STOPPED )
+  if (recorderState == RecorderState.INIT)
     return(
       <div>
         <button onClick={startRecording}>Start Recording</button>
       </div>
   )
+  else if (recorderState == RecorderState.STOPPED )
+      return(
+      <div>
+        <button onClick={startRecording}>Restart Recording</button>
+        <button onClick={() => onSave(recording)}>Save Recording</button>
+      </div>
+      )
   else if (recorderState == RecorderState.RECORDING )
     return(
       <div>

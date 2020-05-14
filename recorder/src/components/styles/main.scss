@@ -1,6 +1,5 @@
 body, html {
-  font-family: sans-serif; 
-  display: flex;
+  font-family: sans-serif;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -11,8 +10,19 @@ body, html {
 #app {
   margin: auto;
   text-align: center;
+  padding:10px
 }
 
 h1 {
   font-size: 3rem;
+  color: #f00
+}
+
+button {
+  background-color: #000;
+  color: #ffffff;
+  padding: 5px 10px 5px 10px;
+  font-weight: bold;
+  border-radius: 5px;
+  font-size: 1rem;
 }

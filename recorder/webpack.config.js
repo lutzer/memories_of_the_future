@@ -1,5 +1,4 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { GenerateSW } = require('workbox-webpack-plugin');
@@ -15,22 +14,20 @@ module.exports = (env, argv) => {
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
 
-    entry: './src/index.ts',
-  
+    entry: { 
+      app: './src/index.ts',
+      polyfill: './src/media/polyfill.js'
+    },
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
         extensions: [".ts", ".tsx", ".js", ".json"]
     },
     output: {
-      filename: 'bundle.js',
+      filename: '[name].bundle.js',
       path: path.resolve(__dirname, builDir),
     },
     plugins: [
       isDevelopment? () => {} : new CleanWebpackPlugin(),
-      new HtmlWebpackPlugin({
-        template: isDevelopment ? 'src/index.dev.html' : 'src/index.html',
-        filename: 'index.html'
-      }),
       isDevelopment ? () => {} :
         new MiniCssExtractPlugin({
           filename: "css/[name].[contenthash:8].css",
@@ -38,6 +35,7 @@ module.exports = (env, argv) => {
       }),
       new CopyPlugin([
         { from: 'src/manifest.json', to: path.resolve(__dirname, builDir) },
+        { from: isDevelopment ? 'src/index.dev.html' : 'src/index.production.html', to: 'index.html'}
       ]),
       isDevelopment ? () => {} : new GenerateSW()
     ],

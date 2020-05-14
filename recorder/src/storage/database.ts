@@ -1,28 +1,43 @@
-import { openDB, deleteDB, wrap, unwrap, IDBPDatabase } from 'idb';
+import { openDB, IDBPDatabase } from 'idb';
 
-const DATABASE_NAME = "motf-recorder"
-const STORE_NAME_STORIES = "stories"
+const DATABASE_NAME = 'motf-recorder'
+const STORE_NAME_STORIES = 'stories'
+const STORE_NAME_PROJECTS = 'projects'
 const DB_VERSION = 12
 
 type StorySchema = {
-  id: number,
+  id: string,
   author: string,
-  recording?: Blob
+  createdAt: number,
+  recording?: Blob,
+  image? : Blob,
+  location? : [ number, number ],
+}
+
+type ProjectSchema = {
+  id: string,
+  name: string
 }
 
 interface Database {
-  getAll : () => Promise<StorySchema[]>
-  write : (story: StorySchema) => Promise<IDBValidKey>
-  remove : (id: number) => Promise<void>
+  getStories : () => Promise<StorySchema[]>
+  getStory : (id: string) => Promise<StorySchema>
+  writeStory : (story: StorySchema) => Promise<IDBValidKey>
+  removeStory : (id: string) => Promise<void>
 }
 
 function initDatabase(db : IDBPDatabase) {
+  
   if (db.objectStoreNames.contains(STORE_NAME_STORIES))
     db.deleteObjectStore(STORE_NAME_STORIES)
   db.createObjectStore(STORE_NAME_STORIES, {
     keyPath: 'id',
     autoIncrement: true,
   })
+
+  if (db.objectStoreNames.contains(STORE_NAME_PROJECTS))
+    db.deleteObjectStore(STORE_NAME_PROJECTS)
+  db.createObjectStore(STORE_NAME_PROJECTS)
 }
 
 const getDatabase = async () : Promise<Database> => {
@@ -37,23 +52,24 @@ const getDatabase = async () : Promise<Database> => {
       }
     })
 
-    async function getAll() : Promise<StorySchema[]> {
+    async function getStories() : Promise<StorySchema[]> {
       return await db.getAll(STORE_NAME_STORIES)
     }
 
-    async function write(story : StorySchema) : Promise<IDBValidKey> {
+    async function writeStory(story : StorySchema) : Promise<IDBValidKey> {
       return await db.put(STORE_NAME_STORIES, story)
     }
 
-    async function remove(id: number) : Promise<void> {
+    async function removeStory(id: string) : Promise<void> {
       return await db.delete(STORE_NAME_STORIES, id)
     }
 
-
-    // db.put(STORE_NAME_STORIES,{ val: 'test2' })
+    async function getStory(id: string) : Promise<StorySchema> {
+      return await db.get(STORE_NAME_STORIES, id)
+    }
 
     
-    resolve({ getAll, write, remove })
+    resolve({ writeStory, removeStory, getStories, getStory })
   })
 }
 

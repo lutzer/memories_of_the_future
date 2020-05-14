@@ -1,9 +1,15 @@
-const TIMESLICE_DURATION = 50
+const TIMESLICE_DURATION : number = undefined
 
 
 type AudioRecorder = {
   start: () => void,
-  stop: () => void
+  stop: () => Promise<AudioRecording>
+}
+
+type AudioRecording = {
+  blob: Blob
+  url: string,
+  audio: HTMLAudioElement
 }
 
 const getAudioRecorder = () : Promise<AudioRecorder> =>
@@ -31,13 +37,16 @@ new Promise(async (resolve, reject) => {
   const start = () => mediaRecorder.start(TIMESLICE_DURATION);
 
   const stop = () =>
-    new Promise(resolve => {
+    new Promise<AudioRecording>((resolve) => {
       mediaRecorder.addEventListener("stop", () => {
-        const audioBlob = new Blob(audioChunks);
+        const audioBlob = new Blob(audioChunks,  {type : 'audio/wav'});
         const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
-        const play = () => audio.play();
-        resolve({ audioBlob, audioUrl, play });
+        const recording : AudioRecording = {
+          blob: audioBlob,
+          url: audioUrl,
+          audio: new Audio(audioUrl)
+        }
+        resolve(recording);
       });
 
       mediaRecorder.stop();
@@ -46,4 +55,4 @@ new Promise(async (resolve, reject) => {
   resolve({ start, stop });
 });
 
-export { getAudioRecorder }
+export { getAudioRecorder, AudioRecording, AudioRecorder }
