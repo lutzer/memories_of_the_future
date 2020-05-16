@@ -34,10 +34,14 @@ module.exports = (env, argv) => {
           chunkFilename: "css/[name].[contenthash:8].chunk.css"
       }),
       new CopyPlugin([
-        { from: 'src/manifest.json', to: path.resolve(__dirname, builDir) },
+        { from: 'src/manifest.json', to: '' },
         { from: isDevelopment ? 'src/index.dev.html' : 'src/index.production.html', to: 'index.html'}
       ]),
-      isDevelopment ? () => {} : new GenerateSW()
+      isDevelopment ? () => {} : new GenerateSW({
+        swDest: 'service-worker.js',
+        clientsClaim: true,
+        skipWaiting: true
+      })
     ],
     module: {
       rules: [
@@ -57,7 +61,7 @@ module.exports = (env, argv) => {
           loader: "source-map-loader"
         },
         {
-          test: /\.s[ac]ss$/,
+          test: /\.s?[ac]ss$/,
           use: [
             !isDevelopment ? MiniCssExtractPlugin.loader : "style-loader",
               {

@@ -1,8 +1,9 @@
 import { openDB, IDBPDatabase } from 'idb';
+import { v4 as uuidv4 } from 'uuid';
 
 const DATABASE_NAME = 'motf-recorder'
 const STORE_NAME_STORIES = 'stories'
-const STORE_NAME_PROJECTS = 'projects'
+const STORE_NAME_PROJECTS = 'files'
 const DB_VERSION = 12
 
 type StorySchema = {
@@ -57,6 +58,7 @@ const getDatabase = async () : Promise<Database> => {
     }
 
     async function writeStory(story : StorySchema) : Promise<IDBValidKey> {
+      story.id = story.id ? story.id : uuidv4()
       return await db.put(STORE_NAME_STORIES, story)
     }
 

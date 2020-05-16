@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getDatabase, StorySchema } from "../storage/database";
 import { Link } from "react-router-dom";
-import { v4 as uuidv4 } from 'uuid';
+import moment from 'moment';
 import './styles/story.scss'
 
 const StoryListComponent = () => {
@@ -24,17 +24,7 @@ const StoryListComponent = () => {
   async function add() {
     try {
       const db = await getDatabase()
-      await db.writeStory({ id: uuidv4(), author: 'peter', createdAt: Date.now() })
-      await read()
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  async function remove(id : string) {
-    try {
-      const db = await getDatabase()
-      await db.removeStory(id)
+      await db.writeStory({ id: null, author: 'peter', createdAt: Date.now() })
       await read()
     } catch (err) {
       console.error(err)
@@ -49,13 +39,12 @@ const StoryListComponent = () => {
           <div key={i} className='story list-item'>
             <p>{story.id}</p>
             <p>{story.author}</p>
-            <p>{story.createdAt}</p>
+            <p>{moment(story.createdAt).fromNow()}</p>
             <p><Link to={`story/${story.id}`}>Link</Link></p>
-            <button onClick={() => remove(story.id)}>Delete Story</button>
           </div>
         )
       })}
-      <button onClick={add}>Add Story</button>
+      <button onClick={add}>Create Story</button>
     </div>
   )
 }

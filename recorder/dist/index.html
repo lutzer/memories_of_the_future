@@ -11,25 +11,25 @@
         <div id="app">
         </div>
         <script>
-            /*
-            // Check that service workers are supported
-            if ('serviceWorker' in navigator) {
-              // Use the window load event to keep the page load performant
-              window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js');
-              });
-            } else {
-                console.error("Service Worker not supported")
-            }*/
+            // // Check that service workers are supported
+            // if ('serviceWorker' in navigator) {
+            //   // Use the window load event to keep the page load performant
+            //   window.addEventListener('load', () => {
+            //     navigator.serviceWorker.register('/service-worker.js');
+            //   });
+            // } else {
+            //     console.error("Service Worker not supported")
+            // }
         </script>
         <script>
             if (!window.MediaRecorder) {
                 document.write(
-                    decodeURI('%3Cscript defer src="/polyfill.js">%3C/script>')
+                    decodeURI('%3Cscript defer src="/polyfill.bundle.js">%3C/script>')
                 )
             }
         </script>
         <script src="./../node_modules/react/umd/react.development.js"></script>
         <script src="./../node_modules/react-dom/umd/react-dom.development.js"></script>
+        <script src='./app.bundle.js'></script>
     </body>
 </html>

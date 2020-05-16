@@ -2,24 +2,23 @@ import React from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { StoryListComponent } from "./StoryListComponent";
 import { StoryComponent } from "./StoryComponent";
+import { LocationPickerComponent } from "./LocationPickerComponent";
 
 const MainComponent = () => {
   return (
+    <div>
+      <h1>Memories of the Future</h1>
     <Router>
-      <Switch><Route path="/story/:storyId">
-        <div>
-          <h1>Memories of the Future</h1>
+      <Switch>
+        <Route path="/story/:storyId">
           <StoryComponent/>
-        </div>
         </Route>
         <Route path="/">
-        <div>
-          <h1>Memories of the Future</h1>
           <StoryListComponent/>
-        </div>
         </Route>
       </Switch>
     </Router>
+    </div>
   )
 }
 

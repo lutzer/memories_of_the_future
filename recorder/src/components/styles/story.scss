@@ -1,9 +1,33 @@
 .story {
-  &.list-item {
+  
+  .list-item {
     background-color: #eee;
     padding: 5px;
     margin: 5px 0px 5px 0px;
     border-radius: 5px;
     text-align: left;
+  }
+
+  .details {
+    div {
+      margin: 10px 0px;
+    }
+    .info {
+      font-family: italic;
+    }
+    .recorder {
+      background-color: #eee;
+      padding: 10px 0px;
+      height: 130px;
+    }
+    .camera {
+      background-color: #eee;
+      padding: 10px 0px;
+      height: 200px;
+    }
+    .location {
+      background-color: #eee;
+      padding: 10px 0px;
+    }
   }
 }

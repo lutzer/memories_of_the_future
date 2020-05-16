@@ -7,7 +7,7 @@ type AudioRecorder = {
 }
 
 type AudioRecording = {
-  blob: Blob
+  blob: Blob,
   url: string,
   audio: HTMLAudioElement
 }

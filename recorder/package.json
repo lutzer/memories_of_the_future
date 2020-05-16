@@ -12,8 +12,12 @@
   "dependencies": {
     "audio-recorder-polyfill": "^0.3.6",
     "idb": "^5.0.3",
+    "leaflet": "^1.6.0",
+    "lodash": "^4.17.15",
+    "moment": "^2.25.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-leaflet": "^2.7.0",
     "react-recorder": "^1.0.0",
     "react-router-dom": "^5.2.0",
     "uuid": "^8.0.0"
@@ -21,8 +25,10 @@
   "devDependencies": {
     "@types/dom-mediacapture-record": "^1.0.5",
     "@types/html-webpack-plugin": "^3.2.2",
+    "@types/lodash": "^4.14.151",
     "@types/react": "^16.9.32",
     "@types/react-dom": "^16.9.6",
+    "@types/react-leaflet": "^2.5.1",
     "@types/react-map-gl": "^5.2.2",
     "@types/react-router-dom": "^5.1.5",
     "@types/uuid": "^7.0.3",
