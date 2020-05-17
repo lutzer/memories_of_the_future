@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { Map, TileLayer, Marker, Popup, Viewport } from 'react-leaflet'
-import L from 'leaflet'
+import React, {Fragment, useState, useEffect } from "react";
+import { Map, TileLayer, Marker, CircleMarker, Viewport } from 'react-leaflet'
+import L, { GeoJSONOptions } from 'leaflet'
 import _ from 'lodash'
 
 import './styles/location.scss'
 import './../../node_modules/leaflet/dist/leaflet.css'
-import markerImage from '../assets/marker-icon.png'
+import '../assets/marker-icon.png'
 
 // type GeolocationPosition = { lat: number, lng: number }
 
-const icon = L.icon({
+const markerIcon = L.icon({
   iconUrl: 'assets/marker-icon.png',
-  shadowUrl: 'assets/marker-shadow.png'
+  shadowUrl: 'assets/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12.5, 30]
 });
 
 type GeolocationPosition = {
@@ -26,47 +28,88 @@ type GeolocationPosition = {
   }
 }
 
+const LocationMarker = ({geoLoc, zoom} : {geoLoc: GeolocationPosition, zoom : number}) => {
+
+  function calculateAccuracyRadius() {
+    return geoLoc.coords.accuracy
+  }
+
+  return(
+    <Fragment>
+      <CircleMarker
+        radius={calculateAccuracyRadius()}
+        fillColor='#00a2ff'
+        fillOpacity={0.3}
+        stroke={false}
+        center={[geoLoc.coords.latitude, geoLoc.coords.longitude]}
+        />
+      <CircleMarker
+        radius={9}
+        color='#ffffff'
+        weight={2}
+        fillOpacity={1.0}
+        fillColor='#00a2ff'
+        center={[geoLoc.coords.latitude, geoLoc.coords.longitude]}/>
+    </Fragment>
+  )
+}
+
 const LocationPickerComponent = ({location, onPick} : {location? : [number, number], onPick : (loc : [number, number]) => void}) => {
   const [viewport, setViewport] = useState<Viewport>({ center: [52.672869, 12.988025], zoom: 16 })
   const [dragged, setDragged] = useState(false)
+  const [geolocation, setGeolocation] = useState<GeolocationPosition>(null)
+  const [watchId, setWatchId] = useState(null)
 
-  useEffect( () => {
-    if (!location)
-      var watchId = navigator.geolocation.watchPosition(updateLocation)
-    return function cleanup() {
-      if (watchId) 
-        navigator.geolocation.clearWatch(watchId)
-    }
-  },[])
-
+  // update viewport when there is a new location set
   useEffect( () => {
     if (location)
       setViewport(Object.assign({}, viewport, { center: location }))
   },[location])
 
-  function updateLocation(pos : GeolocationPosition) {
-    if (!dragged)
-      setViewport(Object.assign({}, viewport, { center: [ pos.coords.latitude, pos.coords.longitude ] }))
-  }
+  // update viewpoert on new geolocation
+  useEffect( () => {
+    if (geolocation && !dragged)
+      setViewport(Object.assign({}, viewport, { center: [ geolocation.coords.latitude, geolocation.coords.longitude ] }))
+  },[geolocation])
 
-  function updateViewport(newViewport : Viewport) {
-    if (!_.isEqual(newViewport.center,viewport.center))
-      setDragged(true)
-    setViewport(newViewport)
+  // cleanup location listener
+  useEffect( () => {
+    return function cleanup() {
+      if (watchId)
+        navigator.geolocation.clearWatch(watchId)
+    }
+  }, [watchId])
+
+  // start watching geolocation
+  function watchLocation() {
+    setDragged(false)
+    if (watchId)
+      navigator.geolocation.clearWatch(watchId)
+    setWatchId(navigator.geolocation.watchPosition(setGeolocation))
   }
 
   return(
     <div className='location_picker'>
       <Map 
         viewport={viewport}
-        onViewportChanged={updateViewport}>
+        ondrag={() => setDragged(true)}
+        onViewportChanged={setViewport}>
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         />
+        { location && <Marker
+          icon={markerIcon}
+          position={location}
+        /> }
+        { geolocation && <LocationMarker geoLoc={geolocation} zoom={viewport.zoom}/> }
       </Map>
-      <div className="marker">
-        <img src={markerImage}/> 
+      <div className='crosshair'>
+        <svg width='50' height='50'>
+          <line x1='0' x2='50' y1='25' y2='25' stroke='black' opacity='0.5' strokeWidth='2'/> 
+          <line x1='25' x2='25' y1='0' y2='50' stroke='black' opacity='0.5' strokeWidth='2'/>
+        </svg>
       </div>
+      <button onClick={watchLocation}>Your Location</button>
       <button onClick={() => onPick(viewport.center)}>Pick Location</button>
     </div>
   )
