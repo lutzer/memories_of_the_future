@@ -48,6 +48,7 @@ describe('Routes', () => {
       result = await connect().get('/api/projects?name='+name)
       expect(result).to.have.status(200);
       expect(result.body.project.name).equal(name);
+      expect(result.body.project).to.not.haveOwnProperty('password');
     })
 
     it('should not be able to add two projects with same name', async () => {

@@ -29,7 +29,7 @@ router.get('/projects/', async (context) => {
   const db = await getDatabase()
   if (_.has(context.request.query, 'name')) {
     const project = db.get('projects').find({ name : context.request.query.name })
-    context.body = { project : project.value() }
+    context.body = { project : _.omit(project.value(), 'password') }
   } else {
     const projects = db.get('projects').map((val) => {
       return _.omit(val, 'password')
@@ -40,8 +40,8 @@ router.get('/projects/', async (context) => {
 
 router.get('/projects/:id', async (context) => {
   const db = await getDatabase()
-  const project = db.get('projects').find({ id : context.params.id }).value()
-  context.body = { project : _.omit(project, 'password') }
+  const project = db.get('projects').find({ id : context.params.id })
+  context.body = { project : _.omit(project.value(), 'password') }
 })
 
 router.post('/projects/', bodyParser(), async (context) => {

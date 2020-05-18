@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/lutzer/memories_of_the_future#readme",
   "dependencies": {
+    "@koa/cors": "^3.1.0",
     "@koa/multer": "^2.0.2",
     "@koa/router": "^8.0.8",
     "@types/lowdb": "^1.0.9",

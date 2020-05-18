@@ -2,6 +2,7 @@ import Koa from 'koa'
 import serveStatic from 'koa-static'
 import koaJson from 'koa-json'
 import koaProxy from 'koa-proxy'
+import cors from '@koa/cors';
 
 import { config } from './config'
 import { router } from './router'
@@ -20,6 +21,9 @@ if (devMode) {
   // enable pretty json response for development
   app.use(koaJson())
 }
+
+// enable cross origin access
+app.use(cors());
 
 // serve static routes
 app.use(staticRouter.routes())
