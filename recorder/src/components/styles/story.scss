@@ -1,16 +1,17 @@
-.story {
-  
-  .list-item {
-    background-color: #eee;
-    padding: 5px;
-    margin: 5px 0px 5px 0px;
-    border-radius: 5px;
+.story-list {
+  .item {
+    background-color: #eeeeee;
+    padding: 2px 10px;
+    margin: 5px 0px;
     text-align: left;
   }
+}
 
+.story {
   .details {
     > div {
       margin: 10px 0px;
+      padding: 2px 10px;
     }
     .info {
       font-family: italic;

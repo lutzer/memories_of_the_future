@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { getDatabase, StorySchema } from "../storage/database";
+import { getDatabase, StorySchema } from "../services/database";
 import { RecorderComponent } from "./RecorderComponent";
 import { AudioRecording } from "../media/recorder";
 import { AudioPlayerComponent } from "./AudioPlayerComponent";
@@ -102,6 +102,7 @@ const StoryComponent = () => {
           <div className='info'>
             <p>{moment(story.createdAt).fromNow()}</p>
             <p>Author: {story.author}</p>
+            <p>project: {story.projectId}</p>
           </div>
           <div className='recorder'>
           { story.recording ?

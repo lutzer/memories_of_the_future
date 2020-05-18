@@ -44,7 +44,7 @@ const LocationMarker = ({geoLoc, zoom} : {geoLoc: GeolocationPosition, zoom : nu
         center={[geoLoc.coords.latitude, geoLoc.coords.longitude]}
         />
       <CircleMarker
-        radius={9}
+        radius={8}
         color='#ffffff'
         weight={2}
         fillOpacity={1.0}

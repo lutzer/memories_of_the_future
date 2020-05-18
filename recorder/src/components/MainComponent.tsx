@@ -2,7 +2,7 @@ import React from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { StoryListComponent } from "./StoryListComponent";
 import { StoryComponent } from "./StoryComponent";
-import { LocationPickerComponent } from "./LocationPickerComponent";
+import { ProjectViewComponent } from "./ProjectViewComponent";
 
 const MainComponent = () => {
   return (
@@ -14,6 +14,7 @@ const MainComponent = () => {
           <StoryComponent/>
         </Route>
         <Route path="/">
+          <ProjectViewComponent/>
           <StoryListComponent/>
         </Route>
       </Switch>

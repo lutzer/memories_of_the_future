@@ -1,23 +1,29 @@
-import { openDB, IDBPDatabase } from 'idb';
+import { openDB, deleteDB, IDBPDatabase } from 'idb';
 import { v4 as uuidv4 } from 'uuid';
 
 const DATABASE_NAME = 'motf-recorder'
 const STORE_NAME_STORIES = 'stories'
-const STORE_NAME_PROJECTS = 'files'
-const DB_VERSION = 12
+const STORE_NAME_PROJECT = 'projects'
+const PROJECT_ID = 1
+const DB_VERSION = 18
 
 type StorySchema = {
   id: string,
-  author: string,
+  projectId : string,
   createdAt: number,
+  author?: string,
+  modifiedAt?: number,
+  text?: string,
   recording?: Blob,
   image? : Blob,
-  location? : [ number, number ],
+  location? : [ number, number ]
 }
 
 type ProjectSchema = {
   id: string,
-  name: string
+  name: string,
+  password?: string,
+  description?: string
 }
 
 interface Database {
@@ -25,10 +31,13 @@ interface Database {
   getStory : (id: string) => Promise<StorySchema>
   writeStory : (story: StorySchema) => Promise<IDBValidKey>
   removeStory : (id: string) => Promise<void>
+
+  getProject : () => Promise<ProjectSchema>
+  setProject : (project: ProjectSchema) => Promise<IDBValidKey>
 }
 
 function initDatabase(db : IDBPDatabase) {
-  
+
   if (db.objectStoreNames.contains(STORE_NAME_STORIES))
     db.deleteObjectStore(STORE_NAME_STORIES)
   db.createObjectStore(STORE_NAME_STORIES, {
@@ -36,9 +45,9 @@ function initDatabase(db : IDBPDatabase) {
     autoIncrement: true,
   })
 
-  if (db.objectStoreNames.contains(STORE_NAME_PROJECTS))
-    db.deleteObjectStore(STORE_NAME_PROJECTS)
-  db.createObjectStore(STORE_NAME_PROJECTS)
+  if (db.objectStoreNames.contains(STORE_NAME_PROJECT))
+    db.deleteObjectStore(STORE_NAME_PROJECT)
+  db.createObjectStore(STORE_NAME_PROJECT)
 }
 
 const getDatabase = async () : Promise<Database> => {
@@ -59,6 +68,7 @@ const getDatabase = async () : Promise<Database> => {
 
     async function writeStory(story : StorySchema) : Promise<IDBValidKey> {
       story.id = story.id ? story.id : uuidv4()
+      story.modifiedAt = Date.now()
       return await db.put(STORE_NAME_STORIES, story)
     }
 
@@ -70,9 +80,20 @@ const getDatabase = async () : Promise<Database> => {
       return await db.get(STORE_NAME_STORIES, id)
     }
 
-    
-    resolve({ writeStory, removeStory, getStories, getStory })
+
+    async function getProject() : Promise<ProjectSchema> {
+      return await db.get(STORE_NAME_PROJECT, PROJECT_ID)
+    }
+
+    async function setProject(project: ProjectSchema) : Promise<IDBValidKey> {
+      return await db.put(STORE_NAME_PROJECT, project, PROJECT_ID)
+    }
+
+    resolve({ 
+      writeStory, removeStory, getStories, getStory, 
+      getProject, setProject 
+    })
   })
 }
 
-export { getDatabase, StorySchema }
+export { getDatabase, StorySchema, ProjectSchema }

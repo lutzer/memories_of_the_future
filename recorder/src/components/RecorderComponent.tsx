@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { getAudioRecorder, AudioRecording, AudioRecorder } from './../media/recorder'
-import { getDatabase } from '../storage/database'
 
 enum RecorderState {
   INIT, RECORDING, BUSY, STOPPED, ERROR,
