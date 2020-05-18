@@ -28,7 +28,7 @@ const errorMiddleware = async function(context : Koa.BaseContext, next : Koa.Nex
 }
 
 const generateRandomString = function() {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15).toUpperCase();
 }
 
 export { 

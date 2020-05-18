@@ -51,6 +51,18 @@ describe('Routes', () => {
       expect(result.body.project).to.not.haveOwnProperty('password');
     })
 
+    it('should be able to get a project by name, beeing case insenstive', async () => {
+      let name = generateRandomString()
+      let result = await connect().post('/api/projects').send({
+        name: name
+      })
+      expect(result).to.have.status(200);
+      result = await connect().get('/api/projects?name='+name.toLowerCase())
+      expect(result).to.have.status(200);
+      expect(result.body.project.name).equal(name);
+      expect(result.body.project).to.not.haveOwnProperty('password');
+    })
+
     it('should not be able to add two projects with same name', async () => {
       let name = generateRandomString()
       let result = await connect().post('/api/projects').send({
