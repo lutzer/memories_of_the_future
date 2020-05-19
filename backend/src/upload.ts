@@ -17,7 +17,7 @@ type FileUpload = {
 const convertToMp3 = async function(path : string, extension : string = null) : Promise<string> {
   const fileData = parse(path)
   extension = extension || fileData.ext
-  if (!_.includes(['.wav','.ogg'], extension))
+  if (!_.includes(['.wav','.ogg','.webm'], extension))
     throw new Error("Extension not supported")
     
   const newPath = fileData.dir + '/' + fileData.name + '.mp3'
@@ -35,7 +35,7 @@ async function handleImageUpload(file: FileUpload, storyId: string) : Promise<st
 }
 
 async function handleAudioUpload(file: FileUpload, storyId: string) : Promise<string> {
-  if (!_.includes(['.mp3','.ogg','.wav'], extname(file.name)))
+  if (!_.includes(['.mp3','.ogg','.wav','.webm'], extname(file.name)))
     throw new Error('File format not supported')
 
   var path = null
