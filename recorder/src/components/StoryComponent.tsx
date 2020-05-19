@@ -105,7 +105,7 @@ const StoryComponent = () => {
 
   return (
     <div className="story">
-      { story &&
+      { story ?
         <div className='details'>
           <div className='info'>
             <p>{moment(story.createdAt).fromNow()}</p>
@@ -130,6 +130,11 @@ const StoryComponent = () => {
           <button onClick={deleteStory}>Delete Story</button>
           <button onClick={uploadStory}>Upload Story</button>
         </div>
+      :
+          <div className='placeholder'>
+            <p>This memory was forgotten.</p>
+            <button onClick={() => history.push('/stories/')}>Back</button>
+          </div>
       }
     </div>
   )

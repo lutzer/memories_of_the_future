@@ -28,15 +28,26 @@
     }
   }
 
-  .placeholder {
+  .center-item {
     justify-self: center;
     text-align: center;
     color: #666;
-    padding: 20px;
+    width: 100%;
+
+    .input-element {
+      width: 80%;
+      margin: 0 auto;
+    }
   }
 }
 
 .story {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  flex-direction: column;
+
   .details {
     > div {
       margin: 10px 0px;
@@ -59,5 +70,11 @@
       background-color: #eee;
       padding: 10px 0px;
     }
+  }
+
+  .center-item {
+    justify-self: center;
+    text-align: center;
+    color: #666;
   }
 }

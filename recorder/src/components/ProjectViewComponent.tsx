@@ -9,10 +9,35 @@ import './styles/input.scss'
 
 const ERROR_TIMEOUT = 2000
 
+
+const ProjectNameInputComponent = ({onCancel, onSave, showError} : 
+  { onCancel: () => void, onSave : (name: string) => void, showError? : string }) => {
+    const [projectName, setProjectName] = useState('')
+
+  return(
+    <div className='project center'>
+      <div className='center-item'>
+        <div className='error'>
+          { showError }
+        </div>
+        <div className='input-element'>
+          <input type='text' 
+            placeholder='Enter project name' 
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}/>
+        </div>
+        <div className='button-group'>
+          <button onClick={onCancel}>Cancel</button>
+          <button onClick={() => onSave(projectName)}>Save</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const ProjectViewComponent = () => {
   const [project, setProject] = useState<ProjectSchema>(null)
   const [editing, setEditing] = useState<boolean>(false)
-  const [projectName, setProjectName] = useState('')
   const [error, setError] = useState<string>(null)
 
   useEffect(() => {
@@ -53,44 +78,29 @@ const ProjectViewComponent = () => {
 
   if (!editing) {
     return(
+      project ?
       <div className='project'>
-        { project ? 
-          <div className='details'>
-            <Link to='/stories'>
-              <div className='item-content'>
-                <h3>{project.name}</h3>
-                <p>{project.description}</p>
-              </div>
-            </Link>
-            <button onClick={() => setEditing(true)}>Change Project</button>
-          </div>
-        :
-        <div className='placeholder'>
+        <div className='details'>
+          <Link to='/stories'>
+            <div className='item-content'>
+              <h3>{project.name}</h3>
+              <p>{project.description}</p>
+            </div>
+          </Link>
+          <button onClick={() => setEditing(true)}>Change Project</button>
+        </div>
+      </div>
+      :
+      <div className='project center'>
+        <div className='center-item'>
           <p>No project selected</p>
           <button onClick={() => setEditing(true)}>Choose Project</button>
         </div>
-        }
       </div>
     )
   } else {
     return(
-      <div className='project center'>
-        <div className='placeholder'>
-          <div className='error'>
-            { error }
-          </div>
-          <div className='input-element'>
-            <input type='text' 
-              placeholder='Project Name' 
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}/>
-          </div>
-          <div className='button-group'>
-            <button onClick={() => setEditing(false)}>Cancel</button>
-            <button onClick={() => changeProject(projectName)}>Save</button>
-          </div>
-        </div>
-      </div>
+      <ProjectNameInputComponent onCancel={() => setEditing(false)} onSave={changeProject} showError={error}/>
     )
   }
 }
