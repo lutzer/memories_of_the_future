@@ -21,11 +21,19 @@ const PhotoCaptureComponent = ({imageData, onCapture, onDelete} : {imageData? : 
       { image ? 
         <div className='photo'>
           <img src={image}/>
-          <button onClick={onDelete}>Delete Image</button>
+          <div className='input'>
+            <button onClick={onDelete}>Delete Image</button>
+          </div>
         </div> 
       : 
-        <div className='input'>
-          <input onChange={onInputChange} type="file" name="image" accept="image/*" capture/>
+        <div>
+          <div className='placeholder'>
+            Add a picture
+          </div>
+          <div className='input'>
+            <label htmlFor='cameraInput' className='button'>Take Picture</label>
+            <input id='cameraInput' style={{visibility : 'hidden'}} onChange={onInputChange} type="file" name="image" accept="image/*" capture/>
+          </div>
         </div>
       }
     </div>

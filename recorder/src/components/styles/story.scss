@@ -48,29 +48,48 @@
   height: 100%;
   flex-direction: column;
 
-  .details {
-    > div {
-      margin: 10px 0px;
-      padding: 2px 10px;
+  &.center {
+    justify-content: center;
+  }
+
+  .item {
+    background-color: #eeeeee;
+    text-align: left;
+    width: 100%;
+    box-shadow: $item-shadow;
+    margin: 10px 0px;
+
+    .item-content {
+      margin: 10px;
     }
-    .info {
-      font-family: italic;
-    }
-    .recorder {
-      background-color: #eee;
-      padding: 10px 0px;
-      height: 130px;
-    }
-    .camera {
-      background-color: #eee;
-      padding: 10px 0px;
-      height: 200px;
-    }
-    .location {
-      background-color: #eee;
-      padding: 10px 0px;
+
+  }
+
+  .info {
+    .author {
+      font-style: italic;
     }
   }
+
+    
+
+  // .info {
+  //   font-family: italic;
+  // }
+  // .recorder {
+  //   background-color: #eee;
+  //   padding: 10px 0px;
+  //   height: 130px;
+  // }
+  // .camera {
+  //   background-color: #eee;
+  //   padding: 10px 0px;
+  //   height: 200px;
+  // }
+  // .location {
+  //   background-color: #eee;
+  //   padding: 10px 0px;
+  // }
 
   .center-item {
     justify-self: center;

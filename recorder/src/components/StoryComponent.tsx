@@ -3,13 +3,15 @@ import { useParams, useHistory } from "react-router-dom";
 import { getDatabase, StorySchema } from "../services/storage";
 import { AudioRecorderComponent } from "./AudioRecorderComponent";
 import { AudioRecording } from "../media/recorder";
-import { AudioPlayerComponent } from "./AudioPlayerComponent";
 import { PhotoCaptureComponent } from "./PhotoCaptureComponent";
 import moment from 'moment';
-
-import './styles/story.scss'
 import { LocationPickerComponent } from "./LocationPickerComponent";
 import { Api } from "../services/api";
+
+import './styles/input.scss'
+import './styles/story.scss'
+import { ProjectViewComponent } from "./ProjectViewComponent";
+
 
 const StoryComponent = () => {
   const [story, setStory] = useState<StorySchema>(null)
@@ -104,39 +106,37 @@ const StoryComponent = () => {
   }
 
   return (
-    <div className="story">
-      { story ?
-        <div className='details'>
-          <div className='info'>
-            <p>{moment(story.createdAt).fromNow()}</p>
-            <p>Author: {story.author}</p>
-            <p>project: {story.projectId}</p>
+    story ?
+      <div className="story">
+        <h2>Memory of {story.projectName}</h2>
+        <div className='item info'>
+          <div className='item-content'>
+          <p>Created {moment(story.createdAt).fromNow()} from <span className='author'>{story.author}</span>.</p>
           </div>
-          <div className='recorder'>
-          { story.recording ?
-            <div className='player'>
-               <AudioPlayerComponent audioData={story.recording}/>
-               <button onClick={deleteRecording}>Delete Recording</button>
-            </div>
-            : <AudioRecorderComponent onSave={(rec) => saveRecording(rec)}/>
-          }
-          </div>
-          <div className='camera'>
-            <PhotoCaptureComponent imageData={story.image} onCapture={saveImage} onDelete={deleteImage}/>
-          </div>
-          <div className='location'> 
-            <LocationPickerComponent location={story.location} onPick={updateLocation}/>
-          </div>
-          <button onClick={deleteStory}>Delete Story</button>
-          <button onClick={uploadStory}>Upload Story</button>
         </div>
-      :
-          <div className='placeholder'>
-            <p>This memory was forgotten.</p>
-            <button onClick={() => history.push('/stories/')}>Back</button>
+        <div className='item recorder'>
+          <div className='item-content'>
+            <AudioRecorderComponent onSave={(rec) => saveRecording(rec)} onDelete={deleteRecording} recording={story.recording}/>
           </div>
-      }
-    </div>
+        </div>
+        <div className='item camera'>
+          <PhotoCaptureComponent imageData={story.image} onCapture={saveImage} onDelete={deleteImage}/>
+        </div>
+        {/* <div className='item location'> 
+          <LocationPickerComponent location={story.location} onPick={updateLocation}/>
+        </div> */}
+        <div className='button-group'>
+          <button onClick={deleteStory}>Delete</button>
+          <button onClick={uploadStory}>Upload</button>
+        </div>
+      </div>
+    :
+      <div className="story center">
+        <div className='center-item'>
+          <p>This memory was forgotten.</p>
+          <button onClick={() => history.push('/stories/')}>Back</button>
+        </div>
+      </div>
   )
 }
 

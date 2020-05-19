@@ -2,14 +2,33 @@ import React, { useState, useEffect } from "react";
 import { getAudioRecorder, AudioRecording, AudioRecorder } from '../media/recorder'
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 
-enum RecorderState {
-  INIT, RECORDING, BUSY, STOPPED, ERROR,
+import './styles/input.scss'
+import './styles/recorder.scss'
+
+const AudioPlayerComponent = ({audioData} : {audioData : Blob}) => {
+  const [audioUrl, setAudioUrl] = useState(null)
+
+  useEffect( () => {
+    if (audioData)
+      setAudioUrl(URL.createObjectURL(audioData))
+  },[audioData])
+
+  return(
+    <div className='audio-player'>
+      <audio
+        controls
+        src={audioUrl}>
+            Your browser does not support the
+            <code>audio</code> element.
+      </audio>
+    </div>
+  )
 }
 
-const AudioRecorderComponent = ({onSave} : {onSave : (rec: AudioRecording) => void}) => {
-  const [recorderState, setRecorderState] = useState(RecorderState.INIT)
+const AudioRecorderComponent = ({onSave, onDelete, recording} :
+  {onSave : (rec: AudioRecording) => void, onDelete : () => void, recording? : Blob}) => {
   const [recorder, setRecorder] = useState<AudioRecorder>(null)
-  const [recording, setRecording] = useState<AudioRecording>(null)
+  const [isRecording, setIsRecording] = useState<boolean>(false)
 
 
   useEffect(() => {
@@ -22,51 +41,48 @@ const AudioRecorderComponent = ({onSave} : {onSave : (rec: AudioRecording) => vo
 
   async function startRecording() {
     try {
+      setIsRecording(true)
       const recorder = await getAudioRecorder()
-      setRecorderState(RecorderState.RECORDING)
       setRecorder(recorder)
       recorder.start()
     } catch (err) {
       console.error(err)
-      setRecorderState(RecorderState.ERROR)
+      if (err instanceof Error)
+        window.showModal("Error",err.message)
+      setIsRecording(false)
     }
   }
 
   async function stopRecording() {
-    setRecorderState(RecorderState.BUSY)
-    const recordedAudio = await recorder.stop();
-    setRecording(recordedAudio)
-    setRecorderState(RecorderState.STOPPED)
-    setRecorder(null)
+    try {
+      const recordedAudio = await recorder.stop();
+      onSave(recordedAudio)
+      setRecorder(null)
+      setIsRecording(false)
+    } catch (err) {
+      console.error(err)
+      if (err instanceof Error)
+        window.showModal("Error",err.message)
+      setIsRecording(false)
+    }
   }
 
-  if (recorderState == RecorderState.INIT)
-    return(
-      <div>
+  return (
+    recording ?
+      <div className='recorder'>
+        <AudioPlayerComponent audioData={recording}/>
+        <button onClick={onDelete}>Delete Recording</button>
+      </div>
+    :
+    <div className='recorder'>
+      { !isRecording ?
         <button onClick={startRecording}>Start Recording</button>
-      </div>
-  )
-  else if (recorderState == RecorderState.STOPPED )
-      return(
-      <div>
-        <button onClick={startRecording}>Restart Recording</button>
-        <button onClick={() => onSave(recording)}>Save Recording</button>
-      </div>
-      )
-  else if (recorderState == RecorderState.RECORDING )
-    return(
-      <div>
+      :
         <button onClick={stopRecording}>Stop Recording</button>
-      </div>
-    )
-  else if (recorderState == RecorderState.ERROR)
-    return(
-      <div>Error initializing recorder</div>
-    )
-  else 
-      return(
-        <div>Working...</div>
-      )
+      }
+    </div>
+    
+  )
 }
 
 export { AudioRecorderComponent }

@@ -5,14 +5,18 @@ import { StoryComponent } from "./StoryComponent";
 import { ProjectViewComponent } from "./ProjectViewComponent";
 import { ModalComponent, ModalProperties } from "./ModalComponent";
 
+declare global {
+  var showModal: (title: string, text: string) => void
+}
+
 const MainComponent = () => {
   const [modal, setModal] = useState<ModalProperties>(null)
 
   function showModal(title: string, text: string) {
-    console.log('title', text)
     setModal({title: title, text: 'text', onAccept: () => setModal(null)})
   }
 
+  window.showModal = showModal;
 
   return (
     <div className='content'>
