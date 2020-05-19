@@ -1,3 +1,5 @@
+@import '_vars.scss';
+
 body, html {
   font-family: sans-serif;
   height: 100%;
@@ -8,9 +10,35 @@ body, html {
 
 /* Center the content in the browser window */
 #app {
-  margin: auto;
-  padding:10px
+  margin: 0;
+  padding: 0;
+  height:100%;
 }
+
+.content {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+
+  .header {
+    flex: 0 1 auto;
+    padding: 10px;
+    height: $header-height
+  }
+  
+  .main {
+    flex: 1 1 auto;
+    padding: 10px;
+    white-space: nowrap;
+    overflow: scroll;
+
+    > div {
+      white-space: pre-wrap;
+    }
+  }
+
+}
+
 
 h1 {
   font-size: 2rem;
@@ -28,17 +56,23 @@ h2 {
 
 h3 {
   font-size: 1.2rem;
-  margin: 5px 0px;
 }
 
 button {
   margin: 10px auto;
   display: block;
-  background-color: #000;
+  background-color: #525252;
   color: #ffffff;
   padding: 5px 10px;
   font-weight: bold;
   border-radius: 5px;
   font-size: 1rem;
   width: 200px;
+  border: none;
 }
+
+a {
+  text-decoration: none;
+  color: #000000;
+}
+

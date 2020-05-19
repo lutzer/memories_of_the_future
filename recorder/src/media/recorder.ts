@@ -39,7 +39,7 @@ new Promise(async (resolve, reject) => {
   const stop = () =>
     new Promise<AudioRecording>((resolve) => {
       mediaRecorder.addEventListener("stop", () => {
-        const audioBlob = new Blob(audioChunks,  {type : 'audio/wav'});
+        const audioBlob = new Blob(audioChunks,  {type : mediaRecorder.mimeType});
         const audioUrl = URL.createObjectURL(audioBlob);
         const recording : AudioRecording = {
           blob: audioBlob,

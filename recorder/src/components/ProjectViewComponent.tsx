@@ -1,54 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { getDatabase, ProjectSchema } from "../services/database";
+import { getDatabase, ProjectSchema } from "../services/storage";
 import { Link } from "react-router-dom";
+import { Api, ApiException } from "../services/api";
+import { EvalSourceMapDevToolPlugin } from "webpack";
+
 import './styles/project.scss'
-import './styles/modal.scss'
-import { Api, ApiNoDataError } from "../services/api";
+import './styles/input.scss'
 
-const ProjectAddDialog = ({onAccept, onCancel} : {
-  onAccept : ({name, password} : {name: string, password: string}) => void, 
-  onCancel : () => void
-}) => {
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [okDisabled, setOkDisabled] =useState(true)
-
-  useEffect( () => {
-    setOkDisabled(name.length < 3 || password.length < 3)
-  },[name, password])
-
-  function onOkClicked() {
-    const data = {
-      name : name,
-      password: password
-    }
-    onAccept(data);
-  }
-  
-  return(
-    <div className='modal'>
-      <div className='dialog'>
-        <h3>Change Project</h3>
-        <div className='input-element'>
-          <input type='text' placeholder='Name' onChange={e => setName(e.target.value)}/>
-        </div>
-        <div className='input-element'>
-          <input type='password' placeholder='Password' onChange={e => setPassword(e.target.value)}/>
-        </div>
-        <button onClick={onCancel}>Cancel</button>
-        <button disabled={okDisabled} onClick={onOkClicked}>Ok</button>
-      </div>
-    </div>
-  )
-}
+const ERROR_TIMEOUT = 2000
 
 const ProjectViewComponent = () => {
   const [project, setProject] = useState<ProjectSchema>(null)
-  const [addDialogVisible, showAddDialog] = useState(false)
+  const [editing, setEditing] = useState<boolean>(false)
+  const [projectName, setProjectName] = useState('')
+  const [error, setError] = useState<string>(null)
 
-  useEffect(()=> {
+  useEffect(() => {
     readProject()
   },[])
+
 
   async function readProject() {
     try {
@@ -60,36 +30,69 @@ const ProjectViewComponent = () => {
     }
   }
 
-  async function changeProject(name: string, password: string) {
+  async function changeProject(name: string) {
     try {
       const data = await Api.getProjectByName(name)
       const db = await getDatabase()
-      await db.setProject({id : data.project.id, name: data.project.name, password: password})
-      showAddDialog(false)
-      readProject()
+      await db.setProject(data.project)
+      setEditing(false)
     } catch (err) {
-      if (err instanceof ApiNoDataError)
-        alert('no data')
-      else
-        console.error(err)
+      console.error(err)
+      if (err instanceof Error)
+        showError(err.message)
     }
+    readProject()
   }
 
-  return (
-    <div className="project">
-      { addDialogVisible && <ProjectAddDialog 
-        onCancel={() => showAddDialog(false)}
-        onAccept={(data) => changeProject(data.name, data.password)}/> }
-      <h2>Project</h2>
-      { project &&
+  function showError(text : string) {
+    setError(text)
+    setTimeout(() => {
+      setError(null)
+    },2000)
+  }
+
+  if (!editing) {
+    return(
+      <div className='project'>
+        { project ? 
           <div className='details'>
-            <p>Id: {project.id}</p>
-            <p>Name: {project.name}</p>
+            <Link to='/stories'>
+              <div className='item-content'>
+                <h3>{project.name}</h3>
+                <p>{project.description}</p>
+              </div>
+            </Link>
+            <button onClick={() => setEditing(true)}>Change Project</button>
           </div>
-      }
-      <button onClick={() =>  showAddDialog(true)}>Change Project</button>
-    </div>
-  )
+        :
+        <div className='placeholder'>
+          <p>No project selected</p>
+          <button onClick={() => setEditing(true)}>Choose Project</button>
+        </div>
+        }
+      </div>
+    )
+  } else {
+    return(
+      <div className='project center'>
+        <div className='placeholder'>
+          <div className='error'>
+            { error }
+          </div>
+          <div className='input-element'>
+            <input type='text' 
+              placeholder='Project Name' 
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}/>
+          </div>
+          <div className='button-group'>
+            <button onClick={() => setEditing(false)}>Cancel</button>
+            <button onClick={() => changeProject(projectName)}>Save</button>
+          </div>
+        </div>
+      </div>
+    )
+  }
 }
 
 export { ProjectViewComponent }

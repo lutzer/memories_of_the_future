@@ -10,6 +10,7 @@ const DB_VERSION = 18
 type StorySchema = {
   id: string,
   projectId : string,
+  projectName? : string,
   createdAt: number,
   author?: string,
   modifiedAt?: number,
@@ -22,14 +23,14 @@ type StorySchema = {
 type ProjectSchema = {
   id: string,
   name: string,
+  description: string
   password?: string,
-  description?: string
 }
 
 interface Database {
   getStories : () => Promise<StorySchema[]>
   getStory : (id: string) => Promise<StorySchema>
-  writeStory : (story: StorySchema) => Promise<IDBValidKey>
+  writeStory : (story: StorySchema) => Promise<StorySchema>
   removeStory : (id: string) => Promise<void>
 
   getProject : () => Promise<ProjectSchema>
@@ -66,10 +67,11 @@ const getDatabase = async () : Promise<Database> => {
       return await db.getAll(STORE_NAME_STORIES)
     }
 
-    async function writeStory(story : StorySchema) : Promise<IDBValidKey> {
+    async function writeStory(story : StorySchema) : Promise<StorySchema> {
       story.id = story.id ? story.id : uuidv4()
       story.modifiedAt = Date.now()
-      return await db.put(STORE_NAME_STORIES, story)
+      await db.put(STORE_NAME_STORIES, story)
+      return story
     }
 
     async function removeStory(id: string) : Promise<void> {

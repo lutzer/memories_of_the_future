@@ -1,8 +1,52 @@
-.project-list {
-  .item {
+@import '_vars.scss';
+
+.project {
+  display: flex;
+  align-items: center; 
+  justify-content: flex-start;
+  height: 100%;
+  flex-direction: column;
+
+  &.center {
+    justify-content: center;
+  }
+
+  .details {
     background-color: #eeeeee;
-    padding: 2px 10px;
-    margin: 5px 0px;
+    width: 100%;
     text-align: left;
+    box-shadow: $item-shadow;
+
+    .item-content {
+      margin: 10px;
+    }
+  }
+
+  .placeholder {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+    width: 100%;
+
+    .input-element {
+      width: 80%;
+      margin: 0 auto;
+    }
+  }
+
+  .error {
+    color: white;
+    background-color: red;
+    font-weight: bold;
+    opacity: 0.4;
+    height: 15px;
+    font-size: 0.9rem;
+    margin: 10px 0px;
+    padding: 3px;
+    border-radius: 5px;
+
+    &:empty {
+      background-color: transparent;
+    }
   }
 }

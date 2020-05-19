@@ -10,7 +10,8 @@ const PhotoCaptureComponent = ({imageData, onCapture, onDelete} : {imageData? : 
   },[imageData])
 
   function onInputChange(e : React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files[0]
+    const file : Blob = e.target.files[0]
+    console.log(file)
     setImage(URL.createObjectURL(file))
     onCapture(file)
   }

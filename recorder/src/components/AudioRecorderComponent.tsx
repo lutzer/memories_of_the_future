@@ -1,14 +1,24 @@
-import React, { useState } from "react";
-import { getAudioRecorder, AudioRecording, AudioRecorder } from './../media/recorder'
+import React, { useState, useEffect } from "react";
+import { getAudioRecorder, AudioRecording, AudioRecorder } from '../media/recorder'
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
 
 enum RecorderState {
   INIT, RECORDING, BUSY, STOPPED, ERROR,
 }
 
-const RecorderComponent = ({onSave} : {onSave : (rec: AudioRecording) => void}) => {
+const AudioRecorderComponent = ({onSave} : {onSave : (rec: AudioRecording) => void}) => {
   const [recorderState, setRecorderState] = useState(RecorderState.INIT)
   const [recorder, setRecorder] = useState<AudioRecorder>(null)
   const [recording, setRecording] = useState<AudioRecording>(null)
+
+
+  useEffect(() => {
+    return function cleanup() {
+      console.log('cleanup')
+      if(recorder)
+        recorder.stop();
+    }
+  },[])
 
   async function startRecording() {
     try {
@@ -27,6 +37,7 @@ const RecorderComponent = ({onSave} : {onSave : (rec: AudioRecording) => void}) 
     const recordedAudio = await recorder.stop();
     setRecording(recordedAudio)
     setRecorderState(RecorderState.STOPPED)
+    setRecorder(null)
   }
 
   if (recorderState == RecorderState.INIT)
@@ -58,4 +69,4 @@ const RecorderComponent = ({onSave} : {onSave : (rec: AudioRecording) => void}) 
       )
 }
 
-export { RecorderComponent }
+export { AudioRecorderComponent }

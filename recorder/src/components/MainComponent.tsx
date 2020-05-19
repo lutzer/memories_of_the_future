@@ -1,24 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { StoryListComponent } from "./StoryListComponent";
 import { StoryComponent } from "./StoryComponent";
 import { ProjectViewComponent } from "./ProjectViewComponent";
+import { ModalComponent, ModalProperties } from "./ModalComponent";
 
 const MainComponent = () => {
+  const [modal, setModal] = useState<ModalProperties>(null)
+
+  function showModal(title: string, text: string) {
+    console.log('title', text)
+    setModal({title: title, text: 'text', onAccept: () => setModal(null)})
+  }
+
+
   return (
-    <div>
-      <h1>Memories of the Future</h1>
-    <Router>
-      <Switch>
-        <Route path="/story/:storyId">
-          <StoryComponent/>
-        </Route>
-        <Route path="/">
-          <ProjectViewComponent/>
-          <StoryListComponent/>
-        </Route>
-      </Switch>
-    </Router>
+    <div className='content'>
+      <div className='header'>
+        <h1>Memories of the Future</h1>
+      </div>
+      <div className='main'>
+      <Router>
+        <Switch>
+          <Route path="/story/:storyId">
+            <StoryComponent/>
+          </Route>
+          <Route path="/stories">
+            <StoryListComponent/>
+          </Route>
+          <Route path="/">
+            <ProjectViewComponent/>
+          </Route>
+        </Switch>
+      </Router>
+      </div>
+    { modal && <ModalComponent title={modal.title} text={modal.text} onAccept={modal.onAccept}/>}
     </div>
   )
 }

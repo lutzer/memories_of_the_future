@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { getDatabase, StorySchema } from "../services/database";
-import { RecorderComponent } from "./RecorderComponent";
+import { getDatabase, StorySchema } from "../services/storage";
+import { AudioRecorderComponent } from "./AudioRecorderComponent";
 import { AudioRecording } from "../media/recorder";
 import { AudioPlayerComponent } from "./AudioPlayerComponent";
 import { PhotoCaptureComponent } from "./PhotoCaptureComponent";
@@ -9,6 +9,7 @@ import moment from 'moment';
 
 import './styles/story.scss'
 import { LocationPickerComponent } from "./LocationPickerComponent";
+import { Api } from "../services/api";
 
 const StoryComponent = () => {
   const [story, setStory] = useState<StorySchema>(null)
@@ -16,7 +17,6 @@ const StoryComponent = () => {
   const history = useHistory();
 
   useEffect(()=> {
-    console.log(storyId)
     read()
   },[])
 
@@ -78,7 +78,7 @@ const StoryComponent = () => {
     try {
       const db = await getDatabase()
       db.removeStory(storyId)
-      history.push('/')
+      history.push('/stories')
     } catch (err) {
       console.error(err)
     }
@@ -90,6 +90,14 @@ const StoryComponent = () => {
       const data : StorySchema = Object.assign({}, story, { location: loc})
       db.writeStory(data)
       setStory(data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  async function uploadStory() {
+    try {
+      await Api.uploadStory(story)
     } catch (err) {
       console.error(err)
     }
@@ -110,7 +118,7 @@ const StoryComponent = () => {
                <AudioPlayerComponent audioData={story.recording}/>
                <button onClick={deleteRecording}>Delete Recording</button>
             </div>
-            : <RecorderComponent onSave={(rec) => saveRecording(rec)}/>
+            : <AudioRecorderComponent onSave={(rec) => saveRecording(rec)}/>
           }
           </div>
           <div className='camera'>
@@ -120,6 +128,7 @@ const StoryComponent = () => {
             <LocationPickerComponent location={story.location} onPick={updateLocation}/>
           </div>
           <button onClick={deleteStory}>Delete Story</button>
+          <button onClick={uploadStory}>Upload Story</button>
         </div>
       }
     </div>

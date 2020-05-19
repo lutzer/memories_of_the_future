@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { getDatabase, StorySchema } from "../services/database";
-import { Link, useParams } from "react-router-dom";
+import { getDatabase, StorySchema, ProjectSchema } from "../services/storage";
+import { Link, useHistory } from "react-router-dom";
 import moment from 'moment';
+import _ from 'lodash'
 import './styles/story.scss'
 
 const StoryListComponent = () => {
-  const [stories, setStories] = useState([])
-  const { projectId } = useParams();
+  const [stories, setStories] = useState<StorySchema[]>([])
+  const [project, setProject] = useState<ProjectSchema>({id: null, name: null, description: null})
+  const history = useHistory();
 
   useEffect(()=> {
-    readStories()
-  },[projectId])
+    read()
+  },[])
 
-  async function readStories() {
+  async function read() {
     try {
       const db = await getDatabase()
-      const data = await db.getStories()
-      setStories(data.filter( (story) => story.projectId == projectId))
+      const storyData = await db.getStories()
+      setStories(storyData)
+      const projectData = await db.getProject()
+      setProject(projectData)
     } catch (err) {
       console.error(err)
     }
@@ -25,27 +29,43 @@ const StoryListComponent = () => {
   async function onAddStoryClicked() {
     try {
       const db = await getDatabase()
-      await db.writeStory({ id: null, projectId: projectId, createdAt: Date.now() })
-      await readStories()
+      const story = await db.writeStory({ 
+        id: null, 
+        projectId: project.id, 
+        projectName: project.name, 
+        createdAt: Date.now() 
+      })
+      read()
     } catch (err) {
       console.error(err)
     }
   }
 
   return (
+    _.isEmpty(stories) ?
+      <div className="story-list center">
+        <div className='placeholder'>
+          <p>Record a new memory</p>
+          <button onClick={onAddStoryClicked}>Create Memory</button>
+        </div>
+      </div>
+    : 
     <div className="story-list">
-      <h2>Stories</h2>
       { stories.map( (story: StorySchema, i) => {
         return( 
-          <div key={i} className='item'>
-            <p>Id: {story.id}</p>
-            <p>Author: {story.author || 'none'}</p>
-            <p>Created: {moment(story.createdAt).fromNow()}</p>
-            <p><Link to={`/story/${story.id}`}>Link</Link></p>
+          <div className='item'>
+            <Link key={i} to={`/story/${story.id}`}>
+              <div className='item-content'>
+              <h3>{story.projectName}</h3>
+              <p>
+              created {moment(story.createdAt).fromNow()} from <span className='author'>{story.author || 'unknown'}</span>
+              </p>
+            </div>
+            </Link>
           </div>
         )
-      })}
-      <button onClick={onAddStoryClicked}>Create Story</button>
+      }) }
+      <button onClick={onAddStoryClicked}>Create Memory</button>
     </div>
   )
 }
