@@ -6,7 +6,7 @@ type StoryModelSchema = {
   location : [ number, number ]
   
   author : string,
-  title : string,
+  text : string,
   image : string,
   recording : string,
 
@@ -23,7 +23,7 @@ class StoryModel extends BaseModel {
     location : null, // [ long, lat ]
 
     author : 'unknown',
-    title : 'untitled',
+    text : 'untitled',
     image : null,
     recording : null,
 

@@ -27,7 +27,7 @@ describe('Create Test Data', () => {
   it('should add a project', async () => {
     let result = await connect().post('/api/projects').send({
       name : "Tempelhof",
-      description: "Lorem ipsum dol"
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     })
     expect(result).to.have.status(200);
     expect(result.body.project.id).to.be.string
@@ -36,7 +36,7 @@ describe('Create Test Data', () => {
   it('should add another project with 3 stories', async () => {
     let result = await connect().post('/api/projects').send({
       name : "Project1",
-      description: "Lorem ipsum"
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     })
     expect(result).to.have.status(200);
     expect(result.body.project.id).to.be.string
@@ -67,7 +67,7 @@ describe('Create Test Data', () => {
   it('should add another project with 2 stories with recordings and images', async () => {
     let result = await connect().post('/api/projects').send({
       name : "Project2",
-      description: "Lorem ipsum"
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     })
     expect(result).to.have.status(200);
     expect(result.body.project.id).to.be.string

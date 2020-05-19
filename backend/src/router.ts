@@ -48,7 +48,8 @@ router.get('/projects/:id', async (context) => {
 
 router.post('/projects/', bodyParser(), async (context) => {
   const db = await getDatabase()
-  let project = new ProjectModel(context.request.body)
+  const projectData = _.pick(context.request.body, ['name','description'])
+  let project = new ProjectModel(projectData)
   // check if project with this name already exists
   let nameExists = db.get('projects').find({ name : project.data.name}).isObject().value()
   if (project.validate() && !nameExists) {
@@ -77,7 +78,8 @@ router.get('/stories/:id', async (context) => {
 
 router.post('/stories/'/*?projectId*/, bodyParser(), async (context) => {
   const db = await getDatabase()
-  let story = new StoryModel(context.request.body)
+  const storyData = _.pick(context.request.body, ['author','projectId','location','text','createdAt'])
+  let story = new StoryModel(storyData)
   // check if project with project id exists in database
   let project = db.get('projects').find({ id : story.data.projectId }).value()
   if (story.validate() && project) {
@@ -114,16 +116,16 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
     uploadList.forEach( (file) => {
       if (file.type == 'recording')
         handleAudioUpload(file, story.get('id').value())
-        .catch(() => {
-          console.warn("Error uploading file: " + file.name)
+        .catch((err) => {
+          console.error("Error uploading file: " + file.name,err)
           deleteFile(file.path)
         }).then( (path : string) => {
           story.set('recording', getFileUrl(path)).write()
         })
       else if (file.type == 'image')
         handleImageUpload(file, story.get('id').value())
-        .catch(() => {
-          console.warn("Error uploading file: " + file.name)
+        .catch((err) => {
+          console.error("Error uploading file: " + file.name,err)
           deleteFile(file.path)
         }).then( (path : string) => {
           story.set('image', getFileUrl(path)).write()

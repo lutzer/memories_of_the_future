@@ -26,7 +26,7 @@ const convertToMp3 = async function(path : string, extension : string = null) : 
 }
 
 async function handleImageUpload(file: FileUpload, storyId: string) : Promise<string> {
-  if (!_.includes(['.gif','.png','jpg','jpeg'], extname(file.name)))
+  if (!_.includes(['.gif','.png','.jpg','.jpeg'], extname(file.name)))
     throw new Error('File format not supported')
   // move file
   const newPath = config.fileDirectory + '/' + storyId + extname(file.name)
