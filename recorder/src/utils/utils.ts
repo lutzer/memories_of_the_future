@@ -17,4 +17,11 @@ function getFilename(blob: Blob) : string {
   }
 }
 
-export { getFilename }
+function convertSecondsToMinuteString(seconds: number) {
+  const minutes = Math.floor(seconds / 60)
+  seconds = Math.floor(seconds % 60)
+  const secondString = seconds < 10 ? '0'+seconds : ''+seconds
+  return `${minutes}:${secondString}`
+}
+
+export { getFilename, convertSecondsToMinuteString }

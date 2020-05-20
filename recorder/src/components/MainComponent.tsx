@@ -13,7 +13,7 @@ const MainComponent = () => {
   const [modal, setModal] = useState<ModalProperties>(null)
 
   function showModal(title: string, text: string) {
-    setModal({title: title, text: 'text', onAccept: () => setModal(null)})
+    setModal({title: title, text: text, onAccept: () => setModal(null)})
   }
 
   window.showModal = showModal;

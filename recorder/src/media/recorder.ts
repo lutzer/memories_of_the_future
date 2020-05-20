@@ -3,13 +3,13 @@ const TIMESLICE_DURATION : number = undefined
 
 type AudioRecorder = {
   start: () => void,
-  stop: () => Promise<AudioRecording>
+  stop: () => Promise<AudioRecording>,
+  getTime: () => number
 }
 
 type AudioRecording = {
   blob: Blob,
-  url: string,
-  audio: HTMLAudioElement
+  duration: number
 }
 
 const getAudioRecorder = () : Promise<AudioRecorder> =>
@@ -25,6 +25,8 @@ new Promise(async (resolve, reject) => {
   }
   
   const audioChunks : any = [];
+  var startTimeOfRecording : number = null;
+  var endTimeOfRecording : number = null;
 
   mediaRecorder.addEventListener("dataavailable", event => {
     audioChunks.push(event.data);
@@ -34,25 +36,37 @@ new Promise(async (resolve, reject) => {
     reject(err)
   });
 
-  const start = () => mediaRecorder.start(TIMESLICE_DURATION);
+  const start = () => {
+    startTimeOfRecording = Date.now();
+    mediaRecorder.start(TIMESLICE_DURATION);
+  }
 
-  const stop = () =>
-    new Promise<AudioRecording>((resolve) => {
+  const stop = () => {
+    endTimeOfRecording = Date.now()
+    return new Promise<AudioRecording>((resolve) => {
       mediaRecorder.addEventListener("stop", () => {
         const audioBlob = new Blob(audioChunks,  {type : mediaRecorder.mimeType});
-        const audioUrl = URL.createObjectURL(audioBlob);
         const recording : AudioRecording = {
           blob: audioBlob,
-          url: audioUrl,
-          audio: new Audio(audioUrl)
+          duration: endTimeOfRecording - startTimeOfRecording
         }
         resolve(recording);
       });
 
       mediaRecorder.stop();
     });
+  }
 
-  resolve({ start, stop });
+  const getTime = () : number => {
+    if (!startTimeOfRecording)
+      return 0
+    if (endTimeOfRecording)
+      return endTimeOfRecording = startTimeOfRecording
+    else
+      return Date.now() - startTimeOfRecording
+  }
+
+  resolve({ start, stop, getTime });
 });
 
 export { getAudioRecorder, AudioRecording, AudioRecorder }

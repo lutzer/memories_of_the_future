@@ -1,0 +1,14 @@
+.progress-bar {
+  .outer-line {
+    background-color: lightgray;
+    height: 5px;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .inner-line {
+    background-color: red;
+    height: 100%;
+    border-radius: 3px;
+  }
+}

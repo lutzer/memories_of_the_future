@@ -1,5 +1,6 @@
 import { openDB, deleteDB, IDBPDatabase } from 'idb';
 import { v4 as uuidv4 } from 'uuid';
+import { AudioRecording } from '../media/recorder';
 
 const DATABASE_NAME = 'motf-recorder'
 const STORE_NAME_STORIES = 'stories'
@@ -15,7 +16,7 @@ type StorySchema = {
   author?: string,
   modifiedAt?: number,
   text?: string,
-  recording?: Blob,
+  recording?: AudioRecording,
   image? : Blob,
   location? : [ number, number ]
 }

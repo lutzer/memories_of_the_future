@@ -11,7 +11,7 @@ class ApiException extends Error {
 
 async function uploadFiles(story: StorySchema) : Promise<Response> {
   var data = new FormData()
-  data.append('recording', story.recording, getFilename(story.recording))
+  data.append('recording', story.recording.blob, getFilename(story.recording.blob))
   data.append('image', story.image, getFilename(story.image))
   console.log([story.image, story.recording])
 

@@ -41,7 +41,8 @@ const StoryListComponent = () => {
     try {
       const db = await getDatabase()
       const storyData = await db.getStories()
-      setStories(storyData)
+      
+      setStories(_.sortBy(storyData, ['createdAt']))
       const projectData = await db.getProject()
       setProject(projectData)
     } catch (err) {
@@ -56,12 +57,13 @@ const StoryListComponent = () => {
         id: null, 
         projectId: project.id, 
         projectName: project.name, 
-        author: author,
+        author: _.capitalize(author),
         createdAt: Date.now() 
       })
       read()
     } catch (err) {
       console.error(err)
+      if (err instanceof Error) showModal('Error', err.message)
     }
     enableCreateMode(false)
   }
@@ -95,7 +97,7 @@ const StoryListComponent = () => {
                 <div className='item-content'>
                 <h3>{story.projectName}</h3>
                 <p>
-                created {moment(story.createdAt).fromNow()} from <span className='author'>{story.author || 'unknown'}</span>
+                created {moment(story.createdAt).fromNow()} by <span className='author'>{story.author || 'unknown'}</span>
                 </p>
               </div>
               </Link>

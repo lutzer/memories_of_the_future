@@ -35,7 +35,7 @@ const StoryComponent = () => {
   async function saveRecording(recording: AudioRecording) {
     try {
       const db = await getDatabase()
-      const data : StorySchema = Object.assign({}, story, { recording: recording.blob})
+      const data : StorySchema = Object.assign({}, story, { recording: recording})
       db.writeStory(data)
       setStory(data)
     } catch (err) {
@@ -111,7 +111,7 @@ const StoryComponent = () => {
         <h2>Memory of {story.projectName}</h2>
         <div className='item info'>
           <div className='item-content'>
-          <p>Created {moment(story.createdAt).fromNow()} from <span className='author'>{story.author}</span>.</p>
+          <p>Created {moment(story.createdAt).fromNow()} by <span className='author'>{story.author}</span>.</p>
           </div>
         </div>
         <div className='item recorder'>
