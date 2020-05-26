@@ -7,7 +7,7 @@
   border-radius: 5px;
   font-size: 1rem;
 
-  input {
+  input, textarea {
     font-family: monospace;
     width: 100%;
     display: block;
@@ -16,6 +16,7 @@
     padding: 0;
     background-color: none;
     font-size: inherit;
+    resize: none;
   }
 
   textarea:focus, input:focus{
@@ -32,5 +33,13 @@
   button {
     margin: 10px 5px;
     width: 40%;
+  }
+}
+
+.text-input {
+  padding:5px;
+
+  .input-element {
+    border-radius: 0;
   }
 }

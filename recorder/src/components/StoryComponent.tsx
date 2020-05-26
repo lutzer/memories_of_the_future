@@ -11,6 +11,8 @@ import { Api } from "../services/api";
 import './styles/input.scss'
 import './styles/story.scss'
 import { ProjectViewComponent } from "./ProjectViewComponent";
+import { TextInputComponent } from "./TextInputComponent";
+import _ from "lodash";
 
 
 const StoryComponent = () => {
@@ -86,6 +88,17 @@ const StoryComponent = () => {
     }
   }
 
+  const updateText = _.debounce( async (text : string) => {
+    try {
+      const db = await getDatabase()
+      const data : StorySchema = Object.assign({}, story, { text: text})
+      db.writeStory(data)
+      setStory(data)
+    } catch (err) {
+      console.error(err)
+    }
+  },500)
+
   async function updateLocation(loc : [number, number]) {
     try {
       const db = await getDatabase()
@@ -121,6 +134,9 @@ const StoryComponent = () => {
         </div>
         <div className='item camera'>
           <PhotoCaptureComponent imageData={story.image} onCapture={saveImage} onDelete={deleteImage}/>
+        </div>
+        <div className='item text'> 
+          <TextInputComponent text={story.text} onChange={updateText}/>
         </div>
         <div className='item location'> 
           <LocationPickerComponent location={story.location} onPick={updateLocation}/>

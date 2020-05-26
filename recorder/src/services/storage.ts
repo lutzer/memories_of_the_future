@@ -5,6 +5,7 @@ import { AudioRecording } from '../media/recorder';
 const DATABASE_NAME = 'motf-recorder'
 const STORE_NAME_STORIES = 'stories'
 const STORE_NAME_PROJECT = 'projects'
+const STORE_NAME_FILES = 'files'
 const PROJECT_ID = 1
 const DB_VERSION = 18
 
@@ -50,6 +51,10 @@ function initDatabase(db : IDBPDatabase) {
   if (db.objectStoreNames.contains(STORE_NAME_PROJECT))
     db.deleteObjectStore(STORE_NAME_PROJECT)
   db.createObjectStore(STORE_NAME_PROJECT)
+
+  if (db.objectStoreNames.contains(STORE_NAME_FILES))
+    db.deleteObjectStore(STORE_NAME_FILES)
+  db.createObjectStore(STORE_NAME_FILES)
 }
 
 const getDatabase = async () : Promise<Database> => {
