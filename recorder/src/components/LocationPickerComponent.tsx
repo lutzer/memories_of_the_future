@@ -2,10 +2,12 @@ import React, {Fragment, useState, useEffect } from "react";
 import { Map, TileLayer, Marker, CircleMarker, Viewport } from 'react-leaflet'
 import L, { GeoJSONOptions } from 'leaflet'
 import _ from 'lodash'
+import { config } from "../config";
 
 import './styles/location.scss'
 import './../../node_modules/leaflet/dist/leaflet.css'
 import '../assets/marker-icon.png'
+import './styles/input.scss'
 
 // type GeolocationPosition = { lat: number, lng: number }
 
@@ -55,7 +57,7 @@ const LocationMarker = ({geoLoc, zoom} : {geoLoc: GeolocationPosition, zoom : nu
 }
 
 const LocationPickerComponent = ({location, onPick} : {location? : [number, number], onPick : (loc : [number, number]) => void}) => {
-  const [viewport, setViewport] = useState<Viewport>({ center: [52.672869, 12.988025], zoom: 16 })
+  const [viewport, setViewport] = useState<Viewport>({ center: config.defaultLocation, zoom: 16 })
   const [dragged, setDragged] = useState(false)
   const [geolocation, setGeolocation] = useState<GeolocationPosition>(null)
   const [watchId, setWatchId] = useState(null)
@@ -93,7 +95,8 @@ const LocationPickerComponent = ({location, onPick} : {location? : [number, numb
       <Map 
         viewport={viewport}
         ondrag={() => setDragged(true)}
-        onViewportChanged={setViewport}>
+        onViewportChanged={setViewport}
+        zoomControl={false}>
         <TileLayer
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         />
@@ -105,12 +108,14 @@ const LocationPickerComponent = ({location, onPick} : {location? : [number, numb
       </Map>
       <div className='crosshair'>
         <svg width='50' height='50'>
-          <line x1='0' x2='50' y1='25' y2='25' stroke='black' opacity='0.5' strokeWidth='2'/> 
-          <line x1='25' x2='25' y1='0' y2='50' stroke='black' opacity='0.5' strokeWidth='2'/>
+          <line x1='0' x2='50' y1='25' y2='25' stroke='black' opacity='0.5' strokeWidth='1'/> 
+          <line x1='25' x2='25' y1='0' y2='50' stroke='black' opacity='0.5' strokeWidth='1'/>
         </svg>
       </div>
-      <button onClick={watchLocation}>Your Location</button>
-      <button onClick={() => onPick(viewport.center)}>Pick Location</button>
+      <div className='button-group'>
+        <button onClick={watchLocation}>Your Location</button>
+        <button onClick={() => onPick(viewport.center)}>Pick Location</button>
+      </div>
     </div>
   )
 }

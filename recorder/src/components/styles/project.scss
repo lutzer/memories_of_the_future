@@ -20,6 +20,10 @@
     .item-content {
       margin: 10px;
     }
+
+    &:active {
+      box-shadow: $item-shadow-clicked;
+    }
   }
 
   .center-item {

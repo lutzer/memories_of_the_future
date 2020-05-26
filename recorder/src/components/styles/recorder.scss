@@ -22,14 +22,13 @@
 
     .bar {
       flex: 1 1 0;
-      padding: 0 15px 0 10px;
+      padding: 0 10px;
     }
   }
 
   .recording-time {
     display: flex;
     align-items: center;
-    padding: 0px 5px;
     height: 40px;
 
     .record-circle {
@@ -44,12 +43,12 @@
     }
 
     .time {
-      padding: 5px;
+      // padding: 5px;
     }
 
     .bar {
       flex: 1 1 auto;
-      padding: 5px;
+      padding: 0 10px;
     }
   }
 }

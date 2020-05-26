@@ -122,12 +122,12 @@ const StoryComponent = () => {
         <div className='item camera'>
           <PhotoCaptureComponent imageData={story.image} onCapture={saveImage} onDelete={deleteImage}/>
         </div>
-        {/* <div className='item location'> 
+        <div className='item location'> 
           <LocationPickerComponent location={story.location} onPick={updateLocation}/>
-        </div> */}
+        </div>
         <div className='button-group'>
           <button onClick={deleteStory}>Delete</button>
-          <button onClick={uploadStory}>Upload</button>
+          <button onClick={uploadStory} disabled={!story.recording || !story.image || !story.location}>Upload</button>
         </div>
       </div>
     :

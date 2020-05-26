@@ -103,8 +103,10 @@ module.exports = (env, argv) => {
       "react-dom": "ReactDOM"
     } : {},
     devServer: {
+      host: '0.0.0.0',
       port: 3001,
       open: true,
+      https: false,
       stats: {
         children: false, // Hide children information
         maxModules: 0
