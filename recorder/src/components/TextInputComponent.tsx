@@ -12,13 +12,14 @@ const TextInputComponent = ({text = '', onChange} : { text? : string, onChange :
     <div className='text-input'>
       <div className='input-element'>
         <textarea id='w3mission' 
-          rows={expanded ? 5 : 1} 
+          rows={expanded ? 6 : 1} 
           cols={50} 
           placeholder='Say something about your memory.' 
           defaultValue={text}
           onChange={(e) => onTextAreaChange(e.target.value)}
           onFocus={() => setExpand(true)}
-          onBlur={() => setExpand(false)}>
+          onBlur={() => setExpand(false)}
+          maxLength={512}>
         </textarea>
       </div>
     </div>

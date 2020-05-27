@@ -15,4 +15,27 @@ const ProgressBarComponent = ({progress, className = 'progress-bar', ...props} :
   )
 }
 
-export { ProgressBarComponent }
+const SpinnerComponent = ({start = true, completed = false, className = 'progress-bar', ...props} : 
+{start? : boolean, completed? : boolean, className?: string}) => {
+  const [progress, setProgress] = useState(0)
+
+  useEffect( () => {
+    const watchId = start && !completed ? setInterval( () => {
+      setProgress(progress => progress + 2)
+    },50) : null
+    return function cleanup() {
+      clearInterval(watchId)
+    }
+  }, [start, completed])
+
+  return(
+    <div className={className} {...props}>
+      <div className='outer-line'>
+        <div className='inner-line' style={{ width: completed ? 100 + '%' : (progress % 100) + '%'}}>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export { ProgressBarComponent, SpinnerComponent }

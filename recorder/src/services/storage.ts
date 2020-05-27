@@ -19,7 +19,8 @@ type StorySchema = {
   text?: string,
   recording?: AudioRecording,
   image? : Blob,
-  location? : [ number, number ]
+  location? : [ number, number ],
+  uploaded : boolean
 }
 
 type ProjectSchema = {
@@ -73,6 +74,7 @@ const getDatabase = async () : Promise<Database> => {
       return await db.getAll(STORE_NAME_STORIES)
     }
 
+    // TODO: store image and recording in different data table
     async function writeStory(story : StorySchema) : Promise<StorySchema> {
       story.id = story.id ? story.id : uuidv4()
       story.modifiedAt = Date.now()

@@ -4,6 +4,7 @@ import { StoryListComponent } from "./StoryListComponent";
 import { StoryComponent } from "./StoryComponent";
 import { ProjectViewComponent } from "./ProjectViewComponent";
 import { ModalComponent, ModalProperties } from "./ModalComponent";
+import { UploadComponent } from "./UploadComponent";
 
 declare global {
   var showModal: (title: string, text: string) => void
@@ -28,6 +29,9 @@ const MainComponent = () => {
         <Switch>
           <Route path="/story/:storyId">
             <StoryComponent/>
+          </Route>
+          <Route path="/upload/:storyId">
+            <UploadComponent/>
           </Route>
           <Route path="/stories">
             <StoryListComponent/>
