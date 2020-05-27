@@ -9,15 +9,15 @@ class ApiException extends Error {
   }
 }
 
-async function uploadFiles(story: StorySchema) : Promise<Response> {
+async function uploadFiles(story: StorySchema, controller?: AbortController) : Promise<Response> {
   var data = new FormData()
   data.append('recording', story.recording.blob, getFilename(story.recording.blob))
   data.append('image', story.image, getFilename(story.image))
-  console.log([story.image, story.recording])
 
   let response = await fetch(config.apiAdress + 'upload/story/' + story.id, { // Your POST endpoint
     method: 'POST',
-    body: data
+    body: data,
+    signal: controller ? controller.signal : null
   })
   return response
 }
@@ -31,14 +31,15 @@ class Api {
     return json
   }
 
-  static async uploadStory(story: StorySchema) : Promise<void> {
+  static async uploadStory(story: StorySchema, controller?: AbortController) : Promise<void> {
     // post story
     let response = await fetch(config.apiAdress + 'stories', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(story)
+      body: JSON.stringify(story),
+      signal: controller ? controller.signal : null
     });
 
     if (response.status != 200) {
@@ -50,7 +51,7 @@ class Api {
     story.id = json.story.id
 
     // upload files
-    response = await uploadFiles(story) 
+    response = await uploadFiles(story, controller) 
     if (response.status != 200) {
       let text = await response.text()
       throw new ApiException(text)

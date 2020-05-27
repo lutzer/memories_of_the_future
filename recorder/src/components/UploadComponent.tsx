@@ -29,7 +29,7 @@ async function setStoryUploaded(story : StorySchema) {
 }
 
 enum UploadState {
-  LOADING, TRANSFERING, COMPLETE
+  LOADING, TRANSFERING, COMPLETE, ERROR
 }
 
 const UploadComponent = () => {
@@ -38,39 +38,57 @@ const UploadComponent = () => {
 
   const [message, setMessage] = useState('Uploading Memory...')
   const [state, setState] = useState(UploadState.LOADING)
+  const [uploading, setUploading] = useState(true)
 
   useEffect( () => {
-    uploadStory()
-  }, [storyId])
+    const controller = new AbortController()
+    if (uploading)
+      uploadStory(storyId, controller)
+    return function cleanup() {
+      controller.abort()
+    }
+  }, [uploading])
 
-  async function uploadStory() {
+  async function uploadStory(storyId : string, controller: AbortController) {
     const storyData = await readStory(storyId)
 
     if (!storyData) {
+      setState(UploadState.ERROR)
       setMessage('Can not retrieve memory.')
       return
     }
       
     try {
       setState(UploadState.TRANSFERING)
-      await Api.uploadStory(storyData)
+      await Api.uploadStory(storyData, controller)
       setMessage('Memory has been uploaded.')
+      setState(UploadState.COMPLETE)
     } catch (err) {
+      setState(UploadState.ERROR)
       console.log(err)
-      setMessage('Could not upload memory')
+      if (err.name === "AbortError") {
+        setMessage('Upload cancelled.')
+      } else if (err instanceof Error) {
+        setMessage(err.message)
+      }
     }
-    setState(UploadState.COMPLETE)
   }
+
+  async function onCancel() {
+    setUploading(false)
+  }
+
+  console.log(state)
   
   return(
     <div className='upload'>
       <div className='center-item'>
         <p>{message}</p>
         <SpinnerComponent 
-          start={state == UploadState.TRANSFERING} 
+          spinning={state == UploadState.TRANSFERING}
           completed={state == UploadState.COMPLETE}/>
-        { state != UploadState.COMPLETE ?
-          <button onClick={() => history.push(`/story/${storyId}`)}>Cancel</button>
+        { state == UploadState.TRANSFERING ?
+          <button onClick={onCancel}>Cancel</button>
         :
           <button onClick={() => history.push(`/stories/`)}>OK</button>
         }

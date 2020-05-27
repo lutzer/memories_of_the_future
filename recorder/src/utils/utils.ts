@@ -1,6 +1,5 @@
 
 function getFilename(blob: Blob) : string {
-  console.log(blob)
   switch (blob.type) {
     case 'image/jpeg':
       return 'image.jpg'

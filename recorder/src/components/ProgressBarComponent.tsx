@@ -15,23 +15,35 @@ const ProgressBarComponent = ({progress, className = 'progress-bar', ...props} :
   )
 }
 
-const SpinnerComponent = ({start = true, completed = false, className = 'progress-bar', ...props} : 
-{start? : boolean, completed? : boolean, className?: string}) => {
-  const [progress, setProgress] = useState(0)
+const SpinnerComponent = ({spinning = true, completed = false, className = 'progress-bar', ...props} : 
+{spinning? : boolean, completed? : boolean, className?: string}) => {
+  const [value, setValue] = useState(0)
 
   useEffect( () => {
-    const watchId = start && !completed ? setInterval( () => {
-      setProgress(progress => progress + 2)
-    },50) : null
+    var watchId : NodeJS.Timeout = null
+    // if (progress && !completed)  {
+    //   watchId = setInterval( () => {
+    //     setProgress(progress => progress + 2)
+    //   },50)
+    // }
+    if (completed)
+      setValue(100)
+    else if (!spinning)
+      setValue(0)
+    else {
+      watchId = setInterval( () => {
+        setValue(value => (value + 2) % 100)
+      },50)
+    }
     return function cleanup() {
       clearInterval(watchId)
     }
-  }, [start, completed])
+  }, [spinning, completed])
 
   return(
     <div className={className} {...props}>
       <div className='outer-line'>
-        <div className='inner-line' style={{ width: completed ? 100 + '%' : (progress % 100) + '%'}}>
+        <div className='inner-line' style={{ width: value + '%'}}>
         </div>
       </div>
     </div>
