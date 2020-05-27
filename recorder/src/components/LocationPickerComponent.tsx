@@ -13,9 +13,9 @@ import './styles/input.scss'
 
 const markerIcon = L.icon({
   iconUrl: 'assets/marker-icon.png',
-  shadowUrl: 'assets/marker-shadow.png',
+  shadowUrl: null,
   iconSize: [25, 41],
-  iconAnchor: [12.5, 30]
+  iconAnchor: [13, 39]
 });
 
 type GeolocationPosition = {
@@ -57,7 +57,7 @@ const LocationMarker = ({geoLoc, zoom} : {geoLoc: GeolocationPosition, zoom : nu
 }
 
 const LocationPickerComponent = ({location, onPick} : {location? : [number, number], onPick : (loc : [number, number]) => void}) => {
-  const [viewport, setViewport] = useState<Viewport>({ center: config.defaultLocation, zoom: 16 })
+  const [viewport, setViewport] = useState<Viewport>({ center: config.defaultLocation, zoom: 15 })
   const [dragged, setDragged] = useState(false)
   const [geolocation, setGeolocation] = useState<GeolocationPosition>(null)
   const [watchId, setWatchId] = useState(null)

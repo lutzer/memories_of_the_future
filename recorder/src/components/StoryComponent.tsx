@@ -14,6 +14,11 @@ import { ProjectViewComponent } from "./ProjectViewComponent";
 import { TextInputComponent } from "./TextInputComponent";
 import _ from "lodash";
 
+function handleDbError(err : any) {
+  console.log(err)
+  if (err instanceof Error) showModal('Error', err.message)
+}
+
 
 const StoryComponent = () => {
   const [story, setStory] = useState<StorySchema>(null)
@@ -30,7 +35,7 @@ const StoryComponent = () => {
       const val = await db.getStory(storyId)
       setStory(val)
     } catch (err) {
-      console.error(err)
+      handleDbError(err)
     }
   }
 
@@ -41,7 +46,7 @@ const StoryComponent = () => {
       db.writeStory(data)
       setStory(data)
     } catch (err) {
-      console.error(err)
+      handleDbError(err)
     }
   }
 
@@ -52,18 +57,18 @@ const StoryComponent = () => {
       db.writeStory(data)
       setStory(data)
     } catch (err) {
-      console.error(err)
+      handleDbError(err)
     }
   }
 
   async function saveImage(image: Blob) {
     try {
       const db = await getDatabase()
-      const data : StorySchema = Object.assign({}, story, { image: image})
+      const data : StorySchema = Object.assign({}, story, { image: image } )
       db.writeStory(data)
       setStory(data)
     } catch (err) {
-      console.error(err)
+      handleDbError(err)
     }
   }
 
@@ -74,7 +79,7 @@ const StoryComponent = () => {
       db.writeStory(data)
       setStory(data)
     } catch (err) {
-      console.error(err)
+      handleDbError(err)
     }
   }
 
@@ -84,7 +89,7 @@ const StoryComponent = () => {
       db.removeStory(storyId)
       history.push('/stories')
     } catch (err) {
-      console.error(err)
+      handleDbError(err)
     }
   }
 
@@ -95,7 +100,7 @@ const StoryComponent = () => {
       db.writeStory(data)
       setStory(data)
     } catch (err) {
-      console.error(err)
+      handleDbError(err)
     }
   },500)
 
@@ -106,15 +111,7 @@ const StoryComponent = () => {
       db.writeStory(data)
       setStory(data)
     } catch (err) {
-      console.error(err)
-    }
-  }
-
-  async function uploadStory() {
-    try {
-      await Api.uploadStory(story)
-    } catch (err) {
-      console.error(err)
+      handleDbError(err)
     }
   }
 
@@ -125,6 +122,7 @@ const StoryComponent = () => {
         <div className='item info'>
           <div className='item-content'>
           <p>Created {moment(story.createdAt).fromNow()} by <span className='author'>{story.author}</span>.</p>
+          <TextInputComponent text={story.text} onChange={updateText}/>
           </div>
         </div>
         <div className='item recorder'>
@@ -135,15 +133,12 @@ const StoryComponent = () => {
         <div className='item camera'>
           <PhotoCaptureComponent imageData={story.image} onCapture={saveImage} onDelete={deleteImage}/>
         </div>
-        <div className='item text'> 
-          <TextInputComponent text={story.text} onChange={updateText}/>
-        </div>
         <div className='item location'> 
           <LocationPickerComponent location={story.location} onPick={updateLocation}/>
         </div>
         <div className='button-group'>
           <button onClick={deleteStory}>Delete</button>
-          <button onClick={uploadStory} disabled={!story.recording || !story.image || !story.location}>Upload</button>
+          <button onClick={() => history.push(`/upload/${story.id}`)} disabled={!story.recording || !story.image || !story.location}>Upload</button>
         </div>
       </div>
     :

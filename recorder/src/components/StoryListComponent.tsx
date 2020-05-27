@@ -47,6 +47,7 @@ const StoryListComponent = () => {
       setProject(projectData)
     } catch (err) {
       console.error(err)
+      if (err instanceof Error) showModal('Error', err.message)
     }
   }
 
@@ -58,7 +59,8 @@ const StoryListComponent = () => {
         projectId: project.id, 
         projectName: project.name, 
         author: _.capitalize(author),
-        createdAt: Date.now() 
+        createdAt: Date.now(),
+        uploaded: false
       })
       read()
     } catch (err) {
