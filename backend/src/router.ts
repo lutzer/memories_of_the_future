@@ -76,6 +76,17 @@ router.get('/stories/:id', async (context) => {
   context.body = { story : db.get('stories').find({ id : context.params.id })}
 })
 
+router.delete('/stories/:id', async (context) => {
+  const db = await getDatabase()
+  const story = db.get('stories').find({ id : context.params.id })
+  if (story.isObject().value()) {
+    db.get('stories').remove({ id : context.params.id }).write()
+    context.body = { message: `Story ${context.params.id} removed.`}
+  } else {
+    context.throw(400, 'Story does not exist.');
+  }
+})
+
 router.post('/stories/'/*?projectId*/, bodyParser(), async (context) => {
   const db = await getDatabase()
   const storyData = _.pick(context.request.body, ['author','projectId','location','text','createdAt'])

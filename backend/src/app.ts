@@ -1,7 +1,6 @@
 import Koa from 'koa'
 import serveStatic from 'koa-static'
 import koaJson from 'koa-json'
-import koaProxy from 'koa-proxy'
 import cors from '@koa/cors';
 
 import { config } from './config'
@@ -13,11 +12,6 @@ const devMode = process.argv.includes('-dev')
 const app = new Koa();
 
 if (devMode) {
-  // serve proxy during development
-  app.use(koaProxy({
-    host: config.frontendProxyUrl,
-    match: /^(?!(\/api\/)|(\/files\/))/
-  }))
   // enable pretty json response for development
   app.use(koaJson())
 }

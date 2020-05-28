@@ -12,7 +12,7 @@ const moveFile = promisify(fs.rename)
 const copyFile = promisify(fs.copyFile)
 
 const fileFilter = function (req, file, cb) {
-  // accept image only
+  // accept image and sound files only
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif|mp3|wav|ogg|webm)$/)) {
       return cb(new Error('Only (jpg|jpeg|png|gif|mp3|wav|ogg) are allowed!'), false);
   }

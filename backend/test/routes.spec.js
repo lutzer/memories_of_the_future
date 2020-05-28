@@ -179,6 +179,28 @@ describe('Routes', () => {
       expect(result.body.stories).to.be.lengthOf(1)
       expect(result.body.stories[0].author).to.equal('peter')
     });
+
+    it('should be able to delete a story', async () => {
+      let result = await connect().post('/api/projects').send({
+        name: generateRandomString()
+      })
+      expect(result).to.have.status(200);
+      let projectId = result.body.project.id
+      result = await connect().post('/api/stories').send({
+        projectId : projectId,
+        location : [0,0]
+      })
+      expect(result).to.have.status(200);
+      const id = result.body.story.id
+      result = await connect().delete('/api/stories/' + id )
+      expect(result).to.have.status(200);
+    });
+
+    it('should return 400 on deleting a story that does not exist', async () => {
+      result = await connect().delete('/api/stories/' + generateRandomString() )
+      expect(result).to.have.status(400);
+    });
+
   })
 
 });
