@@ -9,5 +9,21 @@
 
   .center-item {
     width: 66%;
+    text-align: center;
+  }
+
+  .error {
+    color: white;
+    background-color: red;
+    font-weight: bold;
+    opacity: 0.4;
+    font-size: 0.9rem;
+    margin: 10px 0px;
+    padding: 3px;
+    border-radius: 5px;
+
+    &:empty {
+      background-color: transparent;
+    }
   }
 }

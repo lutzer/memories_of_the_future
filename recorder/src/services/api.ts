@@ -30,6 +30,8 @@ async function uploadFiles(story: StorySchema, password: string, controller?: Ab
 class Api {
   static async getProjectByName(name: string) : Promise<{project : ProjectSchema}> {
     let response = await fetch(config.apiAdress + 'projects?name=' + name)
+    if (response.status != 200)
+      throw new ApiException(response.status, `Could not fetch data.`)
     let json = await response.json()
     if (_.isEmpty(json.project))
       throw new ApiException(response.status, `There is no project with the name ${name}.`)
