@@ -4,7 +4,7 @@ import multer from '@koa/multer'
 import _ from 'lodash'
 
 import { getDatabase } from './database'
-import { deleteFile, fileFilter, errorMiddleware, moveFile } from './utils'
+import { deleteFile, fileFilter, errorMiddleware, moveFile, checkBasicAuth } from './utils'
 import { config } from './config'
 import { ProjectModel } from './models/ProjectModel'
 import { StoryModel } from './models/StoryModel'
@@ -48,7 +48,7 @@ router.get('/projects/:id', async (context) => {
 
 router.post('/projects/', bodyParser(), async (context) => {
   const db = await getDatabase()
-  const projectData = _.pick(context.request.body, ['name','description'])
+  const projectData = _.pick(context.request.body, ['name','description','password'])
   let project = new ProjectModel(projectData)
   // check if project with this name already exists
   let nameExists = db.get('projects').find({ name : project.data.name}).isObject().value()
@@ -93,11 +93,15 @@ router.post('/stories/'/*?projectId*/, bodyParser(), async (context) => {
   let story = new StoryModel(storyData)
   // check if project with project id exists in database
   let project = db.get('projects').find({ id : story.data.projectId }).value()
-  if (story.validate() && project) {
+  if (!project) {
+    context.throw(400,'project does not exist.');
+  } else if (!checkBasicAuth(context.header, project.name, project.password)) {
+    context.throw(401,'No Authorization.');
+  } else if (!story.validate() && project) {
+    context.throw(400,'Story data invalid.');
+  } else {
     context.body = { story: story.data }
     db.get('stories').push(story.data).write()
-  } else {
-    context.throw(400,'Story data invalid.');
   }
 })
 
@@ -109,6 +113,7 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
 ]), async (context) => {
   const db = await getDatabase()
   const story = db.get('stories').find({id : context.params.id})
+  const project = db.get('projects').find({id : story.get('projectId').value()}).value()
   
   // create list of uploaded files
   const uploadList = ['recording', 'image'].reduce( (acc, key) : FileUpload[] => {
@@ -123,7 +128,12 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
   }, [])
 
   // story exists, handle file uploads
-  if (story.isObject().value()) {
+  if (!story.isObject().value() || !project) {
+    context.throw(400,'Story or Project does not exist');
+  } else if (!checkBasicAuth(context.header, project.name, project.password)) {
+    context.throw(401,'Authorization required');
+  } else {
+    // convert and move files
     uploadList.forEach( (file) => {
       if (file.type == 'recording')
         handleAudioUpload(file, story.get('id').value())
@@ -143,14 +153,13 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
         })
     })
     context.body = { msg : `${uploadList.length} files uploaded to story ${story.get('id').value()}` }
-  // story does not exist, remove files
-  } else {
-    await Promise.all(uploadList.map( async (file) => {
-      await deleteFile(file.path)
-    }))
-    context.throw(400,'Story does not exist');
+    return
   }
-  
+
+  // cleanup files if there was en error
+  await Promise.all(uploadList.map( async (file) => {
+    await deleteFile(file.path)
+  }))
 })
 
 

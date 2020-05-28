@@ -82,18 +82,18 @@ describe('File Upload', () => {
 
   describe('File Upload Routes', () => {
 
+
     async function createStory() {
+      const project = { name: generateRandomString(), password: generateRandomString() }
       // add project
-      let result = await connect().post('/api/projects').send({
-        name: generateRandomString()
-      })
+      let result = await connect().post('/api/projects').send(project)
       // add story
       result = await connect().post('/api/stories').send({
         author: 'peter',
         projectId : result.body.project.id,
         location : [0,0]
-      })
-      return result.body.story.id
+      }).auth(project.name, project.password)
+      return { storyId : result.body.story.id, project: project }
     }
 
     var server = null
@@ -124,20 +124,21 @@ describe('File Upload', () => {
       });
 
       it('should not be able to upload a tiff file', async () => {
-        let storyId = await createStory()
+        let { storyId, project } = await createStory()
         // upload  file
         result = await connect().post('/api/upload/story/'+storyId).attach(
           'image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.tiff'
-        )
+        ).auth(project.name, project.password)
         expect(result).to.not.have.status(200);
+        expect(result).to.not.have.status(401);
       });
 
       it('should be able to upload an image and add it in the story data entry', async () => {
-        let storyId = await createStory()
+        let { storyId, project } = await createStory()
         // upload  file
         result = await connect().post('/api/upload/story/'+storyId).attach(
           'image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png'
-        )
+        ).auth(project.name, project.password)
         expect(result).to.have.status(200);
         await sleep(200)
         result =  await connect().get('/api/stories/' + storyId)
@@ -146,12 +147,21 @@ describe('File Upload', () => {
         uploads.push(result.body.story.image)
       });
 
+      it('should not be able to upload an image without auth', async () => {
+        let { storyId, project } = await createStory()
+        // upload  file
+        result = await connect().post('/api/upload/story/'+storyId).attach(
+          'image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png'
+        ).auth(generateRandomString(), generateRandomString())
+        expect(result).to.have.status(401);
+      });
+
       it('should be able to upload recording and add it in the story data entry', async () => {
-        let storyId = await createStory()
+        let { storyId, project } = await createStory()
         // upload  file
         result = await connect().post('/api/upload/story/'+storyId).attach(
           'recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3'
-        )
+        ).auth(project.name, project.password)
         expect(result).to.have.status(200);
         await sleep(200)
         result =  await connect().get('/api/stories/' + storyId)
@@ -162,11 +172,11 @@ describe('File Upload', () => {
       });
 
       it('should be able to upload a ogg recording and convert it to mp3', async () => {
-        let storyId = await createStory()
+        let { storyId, project } = await createStory()
         // upload  file
         result = await connect().post('/api/upload/story/'+storyId).attach(
           'recording', fs.readFileSync(__dirname + '/files/sound-ogg.ogg'), 'sound-ogg.ogg'
-        )
+        ).auth(project.name, project.password)
         expect(result).to.have.status(200);
         // wait for audio conversion
         await sleep(600)
@@ -177,11 +187,11 @@ describe('File Upload', () => {
       });
 
       it('should be able to upload a wav recording and convert it to mp3', async () => {
-        let storyId = await createStory()
+        let { storyId, project } = await createStory()
         // upload  file
         result = await connect().post('/api/upload/story/'+storyId).attach(
           'recording', fs.readFileSync(__dirname + '/files/sound-wav.wav'), 'sound-wav.wav'
-        )
+        ).auth(project.name, project.password)
         expect(result).to.have.status(200);
         // wait for audio conversion
         await sleep(600)
@@ -192,11 +202,12 @@ describe('File Upload', () => {
       })
 
       it('should be able to upload an image and recording at the same time', async () => {
-        let storyId = await createStory()
+        let { storyId, project } = await createStory()
         // upload  file
         result = await connect().post('/api/upload/story/'+storyId)
           .attach('image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png')
           .attach('recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3')
+          .auth(project.name, project.password)
         expect(result).to.have.status(200);
         await sleep(200)
         result = await connect().get('/api/stories/' + storyId)
@@ -210,17 +221,16 @@ describe('File Upload', () => {
     describe('/files/*', () => {
 
       async function createStory() {
+        const project = { name: generateRandomString(), password: generateRandomString() }
         // add project
-        let result = await connect().post('/api/projects').send({
-          name: generateRandomString()
-        })
+        let result = await connect().post('/api/projects').send(project)
         // add story
         result = await connect().post('/api/stories').send({
           author: 'peter',
           projectId : result.body.project.id,
           location : [0,0]
-        })
-        return result.body.story.id
+        }).auth(project.name, project.password)
+        return { storyId : result.body.story.id, project: project }
       }
 
       var server = null
@@ -242,9 +252,10 @@ describe('File Upload', () => {
       });
 
       it('should be able to get image from files dir', async () => {
-        const storyId = await createStory()
+        const { storyId, project } = await createStory()
         var result = await connect().post('/api/upload/story/'+storyId)
           .attach('image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png')
+          .auth(project.name, project.password)
         expect(result).to.have.status(200);
         result =  await connect().get('/api/stories/' + storyId)
         expect(result).to.have.status(200);
@@ -254,9 +265,10 @@ describe('File Upload', () => {
       })
 
       it('should be able to get recording from files dir', async () => {
-        const storyId = await createStory()
+        const { storyId, project } = await createStory()
         var result = await connect().post('/api/upload/story/'+storyId)
-        .attach('recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3')
+          .attach('recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3')
+          .auth(project.name, project.password)
         expect(result).to.have.status(200);
         result =  await connect().get('/api/stories/' + storyId)
         expect(result).to.have.status(200);

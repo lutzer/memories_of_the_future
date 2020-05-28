@@ -27,6 +27,13 @@ const errorMiddleware = async function(context : Koa.BaseContext, next : Koa.Nex
   }
 }
 
+const checkBasicAuth = function(header : any, name: string, password: string) : boolean {
+  if (!_.has(header,'authorization'))
+    return false;
+  let hash = 'Basic ' + Buffer.from(name+':'+password).toString('base64')
+  return header.authorization == hash
+}
+
 const generateRandomString = function() {
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15).toUpperCase();
 }
@@ -38,5 +45,6 @@ export {
   copyFile,
   fileFilter, 
   errorMiddleware, 
-  generateRandomString 
+  generateRandomString,
+  checkBasicAuth
 }

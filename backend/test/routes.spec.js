@@ -128,16 +128,15 @@ describe('Routes', () => {
     });
 
     it('should get a story by id', async () => {
-      let result = await connect().post('/api/projects').send({
-        name: generateRandomString()
-      })
+      const project = { name : generateRandomString(), password: generateRandomString() }
+      let result = await connect().post('/api/projects').send(project)
       expect(result).to.have.status(200);
       let projectId = result.body.project.id
       result = await connect().post('/api/stories').send({
         projectId : projectId,
         location : [0,0],
         author: 'max'
-      })
+      }).auth(project.name, project.password)
       expect(result).to.have.status(200);
       let storyId = result.body.story.id
       result = await connect().get('/api/stories/'+storyId)
@@ -147,23 +146,33 @@ describe('Routes', () => {
     });
 
     it('should be able to post a story with an existing projectId and location', async () => {
-      let result = await connect().post('/api/projects').send({
-        name: generateRandomString()
-      })
+      const project = { name : generateRandomString(), password: generateRandomString() }
+      let result = await connect().post('/api/projects').send(project)
       expect(result).to.have.status(200);
       let projectId = result.body.project.id
       result = await connect().post('/api/stories').send({
         projectId : projectId,
         location : [0,0]
-      })
+      }).auth(project.name, project.password)
       expect(result).to.have.status(200);
     });
 
+    it('should not be able to post a story without auth', async () => {
+      const project = { name : generateRandomString(), password: generateRandomString() }
+      let result = await connect().post('/api/projects').send(project)
+      expect(result).to.have.status(200);
+      let projectId = result.body.project.id
+      result = await connect().post('/api/stories').send({
+        projectId : projectId,
+        location : [0,0]
+      }).auth(generateRandomString(), generateRandomString())
+      expect(result).to.have.status(401);
+    });
+
     it('should get Stories for a specific project', async () => {
+      const project = { name : generateRandomString(), password: generateRandomString() }
       // add project
-      let result = await connect().post('/api/projects').send({
-        name: generateRandomString()
-      })
+      let result = await connect().post('/api/projects').send(project)
       expect(result).to.have.status(200);
       let projectId = result.body.project.id
       // add story
@@ -171,7 +180,7 @@ describe('Routes', () => {
         author: 'peter',
         projectId : projectId,
         location : [0,0]
-      })
+      }).auth(project.name, project.password)
       expect(result).to.have.status(200);
       // fetch story
       result = await connect().get('/api/stories/?project='+projectId)
@@ -181,15 +190,14 @@ describe('Routes', () => {
     });
 
     it('should be able to delete a story', async () => {
-      let result = await connect().post('/api/projects').send({
-        name: generateRandomString()
-      })
+      const project = { name : generateRandomString(), password: generateRandomString() }
+      let result = await connect().post('/api/projects').send(project)
       expect(result).to.have.status(200);
       let projectId = result.body.project.id
       result = await connect().post('/api/stories').send({
         projectId : projectId,
         location : [0,0]
-      })
+      }).auth(project.name, project.password)
       expect(result).to.have.status(200);
       const id = result.body.story.id
       result = await connect().delete('/api/stories/' + id )
