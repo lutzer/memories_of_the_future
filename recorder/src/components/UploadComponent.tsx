@@ -4,7 +4,7 @@ import { SpinnerComponent } from "./ProgressBarComponent";
 import { getDatabase, StorySchema } from "../services/storage";
 
 import './styles/upload.scss'
-import { Api } from "../services/api";
+import { Api, ApiException } from "../services/api";
 import { LoaderOptionsPlugin } from "webpack";
 
 function handleDbError(err : any) {
@@ -22,14 +22,17 @@ async function readStory(storyId : string) {
   }
 }
 
-async function setStoryUploaded(story : StorySchema) {
+async function setStoryUploaded(story : StorySchema, oldStoryId : string) {
   const db = await getDatabase()
   const data : StorySchema = Object.assign({}, story, { uploaded: true})
-  db.writeStory(data)
+  await db.writeStory(data)
+
+  // remove old story
+  await db.removeStory(oldStoryId)
 }
 
 enum UploadState {
-  LOADING, TRANSFERING, COMPLETE, ERROR
+  PASSWORD, LOADING, TRANSFERING, COMPLETE, ERROR
 }
 
 const UploadComponent = () => {
@@ -37,8 +40,9 @@ const UploadComponent = () => {
   const history = useHistory()
 
   const [message, setMessage] = useState('Uploading Memory...')
-  const [state, setState] = useState(UploadState.LOADING)
-  const [uploading, setUploading] = useState(true)
+  const [state, setState] = useState(UploadState.PASSWORD)
+  const [uploading, setUploading] = useState(false)
+  const [password, setPassword] = useState(null)
 
   useEffect( () => {
     const controller = new AbortController()
@@ -49,18 +53,25 @@ const UploadComponent = () => {
     }
   }, [uploading])
 
-  async function uploadStory(storyId : string, controller: AbortController) {
-    const storyData = await readStory(storyId)
+  async function uploadStory(id : string, controller: AbortController) {
+    const story = await readStory(id)
 
-    if (!storyData) {
+    if (!story) {
       setState(UploadState.ERROR)
       setMessage('Can not retrieve memory.')
+      return
+    }
+
+    if (story.uploaded) {
+      setState(UploadState.ERROR)
+      setMessage('Story has been uploaded already.')
       return
     }
       
     try {
       setState(UploadState.TRANSFERING)
-      await Api.uploadStory(storyData, controller)
+      await Api.uploadStory(story, password, controller)
+      setStoryUploaded(story, id);
       setMessage('Memory has been uploaded.')
       setState(UploadState.COMPLETE)
     } catch (err) {
@@ -68,8 +79,13 @@ const UploadComponent = () => {
       console.log(err)
       if (err.name === "AbortError") {
         setMessage('Upload cancelled.')
+      } else if (err instanceof ApiException && err.statusCode == 401) {
+        setMessage('Error: Authorization failed.')
+      } else if (err instanceof ApiException) {
+        setMessage('Error: ' + err.message)
       } else if (err instanceof Error) {
-        setMessage(err.message)
+        setMessage('Server or connection error.')
+        showModal('Error', err.message)
       }
     }
   }
@@ -77,24 +93,32 @@ const UploadComponent = () => {
   async function onCancel() {
     setUploading(false)
   }
-
-  console.log(state)
   
   return(
     <div className='upload'>
-      <div className='center-item'>
-        <p>{message}</p>
-        <SpinnerComponent 
-          spinning={state == UploadState.TRANSFERING}
-          completed={state == UploadState.COMPLETE}/>
-        { state == UploadState.TRANSFERING ?
-          <button onClick={onCancel}>Cancel</button>
-        :
-          <button onClick={() => history.push(`/stories/`)}>OK</button>
-        }
-      </div>
+      { state != UploadState.PASSWORD ?
+        <div className='center-item'>
+          <p>{message}</p>
+          <SpinnerComponent 
+            spinning={state == UploadState.TRANSFERING}
+            completed={state == UploadState.COMPLETE}/>
+          { state == UploadState.TRANSFERING ?
+            <button onClick={onCancel}>Cancel</button>
+          :
+            <button onClick={() => history.push(`/story/${storyId}`)}>OK</button>
+          }
+        </div>
+      :
+        <div className='center-item'>
+          <div className='input-element'>
+          <input type='password' 
+            placeholder='Enter password'
+            onChange={(e) => setPassword(e.target.value)}/>
+          </div>
+          <button onClick={() => setUploading(true)}>OK</button>
+        </div>
+      }
     </div>
-    
   )
 }
 

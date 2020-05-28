@@ -33,18 +33,19 @@ type GeolocationPosition = {
 const LocationMarker = ({geoLoc, zoom} : {geoLoc: GeolocationPosition, zoom : number}) => {
 
   function calculateAccuracyRadius() {
-    return geoLoc.coords.accuracy
+    console.log(zoom)
+    return geoLoc.coords.accuracy * zoom / 16
   }
 
   return(
     <Fragment>
-      <CircleMarker
+      {/* <CircleMarker
         radius={calculateAccuracyRadius()}
         fillColor='#00a2ff'
         fillOpacity={0.3}
         stroke={false}
         center={[geoLoc.coords.latitude, geoLoc.coords.longitude]}
-        />
+        /> */}
       <CircleMarker
         radius={8}
         color='#ffffff'
@@ -60,7 +61,7 @@ const LocationPickerComponent = ({location, onPick} : {location? : [number, numb
   const [viewport, setViewport] = useState<Viewport>({ center: config.defaultLocation, zoom: 15 })
   const [dragged, setDragged] = useState(false)
   const [geolocation, setGeolocation] = useState<GeolocationPosition>(null)
-  const [watchId, setWatchId] = useState(null)
+  const [watchId, setWatchId] = useState<number>(null)
 
   // update viewport when there is a new location set
   useEffect( () => {
@@ -72,21 +73,18 @@ const LocationPickerComponent = ({location, onPick} : {location? : [number, numb
   useEffect( () => {
     if (geolocation && !dragged)
       setViewport(Object.assign({}, viewport, { center: [ geolocation.coords.latitude, geolocation.coords.longitude ] }))
-  },[geolocation])
+  },[geolocation, watchId])
 
   // cleanup location listener
   useEffect( () => {
+    const watch : number = watchId
     return function cleanup() {
-      if (watchId)
-        navigator.geolocation.clearWatch(watchId)
+        navigator.geolocation.clearWatch(watch)
     }
   }, [watchId])
 
-  // start watching geolocation
   function watchLocation() {
     setDragged(false)
-    if (watchId)
-      navigator.geolocation.clearWatch(watchId)
     setWatchId(navigator.geolocation.watchPosition(setGeolocation))
   }
 
@@ -113,7 +111,7 @@ const LocationPickerComponent = ({location, onPick} : {location? : [number, numb
         </svg>
       </div>
       <div className='button-group'>
-        <button onClick={watchLocation}>Your Location</button>
+        <button onClick={() => watchLocation()}>Your Location</button>
         <button onClick={() => onPick(viewport.center)}>Pick Location</button>
       </div>
     </div>

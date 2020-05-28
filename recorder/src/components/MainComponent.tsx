@@ -5,6 +5,7 @@ import { StoryComponent } from "./StoryComponent";
 import { ProjectViewComponent } from "./ProjectViewComponent";
 import { ModalComponent, ModalProperties } from "./ModalComponent";
 import { UploadComponent } from "./UploadComponent";
+import { HeaderComponent } from "./HeaderComponent";
 
 declare global {
   var showModal: (title: string, text: string) => void
@@ -17,31 +18,42 @@ const MainComponent = () => {
     setModal({title: title, text: text, onAccept: () => setModal(null)})
   }
 
+  function onBackButtonClick() {
+    
+  }
+
   window.showModal = showModal;
 
   return (
     <div className='content'>
-      <div className='header'>
-        <h1>Memories of the Future</h1>
-      </div>
-      <div className='main'>
-      <Router>
-        <Switch>
-          <Route path="/story/:storyId">
+    <Router>
+      <Switch>
+        <Route path="/story/:storyId">
+          <HeaderComponent backButtonLink='/stories/'/>
+          <div className='main'>
             <StoryComponent/>
-          </Route>
-          <Route path="/upload/:storyId">
+          </div>
+        </Route>
+        <Route path="/upload/:storyId">
+          <HeaderComponent backButtonLink='/stories/'/>
+          <div className='main'>
             <UploadComponent/>
-          </Route>
-          <Route path="/stories">
+          </div>
+        </Route>
+        <Route path="/stories">
+          <HeaderComponent backButtonLink='/'/>
+          <div className='main'>
             <StoryListComponent/>
-          </Route>
-          <Route path="/">
+          </div>
+        </Route>
+        <Route path="/">
+          <HeaderComponent/>
+          <div className='main'>  
             <ProjectViewComponent/>
-          </Route>
-        </Switch>
-      </Router>
-      </div>
+          </div>
+        </Route>
+      </Switch>
+    </Router>
     { modal && <ModalComponent title={modal.title} text={modal.text} onAccept={modal.onAccept}/>}
     </div>
   )

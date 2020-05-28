@@ -3,14 +3,12 @@ import { useParams, useHistory } from "react-router-dom";
 import { getDatabase, StorySchema } from "../services/storage";
 import { AudioRecorderComponent } from "./AudioRecorderComponent";
 import { AudioRecording } from "../media/recorder";
-import { PhotoCaptureComponent } from "./PhotoCaptureComponent";
+import { PhotoCaptureComponent, PhotoViewComponent } from "./PhotoCaptureComponent";
 import moment from 'moment';
 import { LocationPickerComponent } from "./LocationPickerComponent";
-import { Api } from "../services/api";
 
 import './styles/input.scss'
 import './styles/story.scss'
-import { ProjectViewComponent } from "./ProjectViewComponent";
 import { TextInputComponent } from "./TextInputComponent";
 import _ from "lodash";
 
@@ -115,31 +113,47 @@ const StoryComponent = () => {
     }
   }
 
+
   return (
     story ?
+      !story.uploaded ? 
+        <div className="story">
+          <h2>Memory of {story.projectName}</h2>
+          <div className='item info'>
+            <div className='item-content'>
+            <p>Created {moment(story.createdAt).fromNow()} by <span className='author'>{story.author}</span>.</p>
+            <TextInputComponent text={story.text} onChange={updateText}/>
+            </div>
+          </div>
+          <div className='item recorder'>
+            <div className='item-content'>
+              <AudioRecorderComponent onSave={(rec) => saveRecording(rec)} onDelete={deleteRecording} recording={story.recording}/>
+            </div>
+          </div>
+          <div className='item camera'>
+            <PhotoCaptureComponent imageData={story.image} onCapture={saveImage} onDelete={deleteImage}/>
+          </div>
+          <div className='item location'> 
+            <LocationPickerComponent location={story.location} onPick={updateLocation}/>
+          </div>
+          <div className='button-group'>
+            <button onClick={deleteStory}>Delete</button>
+            <button onClick={() => history.push(`/upload/${story.id}`)} disabled={!story.recording || !story.image || !story.location}>Upload</button>
+          </div>
+        </div>
+      :
       <div className="story">
         <h2>Memory of {story.projectName}</h2>
         <div className='item info'>
           <div className='item-content'>
           <p>Created {moment(story.createdAt).fromNow()} by <span className='author'>{story.author}</span>.</p>
-          <TextInputComponent text={story.text} onChange={updateText}/>
-          </div>
-        </div>
-        <div className='item recorder'>
-          <div className='item-content'>
-            <AudioRecorderComponent onSave={(rec) => saveRecording(rec)} onDelete={deleteRecording} recording={story.recording}/>
           </div>
         </div>
         <div className='item camera'>
-          <PhotoCaptureComponent imageData={story.image} onCapture={saveImage} onDelete={deleteImage}/>
+          <PhotoViewComponent imageData={story.image}/>
         </div>
-        <div className='item location'> 
-          <LocationPickerComponent location={story.location} onPick={updateLocation}/>
-        </div>
-        <div className='button-group'>
-          <button onClick={deleteStory}>Delete</button>
-          <button onClick={() => history.push(`/upload/${story.id}`)} disabled={!story.recording || !story.image || !story.location}>Upload</button>
-        </div>
+        <p>Memory has been uploaded.</p>
+        <button onClick={deleteStory}>Delete from Device</button>
       </div>
     :
       <div className="story center">

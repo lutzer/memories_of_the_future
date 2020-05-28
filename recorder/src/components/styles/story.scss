@@ -26,6 +26,10 @@
     .author {
       font-style: italic;
     }
+
+    &.uploaded {
+      opacity: 0.2
+    }
   }
 
   .center-item {

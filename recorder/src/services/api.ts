@@ -1,21 +1,26 @@
 import _ from 'lodash'
 import { config } from "../config"
 import { ProjectSchema, StorySchema } from './storage'
-import { getFilename } from '../utils/utils'
+import { getFilename, generateAuthHeader } from '../utils/utils'
 
 class ApiException extends Error {
-  constructor(message: string) {
+
+  statusCode : number
+
+  constructor(statusCode: number, message: string) {
     super(message)
+    this.statusCode = statusCode
   }
 }
 
-async function uploadFiles(story: StorySchema, controller?: AbortController) : Promise<Response> {
+async function uploadFiles(story: StorySchema, password: string, controller?: AbortController) : Promise<Response> {
   var data = new FormData()
   data.append('recording', story.recording.blob, getFilename(story.recording.blob))
   data.append('image', story.image, getFilename(story.image))
 
-  let response = await fetch(config.apiAdress + 'upload/story/' + story.id, { // Your POST endpoint
+  let response = await fetch(config.apiAdress + 'upload/story/' + story.id, {
     method: 'POST',
+    headers: new Headers( generateAuthHeader(story.projectName, password)),
     body: data,
     signal: controller ? controller.signal : null
   })
@@ -27,34 +32,34 @@ class Api {
     let response = await fetch(config.apiAdress + 'projects?name=' + name)
     let json = await response.json()
     if (_.isEmpty(json.project))
-      throw new ApiException(`There is no project with the name ${name}.`)
+      throw new ApiException(response.status, `There is no project with the name ${name}.`)
     return json
   }
 
-  static async uploadStory(story: StorySchema, controller?: AbortController) : Promise<void> {
+  static async uploadStory(story: StorySchema, password: string, controller?: AbortController) : Promise<void> {
     // post story
     let response = await fetch(config.apiAdress + 'stories', {
       method: 'POST',
-      headers: {
+      headers: Object.assign({},{
         'Content-Type': 'application/json'
-      },
+      }, generateAuthHeader(story.projectName, password)),
       body: JSON.stringify(story),
       signal: controller ? controller.signal : null
     });
 
     if (response.status != 200) {
       let text = await response.text()
-      throw new ApiException(text)
+      throw new ApiException(response.status, text)
     }
     // find out story id from server
     let json = await response.json()
     story.id = json.story.id
 
     // upload files
-    response = await uploadFiles(story, controller) 
+    response = await uploadFiles(story, password, controller) 
     if (response.status != 200) {
       let text = await response.text()
-      throw new ApiException(text)
+      throw new ApiException(response.status, text)
     }
   }
 }

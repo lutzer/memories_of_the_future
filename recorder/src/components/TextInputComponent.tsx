@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import './styles/input.scss'
 
-const TextInputComponent = ({text = '', onChange} : { text? : string, onChange : (text: string) => void } ) => {
+const TextInputComponent = ({text = '', disabled = false, onChange} : 
+  { text? : string, disabled? : boolean, onChange : (text: string) => void } ) => {
   const [expanded, setExpand] = useState(false)
 
   function onTextAreaChange(text: string){
@@ -19,7 +20,8 @@ const TextInputComponent = ({text = '', onChange} : { text? : string, onChange :
           onChange={(e) => onTextAreaChange(e.target.value)}
           onFocus={() => setExpand(true)}
           onBlur={() => setExpand(false)}
-          maxLength={512}>
+          maxLength={512}
+          disabled={disabled}>
         </textarea>
       </div>
     </div>

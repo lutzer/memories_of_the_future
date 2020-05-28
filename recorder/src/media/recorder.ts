@@ -17,7 +17,7 @@ new Promise(async (resolve, reject) => {
   let mediaRecorder : MediaRecorder = null
 
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
     mediaRecorder = new MediaRecorder(stream);
   } catch (err) {
     reject(err)

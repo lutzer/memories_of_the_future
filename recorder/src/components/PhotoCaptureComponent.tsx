@@ -1,6 +1,33 @@
 import React, { useState, useEffect } from "react";
 import './styles/photo_capture.scss'
 
+const PhotoViewComponent = ({imageData} : {imageData? : Blob}) => {
+  const [image, setImage] = useState(null)
+
+  useEffect( () => {
+    setImage(imageData ? URL.createObjectURL(imageData) : null )
+  },[imageData])
+
+  return(
+    <div className='photo_capture'>
+      { image ? 
+        <div className='photo'>
+          <img src={image}/>
+          <div className='input'>
+          </div>
+        </div> 
+      : 
+        <div>
+          <div className='placeholder'>
+            No Picture
+          </div>
+        </div>
+      }
+    </div>
+  )
+}
+
+
 const PhotoCaptureComponent = ({imageData, onCapture, onDelete} : {imageData? : Blob, onCapture : (blob: Blob) => void, onDelete : () => void}) => {
   const [image, setImage] = useState(null)
 
@@ -40,4 +67,4 @@ const PhotoCaptureComponent = ({imageData, onCapture, onDelete} : {imageData? : 
   )
 }
 
-export { PhotoCaptureComponent }
+export { PhotoCaptureComponent, PhotoViewComponent }

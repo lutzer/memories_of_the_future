@@ -94,10 +94,10 @@ const StoryListComponent = () => {
         <h2>Memories - {stories.length}/{config.maxStories}</h2>
         { stories.map( (story: StorySchema, i) => {
           return( 
-            <div key={i} className='item'>
+            <div key={i} className={story.uploaded? 'item uploaded': 'item'}>
               <Link to={`/story/${story.id}`}>
                 <div className='item-content'>
-                <h3>{story.projectName}</h3>
+                <h3>{story.projectName}{story.uploaded ? ' (uploaded)' : ''}</h3>
                 <p>
                 created {moment(story.createdAt).fromNow()} by <span className='author'>{story.author || 'unknown'}</span>
                 </p>

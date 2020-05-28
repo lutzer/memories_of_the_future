@@ -1,5 +1,7 @@
+import base64 from 'base-64'
 
 function getFilename(blob: Blob) : string {
+  console.log(blob)
   switch (blob.type) {
     case 'image/jpeg':
       return 'image.jpg'
@@ -23,4 +25,10 @@ function convertSecondsToMinuteString(seconds: number) {
   return `${minutes}:${secondString}`
 }
 
-export { getFilename, convertSecondsToMinuteString }
+function generateAuthHeader(name: string, password: string) : { Authorization : string } {
+  return {
+    "Authorization": `Basic ${base64.encode(`${name}:${password}`)}`
+  }
+}
+
+export { getFilename, convertSecondsToMinuteString, generateAuthHeader }
