@@ -27,6 +27,7 @@ describe('Create Test Data', () => {
   it('should add a project', async () => {
     let result = await connect().post('/api/projects').send({
       name : "Tempelhof",
+      password: 'password',
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     })
     expect(result).to.have.status(200);
@@ -36,6 +37,7 @@ describe('Create Test Data', () => {
   it('should add another project with 3 stories', async () => {
     let result = await connect().post('/api/projects').send({
       name : "Project1",
+      password: 'password',
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     })
     expect(result).to.have.status(200);
@@ -46,27 +48,28 @@ describe('Create Test Data', () => {
       author: "Nitsa",
       title: "Lutz",
       location: [52.547695, 13.359864]
-    })
+    }).auth('Project1', 'password')
     expect(result).to.have.status(200);
     result = await connect().post('/api/stories').send({
       projectId : projectId,
       author: "Felix",
       title: "Lutz",
       location: [52.538293, 13.343924]
-    })
+    }).auth('Project1', 'password')
     expect(result).to.have.status(200);
     result = await connect().post('/api/stories').send({
       projectId : projectId,
       author: "Sidra",
       title: "Lutz",
       location: [51.563887, 10.803122]
-    })
+    }).auth('Project1', 'password')
     expect(result).to.have.status(200);
   })
 
   it('should add another project with 2 stories with recordings and images', async () => {
     let result = await connect().post('/api/projects').send({
       name : "Project2",
+      password: 'password',
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     })
     expect(result).to.have.status(200);
@@ -78,11 +81,12 @@ describe('Create Test Data', () => {
       author: "Nitsa",
       title: "Lutz",
       location: [52.547695, 13.359864]
-    })
+    }).auth('Project2', 'password')
     expect(result).to.have.status(200);
     result = await connect().post('/api/upload/story/'+result.body.story.id)
       .attach('image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png')
       .attach('recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3')
+      .auth('Project2', 'password')
     expect(result).to.have.status(200);
 
     result = await connect().post('/api/stories').send({
@@ -90,11 +94,12 @@ describe('Create Test Data', () => {
       author: "Felix",
       title: "Lutz",
       location: [52.538293, 13.343924]
-    })
+    }).auth('Project2', 'password')
     expect(result).to.have.status(200);
     result = await connect().post('/api/upload/story/'+result.body.story.id)
       .attach('image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png')
       .attach('recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3')
+      .auth('Project2', 'password')
     expect(result).to.have.status(200);
 
     result = await connect().post('/api/stories').send({
@@ -102,11 +107,12 @@ describe('Create Test Data', () => {
       author: "Sidra",
       title: "Lutz",
       location: [51.563887, 10.803122]
-    })
+    }).auth('Project2', 'password')
     expect(result).to.have.status(200);
     result = await connect().post('/api/upload/story/'+result.body.story.id)
       .attach('image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png')
       .attach('recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3')
+      .auth('Project2', 'password')
     expect(result).to.have.status(200);
   })
 

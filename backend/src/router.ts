@@ -23,6 +23,14 @@ const upload = multer({
   fileFilter : fileFilter
 });
 
+class ApiError extends Error {
+  statusCode : number
+  constructor(statusCode : number, message : string) {
+    super(message)
+    this.statusCode = statusCode;
+  }
+}
+
 /* Project Routes */
 
 router.get('/projects/', async (context) => {
@@ -128,38 +136,41 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
   }, [])
 
   // story exists, handle file uploads
-  if (!story.isObject().value() || !project) {
-    context.throw(400,'Story or Project does not exist');
-  } else if (!checkBasicAuth(context.header, project.name, project.password)) {
-    context.throw(401,'Authorization required');
-  } else {
-    // convert and move files
-    uploadList.forEach( (file) => {
-      if (file.type == 'recording')
-        handleAudioUpload(file, story.get('id').value())
-        .catch((err) => {
-          console.error("Error uploading file: " + file.name,err)
-          deleteFile(file.path)
-        }).then( (path : string) => {
-          story.set('recording', getFileUrl(path)).write()
-        })
-      else if (file.type == 'image')
-        handleImageUpload(file, story.get('id').value())
-        .catch((err) => {
-          console.error("Error uploading file: " + file.name,err)
-          deleteFile(file.path)
-        }).then( (path : string) => {
-          story.set('image', getFileUrl(path)).write()
-        })
-    })
-    context.body = { msg : `${uploadList.length} files uploaded to story ${story.get('id').value()}` }
-    return
+  try {
+    if (!story.isObject().value() || !project) {
+      throw new ApiError(400,'Story or Project does not exist');
+    } else if (!checkBasicAuth(context.header, project.name, project.password)) {
+      throw new ApiError(401,'Authorization required');
+    } else {
+      // convert and move files
+      uploadList.forEach( (file) => {
+        if (file.type == 'recording')
+          handleAudioUpload(file, story.get('id').value())
+          .catch((err) => {
+            console.error("Error uploading file: " + file.name,err)
+            deleteFile(file.path)
+          }).then( (path : string) => {
+            story.set('recording', getFileUrl(path)).write()
+          })
+        else if (file.type == 'image')
+          handleImageUpload(file, story.get('id').value())
+          .catch((err) => {
+            console.error("Error uploading file: " + file.name,err)
+            deleteFile(file.path)
+          }).then( (path : string) => {
+            story.set('image', getFileUrl(path)).write()
+          })
+      })
+      context.body = { msg : `${uploadList.length} files uploaded to story ${story.get('id').value()}` }
+    }
+  } catch (err) {
+    // cleanup files if there was en error
+    await Promise.all(uploadList.map( async (file) => {
+      await deleteFile(file.path)
+    }))
+    context.throw( err instanceof ApiError ? err.statusCode : 400, err.message)
   }
-
-  // cleanup files if there was en error
-  await Promise.all(uploadList.map( async (file) => {
-    await deleteFile(file.path)
-  }))
+ 
 })
 
 
