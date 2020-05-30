@@ -1,4 +1,9 @@
 import base64 from 'base-64'
+import formatDistance from 'date-fns/formatDistance';
+
+function dateFromNow(time : number) {
+  return formatDistance(new Date(time), new Date(), { addSuffix: true });
+}
 
 function getFilename(blob: Blob) : string {
   console.log(blob)
@@ -31,4 +36,4 @@ function generateAuthHeader(name: string, password: string) : { Authorization : 
   }
 }
 
-export { getFilename, convertSecondsToMinuteString, generateAuthHeader }
+export { dateFromNow, getFilename, convertSecondsToMinuteString, generateAuthHeader }

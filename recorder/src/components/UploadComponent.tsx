@@ -115,8 +115,6 @@ const UploadComponent = () => {
 
     }
   }
-
-  console.log(state)
   
   if (state == UploadState.PASSWORD)
     return(

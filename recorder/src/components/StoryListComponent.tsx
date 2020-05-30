@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { getDatabase, StorySchema, ProjectSchema } from "../services/storage";
-import { Link, useHistory } from "react-router-dom";
-import moment from 'moment';
+import { Link } from "react-router-dom";
 import _ from 'lodash'
 import { config } from "../config";
+import { dateFromNow } from "../utils/utils";
 
 import './styles/story.scss'
 import './styles/input.scss'
@@ -99,7 +99,7 @@ const StoryListComponent = () => {
                 <div className='item-content'>
                 <h3>{story.projectName}{story.uploaded ? ' (uploaded)' : ''}</h3>
                 <p>
-                created {moment(story.createdAt).fromNow()} by <span className='author'>{story.author || 'unknown'}</span>
+                created {dateFromNow(story.createdAt)} by <span className='author'>{story.author || 'unknown'}</span>
                 </p>
               </div>
               </Link>

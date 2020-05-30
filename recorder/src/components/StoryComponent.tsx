@@ -4,13 +4,13 @@ import { getDatabase, StorySchema } from "../services/storage";
 import { AudioRecorderComponent } from "./AudioRecorderComponent";
 import { AudioRecording } from "../media/recorder";
 import { PhotoCaptureComponent, PhotoViewComponent } from "./PhotoCaptureComponent";
-import moment from 'moment';
 import { LocationPickerComponent } from "./LocationPickerComponent";
+import { TextInputComponent } from "./TextInputComponent";
+import _ from "lodash";
+import { dateFromNow } from "../utils/utils";
 
 import './styles/input.scss'
 import './styles/story.scss'
-import { TextInputComponent } from "./TextInputComponent";
-import _ from "lodash";
 
 function handleDbError(err : any) {
   console.log(err)
@@ -121,7 +121,7 @@ const StoryComponent = () => {
           <h2>Memory of {story.projectName}</h2>
           <div className='item info'>
             <div className='item-content'>
-            <p>Created {moment(story.createdAt).fromNow()} by <span className='author'>{story.author}</span>.</p>
+            <p>Created {dateFromNow(story.createdAt)} by <span className='author'>{story.author}</span>.</p>
             <TextInputComponent text={story.text} onChange={updateText}/>
             </div>
           </div>
@@ -146,7 +146,7 @@ const StoryComponent = () => {
         <h2>Memory of {story.projectName}</h2>
         <div className='item info'>
           <div className='item-content'>
-          <p>Created {moment(story.createdAt).fromNow()} by <span className='author'>{story.author}</span>.</p>
+          <p>Created {dateFromNow(story.createdAt)} by <span className='author'>{story.author}</span>.</p>
           </div>
         </div>
         <div className='item camera'>
