@@ -3,6 +3,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { GenerateSW } = require('workbox-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = (env, argv) => {
 
@@ -23,7 +24,7 @@ module.exports = (env, argv) => {
         extensions: [".ts", ".tsx", ".js", ".json"]
     },
     output: {
-      filename: '[name].bundle.js',
+      filename: '[name].[hash].bundle.js',
       path: path.resolve(__dirname, builDir),
     },
     plugins: [
@@ -35,12 +36,17 @@ module.exports = (env, argv) => {
       }),
       new CopyPlugin([
         { from: 'src/manifest.json', to: '' },
-        { from: isDevelopment ? 'src/index.dev.html' : 'src/index.production.html', to: 'index.html'}
+        { from: 'src/assets/favicon.ico', to: ''}
       ]),
       isDevelopment ? () => {} : new GenerateSW({
         swDest: 'service-worker.js',
         clientsClaim: true,
         skipWaiting: true
+      }),
+      new HtmlWebpackPlugin({
+        template: isDevelopment ? 'src/index.dev.html' : 'src/index.production.html',
+        filename: 'index.html',
+        excludeChunks: ['polyfill']
       })
     ],
     module: {
