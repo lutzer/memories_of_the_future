@@ -8,14 +8,31 @@ import { UploadComponent } from "./UploadComponent";
 import { HeaderComponent } from "./HeaderComponent";
 
 declare global {
-  var showModal: (title: string, text: string) => void
+  var showModal: (title: string, text: string, cancelable? : boolean) => Promise<boolean>
 }
 
 const MainComponent = () => {
   const [modal, setModal] = useState<ModalProperties>(null)
 
-  function showModal(title: string, text: string) {
-    setModal({title: title, text: text, onAccept: () => setModal(null)})
+  function showModal(title: string, text: string, cancelable : boolean = false) : Promise<boolean> {
+    return new Promise( (resolve) => {
+      if (cancelable)
+        setModal({title: title, text: text,
+          onAccept: () => { setModal(null); resolve(true) },
+          onCancel: () => { setModal(null); resolve(false)}
+        })
+      else
+        setModal({title: title, text: text, onAccept: () => { setModal(null); resolve(true) }})
+    })
+    // if (callback)
+    //   setModal({
+    //     title: title, 
+    //     text: text, 
+    //     onAccept: () => { callback(true); setModal(null) }, 
+    //     onCancel: () => { callback(false); setModal(null) } 
+    //   })
+    // else
+      
   }
 
   function onBackButtonClick() {

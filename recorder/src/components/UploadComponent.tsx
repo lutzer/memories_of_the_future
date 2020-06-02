@@ -5,7 +5,6 @@ import { getDatabase, StorySchema } from "../services/storage";
 
 import './styles/upload.scss'
 import { Api, ApiException } from "../services/api";
-import { LoaderOptionsPlugin } from "webpack";
 
 function handleDbError(err : any) {
   console.log(err)

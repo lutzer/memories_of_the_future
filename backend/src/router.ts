@@ -135,7 +135,6 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
     return _.concat(acc, file)
   }, [])
 
-  // story exists, handle file uploads
   try {
     if (!story.isObject().value() || !project) {
       throw new ApiError(400,'Story or Project does not exist');

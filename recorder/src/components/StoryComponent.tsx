@@ -11,6 +11,7 @@ import { dateFromNow } from "../utils/utils";
 
 import './styles/input.scss'
 import './styles/story.scss'
+import { DeleteButtonComponent } from "./DeleteButtonComponent";
 
 function handleDbError(err : any) {
   console.log(err)
@@ -137,7 +138,7 @@ const StoryComponent = () => {
             <LocationPickerComponent location={story.location} onPick={updateLocation}/>
           </div>
           <div className='button-group'>
-            <button onClick={deleteStory}>Delete</button>
+            <DeleteButtonComponent text='Delete' onConfirm={deleteStory}/>
             <button onClick={() => history.push(`/upload/${story.id}`)} disabled={!story.recording || !story.image || !story.location}>Upload</button>
           </div>
         </div>

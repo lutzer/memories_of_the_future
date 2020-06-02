@@ -9,6 +9,7 @@ import './styles/input.scss'
 import './styles/recorder.scss'
 import playArrow from './../assets/play-arrow.png'
 import pauseButton from './../assets/pause-button.png'
+import { DeleteButtonComponent } from "./DeleteButtonComponent";
 
 const AudioPlayerComponent = ({audioData} : {audioData : AudioRecording}) => {
   const [audio, setAudio] = useState<HTMLAudioElement>(null)
@@ -130,7 +131,7 @@ const AudioRecorderComponent = ({onSave, onDelete, recording} :
     recording ?
       <div className='recorder'>
         <AudioPlayerComponent audioData={recording}/>
-        <button onClick={onDelete}>Delete Recording</button>
+        <DeleteButtonComponent text='Delete Recording' confirmText='Are you sure?' onConfirm={onDelete}/>
       </div>
     :
     <div className='recorder'>

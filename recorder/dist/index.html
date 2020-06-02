@@ -1,13 +1,14 @@
-<!doctype html><html><head><meta name="format-detection" content="telephone=no"><meta name="msapplication-tap-highlight" content="no"><meta name="viewport" content="initial-scale=1,width=device-width,viewport-fit=cover"><title>Memories of the Future</title><link rel="manifest" href="/manifest.json"><link rel="shortcut icon" href="favicon.ico" type="image/x-icon"><link href="css/app.dd2c4302.css" rel="stylesheet"></head><body><div id="app"></div><script>// Check that service workers are supported
-            if ('serviceWorker' in navigator) {
-              // Use the window load event to keep the page load performant
-              window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js');
-              });
-            } else {
-                console.error("Service Worker not supported")
+<!doctype html><html><head><meta name="format-detection" content="telephone=no"><meta name="msapplication-tap-highlight" content="no"><meta name="viewport" content="initial-scale=1,width=device-width,viewport-fit=cover"><title>Memories of the Future</title><link rel="manifest" href="/manifest.json"><link rel="shortcut icon" href="favicon.ico" type="image/x-icon"><link href="css/app.dd2c4302.css" rel="stylesheet"></head><body><div id="app"></div><script>if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    }).catch(registrationError => {
+                        console.error('SW registration failed: ', registrationError);
+                    });
+                });
             }</script><script>if (!window.MediaRecorder) {
                 document.write(
                     decodeURI('%3Cscript defer src="/polyfill.bundle.js">%3C/script>')
                 )
-            }</script><script src="app.5ec64ce25a657d07e5ca.bundle.js"></script></body></html>
+            }</script><script src="app.2a906afcf168a65dfb1a.bundle.js"></script></body></html>
