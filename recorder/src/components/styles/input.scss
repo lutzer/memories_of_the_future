@@ -25,14 +25,14 @@
 }
 
 .button-group {
-  display: flex;
-  justify-content: center;
+  text-align: center;
   width: 80%;
   margin: 0 auto;
 
   button {
+    display: inline-block;
     margin: 10px 5px;
-    width: 40%;
+    width: auto;
   }
 }
 
@@ -45,5 +45,9 @@
 }
 
 .button-delete {
-  background-color: red;
+  transition: background-color 0.4s ease;
+
+  &.confirm {
+    background-color: red;
+  }
 }

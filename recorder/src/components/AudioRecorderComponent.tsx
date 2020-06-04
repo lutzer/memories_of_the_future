@@ -131,7 +131,7 @@ const AudioRecorderComponent = ({onSave, onDelete, recording} :
     recording ?
       <div className='recorder'>
         <AudioPlayerComponent audioData={recording}/>
-        <DeleteButtonComponent text='Delete Recording' confirmText='Are you sure?' onConfirm={onDelete}/>
+        <DeleteButtonComponent text='Delete Recording' onConfirm={onDelete}/>
       </div>
     :
     <div className='recorder'>

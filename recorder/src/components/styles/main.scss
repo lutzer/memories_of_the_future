@@ -77,6 +77,10 @@ button, .button {
   &:disabled {
     background-color: #ddd;
   }
+
+  &:focus {
+    outline:0;
+  }
 }
 
 a {

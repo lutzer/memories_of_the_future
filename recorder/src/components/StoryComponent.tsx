@@ -138,7 +138,7 @@ const StoryComponent = () => {
             <LocationPickerComponent location={story.location} onPick={updateLocation}/>
           </div>
           <div className='button-group'>
-            <DeleteButtonComponent text='Delete' onConfirm={deleteStory}/>
+            <DeleteButtonComponent text='Delete Memory' onConfirm={deleteStory}/>
             <button onClick={() => history.push(`/upload/${story.id}`)} disabled={!story.recording || !story.image || !story.location}>Upload</button>
           </div>
         </div>

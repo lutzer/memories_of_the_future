@@ -19,7 +19,7 @@ const MainComponent = () => {
       if (cancelable)
         setModal({title: title, text: text,
           onAccept: () => { setModal(null); resolve(true) },
-          onCancel: () => { setModal(null); resolve(false)}
+          onCancel: () => { setModal(null); resolve(false) }
         })
       else
         setModal({title: title, text: text, onAccept: () => { setModal(null); resolve(true) }})

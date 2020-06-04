@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import './styles/main.scss'
 import './styles/input.scss'
 
-const DeleteButtonComponent = ({ text = 'Delete', confirmText = 'Sure?', onConfirm} : 
+const DeleteButtonComponent = ({ text = 'Delete', confirmText = 'Confirm Delete', onConfirm} : 
 { text? : string, confirmText? : string, onConfirm : () => void}) => {
   const [clicked, setClicked] = useState(false)
 
@@ -26,7 +26,7 @@ const DeleteButtonComponent = ({ text = 'Delete', confirmText = 'Sure?', onConfi
   }
   
   return(
-    <button className={ clicked ? 'button-delete' : ''} onClick={onClick}>{clicked ? confirmText : text}</button>
+    <button className={ clicked ? 'button-delete confirm' : 'button-delete'} onClick={onClick}>{clicked ? confirmText : text}</button>
   )
 }
 
