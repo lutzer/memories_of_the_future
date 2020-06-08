@@ -79,7 +79,7 @@ const ProjectViewComponent = () => {
   if (!editing) {
     return(
       project ?
-      <div className='project'>
+      <div className='project center'>
         <div className='details'>
           <Link to='/stories'>
             <div className='item-content'>
