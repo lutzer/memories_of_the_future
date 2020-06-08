@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Component } from "react";
-import ReactMapGL, { Marker, Popup } from "react-map-gl";
+import ReactMapGL, { Marker } from "react-map-gl";
 import "./styles/map.scss";
-import { useParams } from "react-router-dom";
 import { config } from "../config";
 import axios from "axios";
+import { StoriesDetailOverlay } from "./StoriesDetailOverlay";
 
 //++++++++Project Details
 const projectDefaults = {
@@ -31,7 +31,7 @@ class ProjectsComponent extends Component {
       project: projectDefaults,
       stories: [],
       viewport: mapViewport,
-      selectedStory: null,
+      visible: false,
     };
   }
 
@@ -57,6 +57,9 @@ class ProjectsComponent extends Component {
           stories: response.data.stories,
         });
       });
+  }
+  handleClick() {
+    console.log("hey I am clicked");
   }
 
   componentDidMount() {
@@ -84,35 +87,44 @@ class ProjectsComponent extends Component {
                   e.preventDefault();
                   this.setState({ selectedStory: story });
                 }}
-              >
-                
-              </button>
+              ></button>
             </Marker>
           ))}
 
           {this.state.selectedStory ? (
-            <Popup
-              className="popup"
+            <div
+              className="popUp"
               key={this.state.selectedStory.id}
               latitude={this.state.selectedStory.location[0]}
               longitude={this.state.selectedStory.location[1]}
-              onClose={() => {
-                this.setState({ selectedStory: null });
-              }}
             >
               <div>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.setState({ selectedStory: null });
+                  }}
+                >
+                  XX
+                </button>
                 <h2>{this.state.selectedStory.author}</h2>
                 <p>{this.state.selectedStory.title}</p>
-
                 <img src={this.state.selectedStory.image} alt="story image" />
-
-                <audio controls src={ this.state.selectedStory.recording}>
+                <audio controls src={this.state.selectedStory.recording}>
                   Your browser does not support the
                   <code>audio</code> element.
                 </audio>
-           
+
+                {this.state.visible ? <StoriesDetailOverlay /> : null}
+                <button
+                  onClick={() => {
+                    this.setState({ visible: true });
+                  }}
+                >
+                  ++
+                </button>
               </div>
-            </Popup>
+            </div>
           ) : null}
         </ReactMapGL>
       </div>
@@ -121,6 +133,3 @@ class ProjectsComponent extends Component {
 }
 
 export { ProjectsComponent };
-
-
-
