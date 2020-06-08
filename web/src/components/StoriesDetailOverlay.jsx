@@ -32,18 +32,3 @@ class StoriesDetailOverlay extends Component {
 }
 
 export { StoriesDetailOverlay };
-
-{
-  /*
-  <div className="projectOverlay">
-        <h1>{this.state.message}</h1>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            this.setState({ message: null });
-          }}
-        >
-          --
-        </button>
-*/
-}
