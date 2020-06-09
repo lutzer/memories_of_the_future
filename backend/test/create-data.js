@@ -116,6 +116,48 @@ describe('Create Test Data', () => {
     expect(result).to.have.status(200);
   })
 
+  it('should add another project with 1 story and attachments', async () => {
+    let result = await connect().post('/api/projects').send({
+      name : "Project3",
+      password: 'password',
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    })
+    expect(result).to.have.status(200);
+    expect(result.body.project.id).to.be.string
+    const projectId = result.body.project.id
+
+    // post story
+    result = await connect().post('/api/stories').send({
+      projectId : projectId,
+      author: "Nitsa",
+      title: "Lutz",
+      location: [52.547695, 13.359864]
+    }).auth('Project3', 'password')
+    const storyId = result.body.story.id;
+    expect(result).to.have.status(200);
+    result = await connect().post('/api/upload/story/'+storyId)
+      .attach('image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png')
+      .attach('recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3')
+      .auth('Project3', 'password')
+    expect(result).to.have.status(200);
+
+    // post attachments
+    result = await connect().post('/api/attachments/').send({
+      storyId : storyId,
+      type: 'text',
+      author: 'Peter',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+    }).auth('Project3', 'password')
+    expect(result).to.have.status(200);
+    result = await connect().post('/api/attachments/').send({
+      storyId : storyId,
+      type: 'text',
+      author: 'Anna',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+    }).auth('Project3', 'password')
+    expect(result).to.have.status(200);
+  })
+
   
 
 });
