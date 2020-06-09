@@ -5,7 +5,7 @@ import "./styles/map.scss";
 import { config } from "../config";
 import axios from "axios";
 import { StoryOverlay } from "./StoryOverlay";
-import { isEmpty } from './../utils.js'
+import { isEmpty } from "./../utils.js";
 
 //+++++++++Map Details
 const mapViewport = {
@@ -24,7 +24,7 @@ class ProjectsComponent extends Component {
       stories: [],
       viewport: mapViewport,
       visible: false,
-      selectedStory: undefined
+      selectedStory: undefined,
     };
   }
 
@@ -33,9 +33,8 @@ class ProjectsComponent extends Component {
     axios
       .get(`http://localhost:3000/api/projects/?name=${name}`)
       .then((responseFromApi) => {
-        console.log(responseFromApi.data)
         this.setState({
-          project: responseFromApi.data.project
+          project: responseFromApi.data.project,
         });
         return axios.get(
           `http://localhost:3000/api/stories/?project=${this.state.project.id}`
@@ -56,15 +55,14 @@ class ProjectsComponent extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.match.params.projectName != prevProps.match.params.projectName)
-      this.getProject(this.props.match.params.projectName)
+    if (
+      this.props.match.params.projectName != prevProps.match.params.projectName
+    )
+      this.getProject(this.props.match.params.projectName);
   }
 
   render() {
-    if (isEmpty(this.state.project))
-      return (
-        <div>Project does not exist</div>
-      )
+    if (isEmpty(this.state.project)) return <div>Project does not exist</div>;
     else
       return (
         <div>
@@ -84,52 +82,15 @@ class ProjectsComponent extends Component {
                   className="marker-btn"
                   onClick={(e) => {
                     e.preventDefault();
-                    
                     this.setState({ selectedStory: story.id });
                   }}
                 ></button>
               </Marker>
             ))}
-
-            {/* {this.state.selectedStory ? (
-              <div
-                className="popUp"
-                key={this.state.selectedStory.id}
-                latitude={this.state.selectedStory.location[0]}
-                longitude={this.state.selectedStory.location[1]}
-              >
-                <div>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      this.setState({ selectedStory: null });
-                    }}
-                  >
-                    XX
-                  </button>
-                  <h2>{this.state.selectedStory.author}</h2>
-                  <p>{this.state.selectedStory.title}</p>
-                  <img src={this.state.selectedStory.image} alt="story image" />
-                  <audio controls src={this.state.selectedStory.recording}>
-                    Your browser does not support the
-                    <code>audio</code> element.
-                  </audio>
-
-                  {this.state.visible ? <StoriesDetailOverlay /> : null}
-                  <button
-                    onClick={() => {
-                      this.setState({ visible: true });
-                    }}
-                  >
-                    ++
-                  </button>
-                </div>
-              </div>
-            ) : null} */}
           </ReactMapGL>
-          { this.state.selectedStory &&
-            <StoryOverlay id={this.state.selectedStory}/>
-          }
+          {this.state.selectedStory && (
+            <StoryOverlay id={this.state.selectedStory} />
+          )}
         </div>
       );
   }
