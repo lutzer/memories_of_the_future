@@ -7,7 +7,7 @@ const { generateRandomString } = require('../dist/utils')
 
 chai.use(chaiHttp);
 
-describe('Routes', () => {
+describe('Project & Story Routes', () => {
 
   var server = null
 
@@ -200,8 +200,23 @@ describe('Routes', () => {
       }).auth(project.name, project.password)
       expect(result).to.have.status(200);
       const id = result.body.story.id
-      result = await connect().delete('/api/stories/' + id )
+      result = await connect().delete('/api/stories/' + id ).auth(project.name, project.password)
       expect(result).to.have.status(200);
+    });
+
+    it('should not be able to delete a story without auth', async () => {
+      const project = { name : generateRandomString(), password: generateRandomString() }
+      let result = await connect().post('/api/projects').send(project)
+      expect(result).to.have.status(200);
+      let projectId = result.body.project.id
+      result = await connect().post('/api/stories').send({
+        projectId : projectId,
+        location : [0,0]
+      }).auth(project.name, project.password)
+      expect(result).to.have.status(200);
+      const id = result.body.story.id
+      result = await connect().delete('/api/stories/' + id ).auth('test','test')
+      expect(result).to.have.status(401);
     });
 
     it('should return 400 on deleting a story that does not exist', async () => {
