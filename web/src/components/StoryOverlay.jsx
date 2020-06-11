@@ -27,7 +27,6 @@ class StoryOverlay extends Component {
 
   componentDidMount() {
     this.getStory(this.props.id);
-    console.log(this.props.id);
   }
 
   componentDidUpdate(prevProps) {
@@ -38,9 +37,10 @@ class StoryOverlay extends Component {
 
   render() {
     return (
-      <div className="story-overlay">
+      <div>
         {this.state.story && (
           <div
+            className="story-overlay"
             key={this.state.story.id}
             latitude={this.state.story.location[0]}
             longitude={this.state.story.location[1]}
@@ -67,45 +67,6 @@ class StoryOverlay extends Component {
         )}
       </div>
     );
-
-    /*<div>
-        {this.state.selectedStory ? (
-          <div
-            className="popUp"
-            key={this.state.selectedStory.id}
-            latitude={this.state.selectedStory.location[0]}
-            longitude={this.state.selectedStory.location[1]}
-          >
-            <div>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  this.setState({ selectedStory: null });
-                }}
-              >
-                XX
-              </button>
-              <h2>{this.state.selectedStory.author}</h2>
-              <p>{this.state.selectedStory.title}</p>
-              <img src={this.state.selectedStory.image} alt="story image" />
-              <audio controls src={this.state.selectedStory.recording}>
-                Your browser does not support the
-                <code>audio</code> element.
-
-                
-              {this.state.visible ? <StoriesDetailOverlay /> : null}
-              <button
-                onClick={() => {
-                  this.setState({ visible: true });
-                }}
-              >
-                ++
-              </button>
-            </div>
-          </div>
-        ) : null}
-      </div>
-              */
   }
 }
 
