@@ -14,8 +14,7 @@ class StoryOverlay extends Component {
     };
   }
 
-  componentDidMount() {
-    console.log(this.props.id);
+  getStory() {
     axios
       .get(`http://localhost:3000/api/stories/${this.props.id}`)
       .then((responseFromApi) => {
@@ -24,6 +23,17 @@ class StoryOverlay extends Component {
           story: responseFromApi.data.story,
         });
       });
+  }
+
+  componentDidMount() {
+    this.getStory(this.props.id);
+    console.log(this.props.id);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.id != prevProps.id) {
+      this.getStory(this.props.id);
+    }
   }
 
   render() {
@@ -57,15 +67,6 @@ class StoryOverlay extends Component {
         )}
       </div>
     );
-
-    {
-      /*}  {this.state.story ? (
-          <div >
-            <h2>Hey I am story</h2>}
-          </div>
-        ) : null}
-      */
-    }
 
     /*<div>
         {this.state.selectedStory ? (
