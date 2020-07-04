@@ -1,6 +1,16 @@
+@import "vars";
+
 .story-overlay {
-  position: absolute;
-  top: 50px;
-  left: 50px;
   background-color: white;
+  width: 40%;
+  height: 40%;
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  top: 5%;
+}
+
+.story-overlay img {
+  width: 20%;
+  height: auto;
 }
