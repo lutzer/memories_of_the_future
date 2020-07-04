@@ -3,6 +3,25 @@ import { config } from "../config"
 import { ProjectSchema, StorySchema } from './storage'
 import { getFilename, generateAuthHeader } from '../utils/utils'
 
+type ApiStorySchema = {
+  id: string,
+  projectId : string,
+  createdAt: number,
+  author: string,
+  text: string,
+  recording: string,
+  image : string,
+  location : [ number, number ],
+  visible: boolean
+}
+
+type ApiProjectSchema = {
+  id: string,
+  name : string,
+  description: string,
+  createdAt: number
+}
+
 class ApiException extends Error {
 
   statusCode : number
@@ -28,7 +47,16 @@ async function uploadFiles(story: StorySchema, password: string, controller?: Ab
 }
 
 class Api {
-  static async getProjectByName(name: string) : Promise<{project : ProjectSchema}> {
+
+  static async getStoriesByProjectId(id : string) : Promise<{stories : ApiStorySchema[]}> {
+    let response = await fetch(config.apiAdress + 'stories/?project=' + id)
+    if (response.status != 200)
+      throw new ApiException(response.status, `Could not fetch data.`)
+    let json = await response.json()
+    return json
+  }
+
+  static async getProjectByName(name: string) : Promise<{project : ApiProjectSchema}> {
     let response = await fetch(config.apiAdress + 'projects?name=' + name)
     if (response.status != 200)
       throw new ApiException(response.status, `Could not fetch data.`)
@@ -66,4 +94,4 @@ class Api {
   }
 }
 
-export { Api, ApiException }
+export { Api, ApiException, ApiStorySchema, ApiProjectSchema }

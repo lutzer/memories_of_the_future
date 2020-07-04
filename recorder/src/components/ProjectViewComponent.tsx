@@ -81,7 +81,7 @@ const ProjectViewComponent = () => {
       project ?
       <div className='project center'>
         <div className='details'>
-          <Link to='/stories'>
+          <Link to={'/project/'+project.name}>
             <div className='item-content'>
               <h3>{project.name}</h3>
               <p>{project.description}</p>

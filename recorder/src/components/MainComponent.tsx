@@ -6,6 +6,8 @@ import { ProjectViewComponent } from "./ProjectViewComponent";
 import { ModalComponent, ModalProperties } from "./ModalComponent";
 import { UploadComponent } from "./UploadComponent";
 import { HeaderComponent } from "./HeaderComponent";
+import { MapComponent } from "./MapComponent";
+import { ProjectComponent } from "./ProjectComponent";
 
 declare global {
   var showModal: (title: string, text: string, cancelable? : boolean) => Promise<boolean>
@@ -24,15 +26,6 @@ const MainComponent = () => {
       else
         setModal({title: title, text: text, onAccept: () => { setModal(null); resolve(true) }})
     })
-    // if (callback)
-    //   setModal({
-    //     title: title, 
-    //     text: text, 
-    //     onAccept: () => { callback(true); setModal(null) }, 
-    //     onCancel: () => { callback(false); setModal(null) } 
-    //   })
-    // else
-      
   }
 
   function onBackButtonClick() {
@@ -45,6 +38,10 @@ const MainComponent = () => {
     <div className='content'>
     <Router>
       <Switch>
+      <Route path='/project/:projectName'>
+          <HeaderComponent backButtonLink='/'/>
+          <ProjectComponent/>
+        </Route>
         <Route path="/story/:storyId">
           <HeaderComponent backButtonLink='/stories/'/>
           <div className='main'>
