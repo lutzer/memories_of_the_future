@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { getDatabase, StorySchema, ProjectSchema } from "../services/storage";
-import { Link } from "react-router-dom";
+import { getDatabase} from "../services/storage";
+import { Link, useParams } from "react-router-dom";
 import _ from 'lodash'
 import { config } from "../config";
 import { dateFromNow } from "../utils/utils";
 
 import './styles/story.scss'
 import './styles/input.scss'
+import { RecordSchema, ProjectSchema, Store } from "../services/store";
 
 const AuthorInputComponent = ({onCancel, onSave} : 
   { onCancel: () => void, onSave : (name: string) => void}) => {
@@ -28,41 +29,37 @@ const AuthorInputComponent = ({onCancel, onSave} :
   )
 }
 
-const StoryListComponent = () => {
-  const [stories, setStories] = useState<StorySchema[]>([])
-  const [project, setProject] = useState<ProjectSchema>({id: null, name: null, description: null})
+const RecordListComponent = () => {
+  const [records, setRecords] = useState<RecordSchema[]>([])
+  const [project, setProject] = useState<ProjectSchema>({id: null, name: null, description: null, createdAt: null})
   const [createMode, enableCreateMode] = useState<boolean>(false)
+  const { projectName } = useParams();
 
   useEffect(()=> {
-    read()
-  },[])
-
-  async function read() {
-    try {
-      const db = await getDatabase()
-      const storyData = await db.getStories()
-      
-      setStories(_.sortBy(storyData, ['createdAt']))
-      const projectData = await db.getProject()
+    Store.getProject(projectName).then( projectData => { 
       setProject(projectData)
-    } catch (err) {
+      return Store.getRecords()
+    }).then( (storyData) => {
+      setRecords(storyData)
+    }).catch( err => {
       console.error(err)
       if (err instanceof Error) showModal('Error', err.message)
-    }
-  }
+    })
+  },[projectName])
 
   async function add(author: string) {
     try {
       const db = await getDatabase()
-      const story = await db.writeStory({ 
-        id: null, 
-        projectId: project.id, 
-        projectName: project.name, 
+      const story = await db.writeStory({
+        id: null,
+        projectId: project.id,
+        projectName: project.name,
         author: _.capitalize(author),
         createdAt: Date.now(),
         uploaded: false
       })
-      read()
+      const storiesData = await db.getStories()
+      setRecords(storiesData)
     } catch (err) {
       console.error(err)
       if (err instanceof Error) showModal('Error', err.message)
@@ -82,7 +79,7 @@ const StoryListComponent = () => {
     )
   } else {
     return (
-      _.isEmpty(stories) ?
+      _.isEmpty(records) ?
         <div className="story-list center">
           <div className='center-item'>
             <p>Record a new memory.</p>
@@ -91,11 +88,11 @@ const StoryListComponent = () => {
         </div>
       : 
       <div className="story-list">
-        <h2>Memories - {stories.length}/{config.maxStories}</h2>
-        { stories.map( (story: StorySchema, i) => {
+        <h2>Memories - {records.length}/{config.maxStories}</h2>
+        { records.map( (story: RecordSchema, i) => {
           return( 
             <div key={i} className={story.uploaded? 'item uploaded': 'item'}>
-              <Link to={`/story/${story.id}`}>
+              <Link to={`/${projectName}/records/${story.id}`}>
                 <div className='item-content'>
                 <h3>{story.projectName}{story.uploaded ? ' (uploaded)' : ''}</h3>
                 <p>
@@ -106,10 +103,10 @@ const StoryListComponent = () => {
             </div>
           )
         }) }
-        <button onClick={onAddStoryClicked} disabled={stories.length >= config.maxStories}>Create Memory</button>
+        <button onClick={onAddStoryClicked} disabled={records.length >= config.maxStories}>Create Memory</button>
       </div>
     )
   }
 }
 
-export { StoryListComponent }
+export { RecordListComponent }

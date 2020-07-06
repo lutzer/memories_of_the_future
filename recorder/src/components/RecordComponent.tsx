@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { getDatabase, StorySchema } from "../services/storage";
+import { getDatabase } from "../services/storage";
 import { AudioRecorderComponent } from "./AudioRecorderComponent";
 import { AudioRecording } from "../media/recorder";
 import { PhotoCaptureComponent, PhotoViewComponent } from "./PhotoCaptureComponent";
@@ -12,6 +12,7 @@ import { dateFromNow } from "../utils/utils";
 import './styles/input.scss'
 import './styles/story.scss'
 import { DeleteButtonComponent } from "./DeleteButtonComponent";
+import { RecordSchema } from "../services/store";
 
 function handleDbError(err : any) {
   console.log(err)
@@ -19,9 +20,9 @@ function handleDbError(err : any) {
 }
 
 
-const StoryComponent = () => {
-  const [story, setStory] = useState<StorySchema>(null)
-  const { storyId } = useParams();
+const RecordComponent = () => {
+  const [story, setStory] = useState<RecordSchema>(null)
+  const { storyId, projectName } = useParams();
   const history = useHistory();
 
   useEffect(()=> {
@@ -41,7 +42,7 @@ const StoryComponent = () => {
   async function saveRecording(recording: AudioRecording) {
     try {
       const db = await getDatabase()
-      const data : StorySchema = Object.assign({}, story, { recording: recording})
+      const data : RecordSchema = Object.assign({}, story, { recording: recording})
       db.writeStory(data)
       setStory(data)
     } catch (err) {
@@ -52,7 +53,7 @@ const StoryComponent = () => {
   async function deleteRecording() {
     try {
       const db = await getDatabase()
-      const data : StorySchema = Object.assign({}, story, { recording: null})
+      const data : RecordSchema = Object.assign({}, story, { recording: null})
       db.writeStory(data)
       setStory(data)
     } catch (err) {
@@ -63,7 +64,7 @@ const StoryComponent = () => {
   async function saveImage(image: Blob) {
     try {
       const db = await getDatabase()
-      const data : StorySchema = Object.assign({}, story, { image: image } )
+      const data : RecordSchema = Object.assign({}, story, { image: image } )
       db.writeStory(data)
       setStory(data)
     } catch (err) {
@@ -74,7 +75,7 @@ const StoryComponent = () => {
   async function deleteImage() {
     try {
       const db = await getDatabase()
-      const data : StorySchema = Object.assign({}, story, { image: null})
+      const data : RecordSchema = Object.assign({}, story, { image: null})
       db.writeStory(data)
       setStory(data)
     } catch (err) {
@@ -86,7 +87,7 @@ const StoryComponent = () => {
     try {
       const db = await getDatabase()
       db.removeStory(storyId)
-      history.push('/stories')
+      history.push('../records/')
     } catch (err) {
       handleDbError(err)
     }
@@ -95,7 +96,7 @@ const StoryComponent = () => {
   const updateText = _.debounce( async (text : string) => {
     try {
       const db = await getDatabase()
-      const data : StorySchema = Object.assign({}, story, { text: text})
+      const data : RecordSchema = Object.assign({}, story, { text: text})
       db.writeStory(data)
       setStory(data)
     } catch (err) {
@@ -106,7 +107,7 @@ const StoryComponent = () => {
   async function updateLocation(loc : [number, number]) {
     try {
       const db = await getDatabase()
-      const data : StorySchema = Object.assign({}, story, { location: loc})
+      const data : RecordSchema = Object.assign({}, story, { location: loc})
       db.writeStory(data)
       setStory(data)
     } catch (err) {
@@ -139,7 +140,7 @@ const StoryComponent = () => {
           </div>
           <div className='button-group'>
             <DeleteButtonComponent text='Delete Memory' onConfirm={deleteStory}/>
-            <button onClick={() => history.push(`/upload/${story.id}`)} disabled={!story.recording || !story.image || !story.location}>Upload</button>
+            <button onClick={() => history.push(`/${projectName}/upload/${story.id}`)} disabled={!story.recording || !story.image || !story.location}>Upload</button>
           </div>
         </div>
       :
@@ -166,4 +167,4 @@ const StoryComponent = () => {
   )
 }
 
-export { StoryComponent }
+export { RecordComponent }

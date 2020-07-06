@@ -1,36 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { MapComponent } from "./MapComponent";
-import { ApiProjectSchema, Api, ApiStorySchema } from "../services/api";
+import { ProjectSchema, StorySchema, Store } from "../services/store";
 
-
+import './styles/project.scss'
+import './styles/input.scss'
+import './styles/animations.scss'
 
 const ProjectComponent = () => {
-  const [ project, setProject ] = useState<ApiProjectSchema>(null)
-  const [ stories, setStories ] = useState<ApiStorySchema[]>([])
+  const [ project, setProject ] = useState<ProjectSchema>(null)
+  const [ stories, setStories ] = useState<StorySchema[]>([])
   const { projectName } = useParams();
 
   useEffect( () => {
-    Api.getProjectByName(projectName).then( data => {
-      setProject(data.project)
+    Store.getProject(projectName).then( data => {
+      setProject(data)
     }).catch( err => {
       setProject(null)
       setStories([])
     })
-  },[projectName])
+  }, [projectName])
 
   useEffect( () => {
     if (project)
-      Api.getStoriesByProjectId(project.id).then( data => {
-        setStories(data.stories)
+      Store.getStories(project.id).then( data => {
+        setStories(data)
+      }).catch( err => {
+        console.warn('Could not load stories from api.')
       })
   },[project])
   
   return(
-    <div>
-      <h1>{projectName}</h1>
-      <MapComponent stories={stories} onMarkerClick={(id) => alert('click id')}></MapComponent>
-    </div>
+    project ? 
+      <div>
+        <h1>{projectName}</h1>
+        <Link className='button' to={`/${projectName}/records/`}>Records</Link>
+        <MapComponent stories={stories} onMarkerClick={(id) => alert('click id')}></MapComponent>
+      </div>
+    :
+    <div className='project center'>
+        <div className='center-item fade-in'>
+          <p>Could not load project data</p>
+        </div>
+      </div>
   )
 }
 

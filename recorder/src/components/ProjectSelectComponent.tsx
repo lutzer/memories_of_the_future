@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getDatabase, ProjectSchema } from "../services/storage";
+import { getDatabase } from "../services/storage";
 import { Link } from "react-router-dom";
 import { Api, ApiException } from "../services/api";
 import { EvalSourceMapDevToolPlugin } from "webpack";
+import { ProjectSchema, Store } from "../services/store";
 
 import './styles/project.scss'
 import './styles/input.scss'
@@ -35,7 +36,7 @@ const ProjectNameInputComponent = ({onCancel, onSave, showError} :
   )
 }
 
-const ProjectViewComponent = () => {
+const ProjectSelectComponent = () => {
   const [project, setProject] = useState<ProjectSchema>(null)
   const [editing, setEditing] = useState<boolean>(false)
   const [error, setError] = useState<string>(null)
@@ -47,8 +48,7 @@ const ProjectViewComponent = () => {
 
   async function readProject() {
     try {
-      const db = await getDatabase()
-      const data = await db.getProject()
+      const data = await Store.getCurrentProject()
       setProject(data)
     } catch (err) {
       console.error(err)
@@ -57,16 +57,14 @@ const ProjectViewComponent = () => {
 
   async function changeProject(name: string) {
     try {
-      const data = await Api.getProjectByName(name)
-      const db = await getDatabase()
-      await db.setProject(data.project)
+      const project = await Store.setCurrentProject(name)
       setEditing(false)
+      setProject(project)
     } catch (err) {
       console.error(err)
       if (err instanceof Error)
         showError(err.message)
     }
-    readProject()
   }
 
   function showError(text : string) {
@@ -81,7 +79,7 @@ const ProjectViewComponent = () => {
       project ?
       <div className='project center'>
         <div className='details'>
-          <Link to={'/project/'+project.name}>
+          <Link to={'/'+project.name}>
             <div className='item-content'>
               <h3>{project.name}</h3>
               <p>{project.description}</p>
@@ -105,4 +103,4 @@ const ProjectViewComponent = () => {
   }
 }
 
-export { ProjectViewComponent }
+export { ProjectSelectComponent }

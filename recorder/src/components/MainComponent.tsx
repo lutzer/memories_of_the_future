@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
-import { StoryListComponent } from "./StoryListComponent";
-import { StoryComponent } from "./StoryComponent";
-import { ProjectViewComponent } from "./ProjectViewComponent";
+import { RecordListComponent } from "./RecordListComponent";
+import { RecordComponent } from "./RecordComponent";
+import { ProjectSelectComponent } from "./ProjectSelectComponent";
 import { ModalComponent, ModalProperties } from "./ModalComponent";
 import { UploadComponent } from "./UploadComponent";
 import { HeaderComponent } from "./HeaderComponent";
-import { MapComponent } from "./MapComponent";
 import { ProjectComponent } from "./ProjectComponent";
 
 declare global {
@@ -38,32 +37,33 @@ const MainComponent = () => {
     <div className='content'>
     <Router>
       <Switch>
-      <Route path='/project/:projectName'>
-          <HeaderComponent backButtonLink='/'/>
-          <ProjectComponent/>
-        </Route>
-        <Route path="/story/:storyId">
-          <HeaderComponent backButtonLink='/stories/'/>
+        
+        <Route path="/:projectName/records/:storyId">
+          <HeaderComponent backButtonLink='.'/>
           <div className='main'>
-            <StoryComponent/>
+            <RecordComponent/>
           </div>
         </Route>
-        <Route path="/upload/:storyId">
-          <HeaderComponent backButtonLink='/stories/'/>
+        <Route path="/:projectName/records">
+          <HeaderComponent backButtonLink='../'/>
+          <div className='main'>
+            <RecordListComponent/>
+          </div>
+        </Route>
+        <Route path="/:projectName/upload/:storyId">
+          <HeaderComponent backButtonLink='../records/'/>
           <div className='main'>
             <UploadComponent/>
           </div>
         </Route>
-        <Route path="/stories">
+        <Route path='/:projectName'>
           <HeaderComponent backButtonLink='/'/>
-          <div className='main'>
-            <StoryListComponent/>
-          </div>
+          <ProjectComponent/>
         </Route>
         <Route path="/">
           <HeaderComponent/>
           <div className='main'>  
-            <ProjectViewComponent/>
+            <ProjectSelectComponent/>
           </div>
         </Route>
       </Switch>
