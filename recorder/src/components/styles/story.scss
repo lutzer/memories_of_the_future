@@ -1,6 +1,7 @@
 @import '_vars.scss';
 
 .story-list {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -46,6 +47,7 @@
 }
 
 .story {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-start;

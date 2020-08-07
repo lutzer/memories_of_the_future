@@ -42,18 +42,12 @@ const ProjectSelectComponent = () => {
   const [error, setError] = useState<string>(null)
 
   useEffect(() => {
-    readProject()
-  },[])
-
-
-  async function readProject() {
-    try {
-      const data = await Store.getCurrentProject()
+    Store.getCurrentProject().then( (data) => {
       setProject(data)
-    } catch (err) {
-      console.error(err)
-    }
-  }
+    }).catch( err => {
+      console.log(err)
+    })
+  },[])
 
   async function changeProject(name: string) {
     try {
@@ -61,7 +55,6 @@ const ProjectSelectComponent = () => {
       setEditing(false)
       setProject(project)
     } catch (err) {
-      console.error(err)
       if (err instanceof Error)
         showError(err.message)
     }
@@ -85,6 +78,8 @@ const ProjectSelectComponent = () => {
               <p>{project.description}</p>
             </div>
           </Link>
+        </div>
+        <div className='change-button'>
           <button onClick={() => setEditing(true)}>Change Project</button>
         </div>
       </div>
