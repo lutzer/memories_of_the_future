@@ -33,16 +33,15 @@ const MainComponent = () => {
 
   return (
     <div className='content'>
-      <MapComponent stories={stories} onMarkerClick={(id) => alert('click id')} showCenterButton={false}/>
-      <Router>
+       <Router>
         <Switch>
-          <Route path='/:projectName'>
+          <Route path='/:projectName/'>
+            <MapComponent stories={stories} onMarkerClick={(id) => alert('click id')} showCenterButton={false}/>
             <ProjectComponent onStoriesChanged={setStories}/>
           </Route>
           <Route path="/">
-            <div className='main'>  
-              <ProjectSelectComponent/>
-            </div>
+            <MapComponent stories={[]} onMarkerClick={(id) => alert('click')} showCenterButton={false}/>
+            <ProjectSelectComponent/>
           </Route>
         </Switch>
       </Router>

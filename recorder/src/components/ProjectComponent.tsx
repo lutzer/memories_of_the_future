@@ -9,6 +9,7 @@ import { HeaderComponent } from "./HeaderComponent";
 import { RecordListComponent } from "./RecordListComponent";
 import { RecordComponent } from "./RecordComponent";
 import { UploadComponent } from "./UploadComponent";
+import { MenuBarComponent } from "./MenuBarComponent";
 
 type Props = {
   onStoriesChanged : (stories : StorySchema[]) => void
@@ -43,37 +44,34 @@ const ProjectComponent = ({onStoriesChanged} : Props ) => {
         console.warn('Could not load stories from api.')
       })
   },[project])
+
+  console.log(path)
   
   return(
-    <div>
-      <Switch>
-        <Route exact path={path}>
-          { project ? 
-            <div className='main'>
-              <h1>{projectName}</h1>
-              <Link className='button' to={`/${projectName}/records/`}>Records</Link>
-            </div>
-          :
-          <div className='project center'>
-              <div className='center-item fade-in'>
-                <p>Could not load project data</p>
-              </div>
-            </div>
-          }
-        </Route>
-        <Route path={`${path}/records/:storyId`}>
-            <HeaderComponent backButtonLink='.'/>
+    <div className='main-container'>
+      <HeaderComponent backButtonLink='/'/>
+      { project ?
+      <div>
+        <Switch>
+          <Route path={`${path}records/:storyId`}>
             <RecordComponent/>
           </Route>
-        <Route path={`${path}/records/`}>
-          <HeaderComponent backButtonLink='../'/>
-          <RecordListComponent/>
-        </Route>
-        <Route path={`${path}/upload/:storyId`}>
-            <HeaderComponent backButtonLink='../records/'/>
+          <Route path={`${path}records`}>
+            <RecordListComponent/>
+          </Route>
+          <Route path={`${path}upload/:storyId`}>
             <UploadComponent/>
           </Route>
-      </Switch>
+        </Switch>
+        <MenuBarComponent/>
+      </div>
+      :
+      <div className='project center'>
+        <div className='center-item fade-in'>
+          <p>Could not load project data.</p>
+        </div>
+      </div>
+      }
     </div>
   )
 }

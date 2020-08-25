@@ -8,6 +8,11 @@
   height: 100%;
   flex-direction: column;
   padding: 5px;
+  pointer-events: none;
+
+  > div {
+    pointer-events: auto;
+  }
 
   &.center {
     justify-content: center;
@@ -53,6 +58,11 @@
   justify-content: flex-start;
   height: 100%;
   flex-direction: column;
+  pointer-events: none;
+
+  > div {
+    pointer-events: auto;
+  }
 
   &.center {
     justify-content: center;

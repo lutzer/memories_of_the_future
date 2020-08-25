@@ -29,7 +29,7 @@ const ProjectNameInputComponent = ({onCancel, onSave, showError} :
         </div>
         <div className='button-group'>
           <button onClick={onCancel}>Cancel</button>
-          <button onClick={() => onSave(projectName)}>Save</button>
+          <button onClick={() => onSave(projectName)}>Ok</button>
         </div>
       </div>
     </div>
@@ -69,31 +69,35 @@ const ProjectSelectComponent = () => {
 
   if (!editing) {
     return(
-      project ?
-      <div className='project center'>
-        <div className='details'>
-          <Link to={'/'+project.name}>
-            <div className='item-content'>
-              <h3>{project.name}</h3>
-              <p>{project.description}</p>
-            </div>
-          </Link>
+      <div className='main-container'>
+        { project ?
+        <div className='project center'>
+          <div className='details'>
+            <Link to={`/${project.name}/`}>
+              <div className='item-content'>
+                <h3>{project.name}</h3>
+                <p>{project.description}</p>
+              </div>
+            </Link>
+          </div>
+          <div className='change-button'>
+            <button onClick={() => setEditing(true)}>Change Project</button>
+          </div>
         </div>
-        <div className='change-button'>
-          <button onClick={() => setEditing(true)}>Change Project</button>
-        </div>
-      </div>
-      :
-      <div className='project center'>
-        <div className='center-item'>
-          <p>No project selected</p>
-          <button onClick={() => setEditing(true)}>Choose Project</button>
-        </div>
+        :
+        <div className='project center'>
+          <div className='center-item'>
+            <p>No project selected</p>
+            <button onClick={() => setEditing(true)}>Choose Project</button>
+          </div>
+        </div> }
       </div>
     )
   } else {
     return(
-      <ProjectNameInputComponent onCancel={() => setEditing(false)} onSave={changeProject} showError={error}/>
+      <div className='main-container'>
+        <ProjectNameInputComponent onCancel={() => setEditing(false)} onSave={changeProject} showError={error}/>
+      </div>
     )
   }
 }

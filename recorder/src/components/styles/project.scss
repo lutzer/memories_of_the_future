@@ -4,11 +4,16 @@
   display: flex;
   align-items: center; 
   justify-content: flex-start;
-  height: 100%;
   flex-direction: column;
+  margin: $outer-margin;
+
+  > div {
+    pointer-events: auto;
+  }
 
   &.center {
     justify-content: center;
+    height:100%;
   }
 
   .details {
