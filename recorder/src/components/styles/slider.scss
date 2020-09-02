@@ -1,0 +1,39 @@
+@import '_vars.scss';
+
+.slide-container {
+  position: absolute;
+  bottom: 0;
+  left:0;
+  width: 100%;
+  pointer-events: auto;
+  transition: bottom 500ms ease;
+
+  &.fullscreen {
+    height: 100%;
+  }
+
+  &.fullscreen.closed {
+    bottom: -100%;
+  }
+
+  &.halfscreen {
+    height: 50%;
+  }
+
+  &.halfscreen.closed {
+    bottom: -50%;
+  }
+
+  .slide-inner-container {
+    padding-top: 30px;
+    background-color: #f0f;
+    height:100%
+  }
+
+  .slide-close-button {
+    position: absolute;
+    top: 0;
+    text-align: center;
+    width: 100%;
+  }
+}

@@ -1,6 +1,10 @@
 @import '_vars.scss';
 
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   flex: 0 1 auto;
   padding: 5px;
   height: $header-height;

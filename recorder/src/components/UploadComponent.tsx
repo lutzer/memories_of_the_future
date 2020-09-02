@@ -15,7 +15,7 @@ function handleDbError(err : any) {
 async function readStory(storyId : string) {
   try {
     const db = await getDatabase()
-    const data = await db.getStory(storyId)
+    const data = await db.getRecord(storyId)
     return data
   } catch (err) {
     return null;
@@ -25,10 +25,10 @@ async function readStory(storyId : string) {
 async function setStoryUploaded(story : RecordSchema, oldStoryId : string) {
   const db = await getDatabase()
   const data : RecordSchema = Object.assign({}, story, { uploaded: true})
-  await db.writeStory(data)
+  await db.writeRecord(data)
 
   // remove old story
-  await db.removeStory(oldStoryId)
+  await db.removeRecord(oldStoryId)
 }
 
 enum UploadState {

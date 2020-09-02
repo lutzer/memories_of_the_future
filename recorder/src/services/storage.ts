@@ -10,10 +10,10 @@ const PROJECT_ID = 1
 const DB_VERSION = 18
 
 interface Database {
-  getStories : () => Promise<RecordSchema[]>
-  getStory : (id: string) => Promise<RecordSchema>
-  writeStory : (story: RecordSchema) => Promise<RecordSchema>
-  removeStory : (id: string) => Promise<void>
+  getRecords : () => Promise<RecordSchema[]>
+  getRecord: (id: string) => Promise<RecordSchema>
+  writeRecord : (story: RecordSchema) => Promise<RecordSchema>
+  removeRecord : (id: string) => Promise<void>
 
   getProject : () => Promise<ProjectSchema>
   setProject : (project: ProjectSchema) => Promise<IDBValidKey>
@@ -49,23 +49,23 @@ const getDatabase = async () : Promise<Database> => {
       }
     })
 
-    async function getStories() : Promise<RecordSchema[]> {
+    async function getRecords() : Promise<RecordSchema[]> {
       return await db.getAll(STORE_NAME_STORIES)
     }
 
     // TODO: store image and recording in different data table
-    async function writeStory(story : RecordSchema) : Promise<RecordSchema> {
+    async function writeRecord(story : RecordSchema) : Promise<RecordSchema> {
       story.id = story.id ? story.id : uuidv4()
       story.modifiedAt = Date.now()
       await db.put(STORE_NAME_STORIES, story)
       return story
     }
 
-    async function removeStory(id: string) : Promise<void> {
+    async function removeRecord(id: string) : Promise<void> {
       return await db.delete(STORE_NAME_STORIES, id)
     }
 
-    async function getStory(id: string) : Promise<RecordSchema> {
+    async function getRecord(id: string) : Promise<RecordSchema> {
       return await db.get(STORE_NAME_STORIES, id)
     }
 
@@ -79,7 +79,7 @@ const getDatabase = async () : Promise<Database> => {
     }
 
     resolve({ 
-      writeStory, removeStory, getStories, getStory, 
+      writeRecord, removeRecord, getRecords, getRecord, 
       getProject, setProject 
     })
   })

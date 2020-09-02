@@ -3,20 +3,6 @@ import { getDatabase } from "./storage"
 import { AudioRecording } from "../media/recorder"
 import _ from "lodash"
 
-type RecordSchema = {
-  id: string,
-  projectId : string,
-  projectName? : string,
-  createdAt: number,
-  author?: string,
-  modifiedAt?: number,
-  text?: string,
-  recording?: AudioRecording,
-  image? : Blob,
-  location? : [ number, number ],
-  uploaded : boolean
-}
-
 type ProjectSchema = {
   id: string,
   name : string,
@@ -34,6 +20,20 @@ type StorySchema = {
   image : string,
   location : [ number, number ],
   visible: boolean
+}
+
+type RecordSchema = {
+  id: string,
+  projectId : string,
+  projectName? : string,
+  createdAt: number,
+  author?: string,
+  modifiedAt?: number,
+  text?: string,
+  recording?: AudioRecording,
+  image? : Blob,
+  location? : [ number, number ],
+  uploaded : boolean
 }
 
 class StoreException extends Error {
@@ -91,7 +91,25 @@ class Store {
 
   static async getRecords() : Promise<RecordSchema[]> {
     const db = await getDatabase()
-    return db.getStories()
+    return db.getRecords()
+  }
+
+  static async createRecord(author: string, project: ProjectSchema) : Promise<RecordSchema> {
+    const db = await getDatabase()
+    const story = await db.writeRecord({
+      id: null,
+      projectId: project.id,
+      projectName: project.name,
+      author: _.capitalize(author),
+      createdAt: Date.now(),
+      uploaded: false
+    })
+    return story
+  }
+
+  static async deleteRecord(id : string) : Promise<void> {
+    const db = await getDatabase()
+    await db.removeRecord(id)
   }
 }
 

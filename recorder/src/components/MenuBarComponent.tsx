@@ -3,17 +3,17 @@ import { Link, useRouteMatch } from "react-router-dom";
 import './styles/menubar.scss'
 
 type Properties = {
+  projectName : string
 }
 
-const MenuBarComponent = (props : Properties) => {
-  const { path, url } = useRouteMatch();
+const MenuBarComponent = ({projectName} : Properties) => {
 
   return(
     <div className='menubar'>
       <div className='menubuttons'>
-        <Link className='button' to={`records`}>Records</Link>
-        <Link className='button' to={`add`}>Add</Link>
-        <Link className='button' to={`info`}>Project</Link>
+        <Link className='button' to={`/${projectName}/records`}>Drafts</Link>
+        <Link className='button' to={`/${projectName}/add`}>Create</Link>
+        <Link className='button' to={`/${projectName}/info`}>Project</Link>
       </div>
     </div>
   )

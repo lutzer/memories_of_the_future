@@ -1,69 +1,107 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link, Switch, Route, useRouteMatch } from "react-router-dom";
-import { ProjectSchema, StorySchema, Store } from "../services/store";
-
-import './styles/project.scss'
-import './styles/input.scss'
-import './styles/animations.scss'
+import { useParams, Switch, Route, useRouteMatch, useHistory } from "react-router-dom";
+import { ProjectSchema, StorySchema, Store, RecordSchema } from "../services/store";
 import { HeaderComponent } from "./HeaderComponent";
 import { RecordListComponent } from "./RecordListComponent";
 import { RecordComponent } from "./RecordComponent";
 import { UploadComponent } from "./UploadComponent";
 import { MenuBarComponent } from "./MenuBarComponent";
+import { SlideContainerComponent } from "./SlideContainterComponent";
+import { AuthorInputComponent } from "./AuthorInputComponent";
+
+import './styles/project.scss'
+import './styles/input.scss'
+import './styles/animations.scss'
+import { ProjectInfoComponent } from "./ProjectInfoComponent";
+import { DialogBoxComponent } from "./DialogBoxComponent";
 
 type Props = {
-  onStoriesChanged : (stories : StorySchema[]) => void
+  onStoriesChanged : (record : StorySchema[]) => void,
+  selected : string
 }
 
-const ProjectComponent = ({onStoriesChanged} : Props ) => {
+const ProjectComponent = ({selected, onStoriesChanged} : Props ) => {
   const [ project, setProject ] = useState<ProjectSchema>(null)
-  const [ stories, setStories ] = useState<StorySchema[]>([])
+  const [ records, setRecords ] = useState<RecordSchema[]>([])
 
   const { projectName } = useParams();
-  const { path, url } = useRouteMatch();
-
-  function setStoryData(stories : StorySchema[]) {
-    setStories(stories)
-    onStoriesChanged(stories)
-  }
+  const history = useHistory();
 
   useEffect( () => {
     Store.getProject(projectName).then( data => {
       setProject(data)
     }).catch( err => {
       setProject(null)
-      setStoryData([])
+      setRecords([])
     })
   }, [projectName])
 
+  // load records
   useEffect( () => {
-    if (project)
-      Store.getStories(project.id).then( data => {
-        setStoryData(data)
-      }).catch( err => {
-        console.warn('Could not load stories from api.')
-      })
-  },[project])
+    Store.getRecords().then( data => {
+      setRecords(data)
+    }).catch( err => {
+      setRecords([])
+    })
+  },[])
 
-  console.log(path)
+  async function addRecord(author: string) {
+    try {
+      const story = await Store.createRecord(author, project)
+      history.push(`records/${story.id}`)
+      setRecords([...records, story])
+    } catch (err) {
+      console.error(err)
+      if (err instanceof Error) showModal('Error', err.message)
+    }
+  }
+
+  async function deleteRecord(id: string) {
+    try {
+      await Store.deleteRecord(id)
+      setRecords(await Store.getRecords())
+      history.push(`./`)
+    } catch (err) {
+      console.error(err)
+      if (err instanceof Error) showModal('Error', err.message)
+    }
+  }
+
+  async function writeRecord(record : RecordSchema) {
+
+  }
   
   return(
     <div className='main-container'>
       <HeaderComponent backButtonLink='/'/>
       { project ?
       <div>
+        <MenuBarComponent projectName={projectName}/>
         <Switch>
-          <Route path={`${path}records/:storyId`}>
-            <RecordComponent/>
+          <Route path={`/${projectName}/records/:storyId`}>
+            <SlideContainerComponent closePath={`/${projectName}/`}>
+              <RecordComponent onDelete={ (id) => deleteRecord(id) }/>
+            </SlideContainerComponent>
           </Route>
-          <Route path={`${path}records`}>
-            <RecordListComponent/>
+          <Route path={`/${projectName}/records`}>
+            <SlideContainerComponent closePath={`/${projectName}/`}>
+              <RecordListComponent project={project} records={records}/>
+            </SlideContainerComponent>
           </Route>
-          <Route path={`${path}upload/:storyId`}>
+          <Route path={`/${projectName}/add`}>
+            <DialogBoxComponent >
+              <AuthorInputComponent enabled={records.length < 5} onCancel={() => history.push(`/${projectName}/`)} onSave={(author) => addRecord(author)}/>
+            </DialogBoxComponent>
+          </Route>
+          <Route path={`/${projectName}/info`}>
+            <SlideContainerComponent fullscreen={false} closePath={`/${projectName}/`}>
+              <ProjectInfoComponent project={project}/>
+            </SlideContainerComponent>
+          </Route>
+          <Route path={`/${projectName}/upload/:storyId`}>
             <UploadComponent/>
           </Route>
         </Switch>
-        <MenuBarComponent/>
       </div>
       :
       <div className='project center'>

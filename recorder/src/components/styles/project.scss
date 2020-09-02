@@ -1,10 +1,14 @@
 @import '_vars.scss';
 
+.project-info {
+  @include flex-column;
+  padding: 10px;
+  overflow:scroll;
+  height:100%;
+}
+
 .project {
-  display: flex;
-  align-items: center; 
-  justify-content: flex-start;
-  flex-direction: column;
+  @include flex-column;
   margin: $outer-margin;
 
   > div {

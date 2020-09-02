@@ -5,8 +5,8 @@ import './styles/map.scss'
 
 type MapProps = {
   stories? : StorySchema[],
-  selected? : number,
-  showCenterButton: boolean,
+  selected? : string,
+  showButtons: boolean,
   onMarkerClick : (storyId : string) => void
 }
 

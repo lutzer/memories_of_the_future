@@ -15,7 +15,8 @@ declare global {
 
 const MainComponent = () => {
   const [modal, setModal] = useState<ModalProperties>(null)
-  const [ stories, setStories ] = useState<StorySchema[]>([])
+  const [stories, setStories] = useState<StorySchema[]>([])
+  const [selectedStory, setSelectedStory] = useState<string>(null)
 
   function showModal(title: string, text: string, cancelable : boolean = false) : Promise<boolean> {
     return new Promise( (resolve) => {
@@ -36,11 +37,11 @@ const MainComponent = () => {
        <Router>
         <Switch>
           <Route path='/:projectName/'>
-            <MapComponent stories={stories} onMarkerClick={(id) => alert('click id')} showCenterButton={false}/>
-            <ProjectComponent onStoriesChanged={setStories}/>
+            <MapComponent stories={stories} selected={selectedStory} onMarkerClick={(id) => setSelectedStory(id)} showButtons={true}/>
+            <ProjectComponent selected={selectedStory} onStoriesChanged={setStories}/>
           </Route>
           <Route path="/">
-            <MapComponent stories={[]} onMarkerClick={(id) => alert('click')} showCenterButton={false}/>
+            <MapComponent stories={[]} onMarkerClick={(id) => alert('click')} showButtons={false}/>
             <ProjectSelectComponent/>
           </Route>
         </Switch>
