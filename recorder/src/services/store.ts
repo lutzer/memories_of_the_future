@@ -111,6 +111,11 @@ class Store {
     const db = await getDatabase()
     await db.removeRecord(id)
   }
+
+  static async updateRecord(record: RecordSchema) : Promise<void> {
+    const db = await getDatabase()
+    await db.writeRecord(record)
+  }
 }
 
 export { Store, RecordSchema, ProjectSchema, StorySchema }

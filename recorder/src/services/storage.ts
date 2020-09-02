@@ -54,11 +54,11 @@ const getDatabase = async () : Promise<Database> => {
     }
 
     // TODO: store image and recording in different data table
-    async function writeRecord(story : RecordSchema) : Promise<RecordSchema> {
-      story.id = story.id ? story.id : uuidv4()
-      story.modifiedAt = Date.now()
-      await db.put(STORE_NAME_STORIES, story)
-      return story
+    async function writeRecord(record : RecordSchema) : Promise<RecordSchema> {
+      record.id = record.id ? record.id : uuidv4()
+      record.modifiedAt = Date.now()
+      await db.put(STORE_NAME_STORIES, record)
+      return record
     }
 
     async function removeRecord(id: string) : Promise<void> {

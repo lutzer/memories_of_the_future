@@ -14,6 +14,12 @@ import './styles/input.scss'
 import './styles/animations.scss'
 import { ProjectInfoComponent } from "./ProjectInfoComponent";
 import { DialogBoxComponent } from "./DialogBoxComponent";
+import _ from "lodash";
+
+function handleDbError(err : any) {
+  console.log(err)
+  if (err instanceof Error) showModal('Error', err.message)
+}
 
 type Props = {
   onStoriesChanged : (record : StorySchema[]) => void,
@@ -23,6 +29,7 @@ type Props = {
 const ProjectComponent = ({selected, onStoriesChanged} : Props ) => {
   const [ project, setProject ] = useState<ProjectSchema>(null)
   const [ records, setRecords ] = useState<RecordSchema[]>([])
+  const [ stories, setStories ] = useState<StorySchema[]>([])
 
   const { projectName } = useParams();
   const history = useHistory();
@@ -32,9 +39,25 @@ const ProjectComponent = ({selected, onStoriesChanged} : Props ) => {
       setProject(data)
     }).catch( err => {
       setProject(null)
-      setRecords([])
     })
   }, [projectName])
+
+  //load stories
+  useEffect( () => {
+    if (project)
+      Store.getStories(project.id).then( data => {
+        setStories(data)
+      }).catch( err => {
+        setStories([])
+      })
+    else
+      setStories([])
+  }, [project])
+
+  // on story changed callback
+  useEffect( () => {
+    onStoriesChanged(stories)
+  }, [stories])
 
   // load records
   useEffect( () => {
@@ -47,12 +70,11 @@ const ProjectComponent = ({selected, onStoriesChanged} : Props ) => {
 
   async function addRecord(author: string) {
     try {
-      const story = await Store.createRecord(author, project)
-      history.push(`records/${story.id}`)
-      setRecords([...records, story])
+      const record = await Store.createRecord(author, project)
+      setRecords([...records, record])
+      history.push(`records/${record.id}`)
     } catch (err) {
-      console.error(err)
-      if (err instanceof Error) showModal('Error', err.message)
+      handleDbError(err)
     }
   }
 
@@ -62,13 +84,19 @@ const ProjectComponent = ({selected, onStoriesChanged} : Props ) => {
       setRecords(await Store.getRecords())
       history.push(`./`)
     } catch (err) {
-      console.error(err)
-      if (err instanceof Error) showModal('Error', err.message)
+      handleDbError(err)
     }
   }
 
-  async function writeRecord(record : RecordSchema) {
-
+  async function updateRecord(record : RecordSchema) {
+    try {
+      await Store.updateRecord(record)
+      setRecords(_.map(records, (data) => {
+        return data.id == record.id ? record : data
+      }))
+    } catch (err) {
+      handleDbError(err)
+    }
   }
   
   return(
@@ -80,7 +108,7 @@ const ProjectComponent = ({selected, onStoriesChanged} : Props ) => {
         <Switch>
           <Route path={`/${projectName}/records/:storyId`}>
             <SlideContainerComponent closePath={`/${projectName}/`}>
-              <RecordComponent onDelete={ (id) => deleteRecord(id) }/>
+              <RecordComponent records={records} onDelete={(id) => deleteRecord(id)} onChange={(record) => updateRecord(record)}/>
             </SlideContainerComponent>
           </Route>
           <Route path={`/${projectName}/records`}>

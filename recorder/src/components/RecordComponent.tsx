@@ -14,139 +14,88 @@ import './styles/story.scss'
 import { DeleteButtonComponent } from "./DeleteButtonComponent";
 import { RecordSchema } from "../services/store";
 
-function handleDbError(err : any) {
-  console.log(err)
-  if (err instanceof Error) showModal('Error', err.message)
-}
-
 type Properties = {
   onDelete : (id : string) => void
+  onChange : (record: RecordSchema) => void
+  records: RecordSchema[]
 }
 
-const RecordComponent = ({onDelete} : Properties) => {
-  const [story, setStory] = useState<RecordSchema>(null)
+const RecordComponent = ({records, onDelete, onChange} : Properties) => {
   const history = useHistory();
   const { storyId } = useParams();
+  const [ record, setRecord ] = useState(null)
 
-  useEffect(()=> {
-    read()
-  },[])
+  useEffect(() => {
+    setRecord(_.find(records,{id: storyId}))
+  },[storyId, records])
 
-  async function read() {
-    try {
-      const db = await getDatabase()
-      const val = await db.getRecord(storyId)
-      setStory(val)
-    } catch (err) {
-      handleDbError(err)
-    }
+  useEffect(() => {
+    if (record)
+      onChange(record)
+  },[record])
+
+  function saveRecording(recording: AudioRecording) {
+    setRecord(Object.assign({} ,record, { recording: recording}))
   }
 
-  async function saveRecording(recording: AudioRecording) {
-    try {
-      const db = await getDatabase()
-      const data : RecordSchema = Object.assign({}, story, { recording: recording})
-      db.writeRecord(data)
-      setStory(data)
-    } catch (err) {
-      handleDbError(err)
-    }
+  function deleteRecording() {
+    setRecord(Object.assign({}, record, { recording: null}))
   }
 
-  async function deleteRecording() {
-    try {
-      const db = await getDatabase()
-      const data : RecordSchema = Object.assign({}, story, { recording: null})
-      db.writeRecord(data)
-      setStory(data)
-    } catch (err) {
-      handleDbError(err)
-    }
-  }
-
-  async function saveImage(image: Blob) {
-    try {
-      const db = await getDatabase()
-      const data : RecordSchema = Object.assign({}, story, { image: image } )
-      db.writeRecord(data)
-      setStory(data)
-    } catch (err) {
-      handleDbError(err)
-    }
+  function saveImage(image: Blob) {
+    setRecord(Object.assign({}, record, { image: image } ))
   }
 
   async function deleteImage() {
-    try {
-      const db = await getDatabase()
-      const data : RecordSchema = Object.assign({}, story, { image: null})
-      db.writeRecord(data)
-      setStory(data)
-    } catch (err) {
-      handleDbError(err)
-    }
+    setRecord(Object.assign({}, record, { image: null}))
   }
 
   const updateText = _.debounce( async (text : string) => {
-    try {
-      const db = await getDatabase()
-      const data : RecordSchema = Object.assign({}, story, { text: text})
-      db.writeRecord(data)
-      setStory(data)
-    } catch (err) {
-      handleDbError(err)
-    }
+    setRecord(Object.assign({}, record, { text: text}))
   },500)
 
   async function updateLocation(loc : [number, number]) {
-    try {
-      const db = await getDatabase()
-      const data : RecordSchema = Object.assign({}, story, { location: loc})
-      db.writeRecord(data)
-      setStory(data)
-    } catch (err) {
-      handleDbError(err)
-    }
+    setRecord(Object.assign({}, record, { location: loc}))
   }
 
-
   return (
-    story ?
-      !story.uploaded ? 
+    record ?
+      !record.uploaded ? 
         <div className="story">
-          <h3>Memory of {story.projectName}</h3>
+          <h3>Memory of {record.projectName}</h3>
           <div className='item info'>
             <div className='item-content'>
-            <p>Created {dateFromNow(story.createdAt)} by <span className='author'>{story.author}</span>.</p>
-            <TextInputComponent text={story.text} onChange={updateText}/>
+            <p>Created {dateFromNow(record.createdAt)} by <span className='author'>{record.author}</span>.</p>
+            <TextInputComponent text={record.text} onChange={updateText}/>
             </div>
           </div>
           <div className='item recorder'>
             <div className='item-content'>
-              <AudioRecorderComponent onSave={(rec) => saveRecording(rec)} onDelete={deleteRecording} recording={story.recording}/>
+              <AudioRecorderComponent onSave={(rec) => saveRecording(rec)} onDelete={deleteRecording} recording={record.recording}/>
             </div>
           </div>
           <div className='item camera'>
-            <PhotoCaptureComponent imageData={story.image} onCapture={saveImage} onDelete={deleteImage}/>
+            <PhotoCaptureComponent imageData={record.image} onCapture={saveImage} onDelete={deleteImage}/>
           </div>
           <div className='item location'> 
-            <LocationPickerComponent location={story.location} onPick={updateLocation}/>
+            <LocationPickerComponent location={record.location} onPick={updateLocation}/>
           </div>
           <div className='button-group'>
-            <DeleteButtonComponent text='Delete Memory' onConfirm={() => { onDelete(storyId) }}/>
-            <button onClick={() => history.push(`/${story.projectName}/upload/${story.id}`)} disabled={!story.recording || !story.image || !story.location}>Upload</button>
+            <DeleteButtonComponent text='Delete Memory' onConfirm={() => { onDelete(record.id) }}/>
+            <button onClick={() => history.push(`/${record.projectName}/upload/${record.id}`)} disabled={!record.recording || !record.image || !record.location}>Upload</button>
             <p> </p>
           </div>
         </div>
       :
       <div className="story">
-        <h3>Memory of {story.projectName}</h3>
+        <h3>Memory of {record.projectName}</h3>
         <div className='item info'>
           <div className='item-content'>
-          <p>Created {dateFromNow(story.createdAt)} by <span className='author'>{story.author}</span>.</p>
+          <p>Created {dateFromNow(record.createdAt)} by <span className='author'>{record.author}</span>.</p>
           </div>
         </div>
         <div className='item camera'>
-          <PhotoViewComponent imageData={story.image}/>
+          <PhotoViewComponent imageData={record.image}/>
         </div>
         <p>Memory has been uploaded.</p>
         <button onClick={() => { onDelete(storyId) }}>Delete from Device</button>
