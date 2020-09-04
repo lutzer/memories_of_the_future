@@ -18,6 +18,7 @@ type StorySchema = {
   text: string,
   recording: string,
   image : string,
+  color: string,
   location : [ number, number ],
   visible: boolean
 }

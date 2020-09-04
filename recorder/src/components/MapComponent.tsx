@@ -10,8 +10,10 @@ type MapProps = {
   onMarkerClick : (storyId : string) => void
 }
 
-const MapComponent = ({ stories = [], selected = null, onMarkerClick } : MapProps) => {
+const MapComponent = ({ stories = [], selected = null, showButtons = true, onMarkerClick } : MapProps) => {
   
+  console.log(stories)
+
   return(
     <div className="map-container">
       {/* <div>Map: {JSON.stringify(stories)}</div> */}

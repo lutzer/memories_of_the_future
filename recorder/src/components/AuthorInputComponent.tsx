@@ -33,7 +33,7 @@ const AuthorInputComponent = ({onCancel, onSave, enabled} :
       <div className='author-input'>
         <div className='center-item'>
           <h3>Create New Memory</h3>
-          <p>Can only record 5 memories on device. Please upload your recorded memories.</p>
+          <p>You can only record 5 memories on this device. Please upload or delete your recorded memories.</p>
           <div className='button-group'>
             <button onClick={() => onCancelButtonPressed()}>Ok</button>
           </div>
