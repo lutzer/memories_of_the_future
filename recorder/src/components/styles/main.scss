@@ -22,11 +22,12 @@ body, html {
   max-width: $content-width;
   margin: 0 auto;
   
-  .main {
-    flex: 1 1 auto;
-    padding: 10px 15px;
-    white-space: nowrap;
-    overflow: auto;
+  .main-container {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    width:100%;
+    pointer-events: none;
 
     > div {
       white-space: pre-wrap;
@@ -53,7 +54,8 @@ h2 {
 }
 
 h3 {
-  font-size: 1.3rem;
+  font-size: 1.0rem;
+  margin:0.3rem;
 }
 
 h4 {

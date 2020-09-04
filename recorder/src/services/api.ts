@@ -1,26 +1,8 @@
 import _ from 'lodash'
 import { config } from "../config"
-import { ProjectSchema, StorySchema } from './storage'
 import { getFilename, generateAuthHeader } from '../utils/utils'
+import { RecordSchema, StorySchema, ProjectSchema } from './store'
 
-type ApiStorySchema = {
-  id: string,
-  projectId : string,
-  createdAt: number,
-  author: string,
-  text: string,
-  recording: string,
-  image : string,
-  location : [ number, number ],
-  visible: boolean
-}
-
-type ApiProjectSchema = {
-  id: string,
-  name : string,
-  description: string,
-  createdAt: number
-}
 
 class ApiException extends Error {
 
@@ -32,7 +14,7 @@ class ApiException extends Error {
   }
 }
 
-async function uploadFiles(story: StorySchema, password: string, controller?: AbortController) : Promise<Response> {
+async function uploadFiles(story: RecordSchema, password: string, controller?: AbortController) : Promise<Response> {
   var data = new FormData()
   data.append('recording', story.recording.blob, getFilename(story.recording.blob))
   data.append('image', story.image, getFilename(story.image))
@@ -48,7 +30,7 @@ async function uploadFiles(story: StorySchema, password: string, controller?: Ab
 
 class Api {
 
-  static async getStoriesByProjectId(id : string) : Promise<{stories : ApiStorySchema[]}> {
+  static async getStoriesByProjectId(id : string) : Promise<{stories : StorySchema[]}> {
     let response = await fetch(config.apiAdress + 'stories/?project=' + id)
     if (response.status != 200)
       throw new ApiException(response.status, `Could not fetch data.`)
@@ -56,7 +38,7 @@ class Api {
     return json
   }
 
-  static async getProjectByName(name: string) : Promise<{project : ApiProjectSchema}> {
+  static async getProjectByName(name: string) : Promise<{project : ProjectSchema}> {
     let response = await fetch(config.apiAdress + 'projects?name=' + name)
     if (response.status != 200)
       throw new ApiException(response.status, `Could not fetch data.`)
@@ -66,7 +48,7 @@ class Api {
     return json
   }
 
-  static async uploadStory(story: StorySchema, password: string, controller?: AbortController) : Promise<void> {
+  static async uploadStory(story: RecordSchema, password: string, controller?: AbortController) : Promise<void> {
     // post story
     let response = await fetch(config.apiAdress + 'stories', {
       method: 'POST',
@@ -94,4 +76,4 @@ class Api {
   }
 }
 
-export { Api, ApiException, ApiStorySchema, ApiProjectSchema }
+export { Api, ApiException }

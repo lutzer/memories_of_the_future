@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { SpinnerComponent } from "./ProgressBarComponent";
-import { getDatabase, StorySchema } from "../services/storage";
+import { getDatabase } from "../services/storage";
 
 import './styles/upload.scss'
 import { Api, ApiException } from "../services/api";
+import { RecordSchema } from "../services/store";
 
 function handleDbError(err : any) {
   console.log(err)
@@ -14,20 +15,20 @@ function handleDbError(err : any) {
 async function readStory(storyId : string) {
   try {
     const db = await getDatabase()
-    const data = await db.getStory(storyId)
+    const data = await db.getRecord(storyId)
     return data
   } catch (err) {
     return null;
   }
 }
 
-async function setStoryUploaded(story : StorySchema, oldStoryId : string) {
+async function setStoryUploaded(story : RecordSchema, oldStoryId : string) {
   const db = await getDatabase()
-  const data : StorySchema = Object.assign({}, story, { uploaded: true})
-  await db.writeStory(data)
+  const data : RecordSchema = Object.assign({}, story, { uploaded: true})
+  await db.writeRecord(data)
 
   // remove old story
-  await db.removeStory(oldStoryId)
+  await db.removeRecord(oldStoryId)
 }
 
 enum UploadState {
@@ -95,9 +96,9 @@ const UploadComponent = () => {
 
   function onOk() {
     if (state == UploadState.COMPLETE)
-      history.push(`/stories/`)
+      history.push(`../records/`)
     else {
-      history.push('/story/' + storyId)
+      history.push(`../records/${storyId}`)
     }
   }
 

@@ -1,12 +1,18 @@
 @import '_vars.scss';
 
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   flex: 0 1 auto;
   padding: 5px;
   height: $header-height;
   display: flex;
   background-color: #fff;
+  opacity: 0.5;
   color: black;
+  pointer-events: auto;
 
   .left {
     display: flex;

@@ -1,9 +1,11 @@
+@import '_vars.scss';
+
 .input-element {
   text-align: center;
   padding: 5px;
   margin: 0px;
   background-color: #fff;
-  border-bottom: 1px solid #aaa;
+  // border-bottom: 1px solid #aaa;
   border-radius: 5px;
   font-size: 1rem;
 
@@ -17,6 +19,7 @@
     background-color: none;
     font-size: inherit;
     resize: none;
+    box-shadow: none;
   }
 
   textarea:focus, input:focus{
@@ -26,7 +29,7 @@
 
 .button-group {
   text-align: center;
-  width: 80%;
+  width: 100%;
   margin: 0 auto;
 
   button {
@@ -49,5 +52,19 @@
 
   &.confirm {
     background-color: red;
+  }
+}
+
+.author-input {
+  @include flex-column;
+  height:100%;
+  justify-content: center;
+
+
+  .center-item {
+    justify-content: center;
+    justify-self: center;
+    text-align: center;
+    color: #666;
   }
 }

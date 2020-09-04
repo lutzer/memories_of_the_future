@@ -1,14 +1,23 @@
 @import '_vars.scss';
 
+.project-info {
+  @include flex-column;
+  padding: 10px;
+  overflow:scroll;
+  height:100%;
+}
+
 .project {
-  display: flex;
-  align-items: center; 
-  justify-content: flex-start;
-  height: 100%;
-  flex-direction: column;
+  @include flex-column;
+  margin: $outer-margin;
+
+  > div {
+    pointer-events: auto;
+  }
 
   &.center {
     justify-content: center;
+    height:100%;
   }
 
   .details {
@@ -24,6 +33,10 @@
     &:active {
       box-shadow: $item-shadow-clicked;
     }
+  }
+
+  .change-button {
+    margin: 10px 0px;
   }
 
   .center-item {

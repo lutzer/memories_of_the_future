@@ -1,12 +1,10 @@
 @import '_vars.scss';
 
 .story-list {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  height: 100%;
-  flex-direction: column;
-  padding: 5px;
+  @include flex-column;
+  padding: 10px;
+  overflow: scroll;
+  height:100%;
 
   &.center {
     justify-content: center;
@@ -46,11 +44,10 @@
 }
 
 .story {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  height: 100%;
-  flex-direction: column;
+  @include flex-column;
+  padding: 10px;
+  overflow:scroll;
+  height:100%;
 
   &.center {
     justify-content: center;
@@ -77,11 +74,5 @@
     .author {
       font-style: italic;
     }
-  }
-
-  .center-item {
-    justify-self: center;
-    text-align: center;
-    color: #666;
   }
 }

@@ -1,4 +1,14 @@
+$outer-margin: 10px;
+
 $header-height: 40px;
 $content-width: 500px;
 $item-shadow: 6px 6px black;
 $item-shadow-clicked: 4px 4px gray;
+$border-radius: 5px;
+
+@mixin flex-column {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { HashRouter as Router, Switch, Route } from "react-router-dom";
-import { StoryListComponent } from "./StoryListComponent";
-import { StoryComponent } from "./StoryComponent";
-import { ProjectViewComponent } from "./ProjectViewComponent";
+import { HashRouter as Router, Switch, Route, useParams } from "react-router-dom";
+import { ProjectSelectComponent } from "./ProjectSelectComponent";
 import { ModalComponent, ModalProperties } from "./ModalComponent";
-import { UploadComponent } from "./UploadComponent";
 import { HeaderComponent } from "./HeaderComponent";
-import { MapComponent } from "./MapComponent";
 import { ProjectComponent } from "./ProjectComponent";
+
+import './styles/main.scss'
+import { MapComponent } from "./MapComponent";
+import { StorySchema } from "../services/store";
 
 declare global {
   var showModal: (title: string, text: string, cancelable? : boolean) => Promise<boolean>
@@ -15,6 +15,8 @@ declare global {
 
 const MainComponent = () => {
   const [modal, setModal] = useState<ModalProperties>(null)
+  const [stories, setStories] = useState<StorySchema[]>([])
+  const [selectedStory, setSelectedStory] = useState<string>(null)
 
   function showModal(title: string, text: string, cancelable : boolean = false) : Promise<boolean> {
     return new Promise( (resolve) => {
@@ -28,47 +30,23 @@ const MainComponent = () => {
     })
   }
 
-  function onBackButtonClick() {
-    
-  }
-
   window.showModal = showModal;
 
   return (
     <div className='content'>
-    <Router>
-      <Switch>
-      <Route path='/project/:projectName'>
-          <HeaderComponent backButtonLink='/'/>
-          <ProjectComponent/>
-        </Route>
-        <Route path="/story/:storyId">
-          <HeaderComponent backButtonLink='/stories/'/>
-          <div className='main'>
-            <StoryComponent/>
-          </div>
-        </Route>
-        <Route path="/upload/:storyId">
-          <HeaderComponent backButtonLink='/stories/'/>
-          <div className='main'>
-            <UploadComponent/>
-          </div>
-        </Route>
-        <Route path="/stories">
-          <HeaderComponent backButtonLink='/'/>
-          <div className='main'>
-            <StoryListComponent/>
-          </div>
-        </Route>
-        <Route path="/">
-          <HeaderComponent/>
-          <div className='main'>  
-            <ProjectViewComponent/>
-          </div>
-        </Route>
-      </Switch>
-    </Router>
-    { modal && <ModalComponent title={modal.title} text={modal.text} onAccept={modal.onAccept}/>}
+       <Router>
+        <Switch>
+          <Route path='/:projectName/'>
+            <MapComponent stories={stories} selected={selectedStory} onMarkerClick={(id) => setSelectedStory(id)} showButtons={true}/>
+            <ProjectComponent selected={selectedStory} onStoriesChanged={setStories}/>
+          </Route>
+          <Route path="/">
+            <MapComponent stories={[]} onMarkerClick={(id) => alert('click')} showButtons={false}/>
+            <ProjectSelectComponent/>
+          </Route>
+        </Switch>
+      </Router>
+      { modal && <ModalComponent title={modal.title} text={modal.text} onAccept={modal.onAccept}/>}
     </div>
   )
 }

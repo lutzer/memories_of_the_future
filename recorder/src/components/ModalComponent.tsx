@@ -9,8 +9,6 @@ type ModalProperties = {
 }
 
 const ModalComponent = (props : ModalProperties) => {
-
-  console.log(props)
   
   return(
     <div className='modal'>
