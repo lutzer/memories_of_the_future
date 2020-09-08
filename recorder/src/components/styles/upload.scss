@@ -1,16 +1,15 @@
+@import '_vars.scss';
 
 .upload {
-  position: relative;
-  display: flex;
-  align-items: center; 
+  @include flex-column;
+  height:100%;
   justify-content: center;
-  height: 100%;
-  flex-direction: column;
-
 
   .center-item {
-    width: 66%;
+    justify-content: center;
+    justify-self: center;
     text-align: center;
+    color: #666;
   }
 
   .error {

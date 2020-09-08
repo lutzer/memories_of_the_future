@@ -129,7 +129,9 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
             </SlideContainerComponent>
           </Route>
           <Route path={`/${projectName}/upload/:storyId`}>
-            <UploadComponent/>
+            <DialogBoxComponent>
+              <UploadComponent/>
+            </DialogBoxComponent>
           </Route>
           <Route path={`/${projectName}/stories/:storyId`}>
             <SlideContainerComponent fullscreen={false} closePath={`/${projectName}/`}>

@@ -12,7 +12,7 @@ const MenuBarComponent = ({projectName} : Properties) => {
     <div className='menubar'>
       <div className='menubuttons'>
         <Link className='button' to={`/${projectName}/records`}>Drafts</Link>
-        <Link className='button' to={`/${projectName}/add`}>Create</Link>
+        <Link className='button' to={`/${projectName}/add`}>Add</Link>
         <Link className='button' to={`/${projectName}/info`}>Project</Link>
       </div>
     </div>

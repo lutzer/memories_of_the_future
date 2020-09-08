@@ -118,7 +118,7 @@ module.exports = (env, argv) => {
         maxModules: 0
       },
       proxy: [{
-        context: ['/api'],
+        context: ['/api', '/files'],
         target: 'http://localhost:3000',
       }]
     },

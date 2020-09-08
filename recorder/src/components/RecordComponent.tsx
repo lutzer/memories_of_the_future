@@ -54,19 +54,27 @@ const RecordComponent = ({records, onDelete, onChange} : Properties) => {
     setRecord(Object.assign({}, record, { text: text}))
   },500)
 
+  const updateTitle = _.debounce( async (title : string) => {
+    setRecord(Object.assign({}, record, { title: title}))
+  },500)
+
   async function updateLocation(loc : [number, number]) {
     setRecord(Object.assign({}, record, { location: loc}))
+  }
+
+  const uploadEnabled = function() {
+    return record.recording && record.image && record.location && record.title.length > 0
   }
 
   return (
     record ?
       !record.uploaded ? 
         <div className="record">
-          <h3>Memory of {record.projectName}</h3>
+          <TextInputComponent maxLength={64} placeholder='Title of the memory' text={record.title} onChange={updateTitle}/>
           <div className='item info'>
             <div className='item-content'>
             <p>Created {dateFromNow(record.createdAt)} by <span className='author'>{record.author}</span>.</p>
-            <TextInputComponent text={record.text} onChange={updateText}/>
+            <TextInputComponent placeholder='Say something about your memory.' text={record.text} rows={6} onChange={updateText}/>
             </div>
           </div>
           <div className='item recorder'>
@@ -82,7 +90,7 @@ const RecordComponent = ({records, onDelete, onChange} : Properties) => {
           </div>
           <div className='button-group'>
             <DeleteButtonComponent text='Delete Memory' onConfirm={() => { onDelete(record.id) }}/>
-            <button onClick={() => history.push(`/${record.projectName}/upload/${record.id}`)} disabled={!record.recording || !record.image || !record.location}>Upload</button>
+            <button onClick={() => history.push(`/${record.projectName}/upload/${record.id}`)} disabled={!uploadEnabled()}>Upload</button>
           </div>
         </div>
       :

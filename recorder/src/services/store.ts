@@ -32,6 +32,7 @@ type RecordSchema = {
   author?: string,
   modifiedAt?: number,
   text?: string,
+  title : string,
   recording?: AudioRecording,
   image? : Blob,
   location? : [ number, number ],
@@ -103,6 +104,7 @@ class Store {
       projectId: project.id,
       projectName: project.name,
       author: _.capitalize(author),
+      title: 'Memory of ' + project.name,
       createdAt: Date.now(),
       uploaded: false
     })

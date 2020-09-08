@@ -24,6 +24,20 @@
       padding: 10px;
       margin: 10px 0px;
     }
+
+    h4 {
+      display: inline;
+    }
+
+    .date {
+      float: right;
+    }
+
+    .empty {
+      padding: 10px;
+      text-align: center;
+      width: 100%;
+    }
   }
 }
 

@@ -26,13 +26,13 @@ const RecordListComponent = ({project, records} : Properties) => {
       </div>
     : 
     <div className="records-list">
-      <h3>Memories - {records.length}/{config.maxStories}</h3>
+      <h2>Recorded Memories - {records.length}/{config.maxStories}</h2>
       { records.map( (record: RecordSchema, i) => {
         return( 
           <div key={i} className={record.uploaded? 'item uploaded': 'item'}>
             <Link to={`/${project.name}/records/${record.id}`}>
               <div className='item-content'>
-              <h3>{record.projectName}{record.uploaded ? ' (uploaded)' : ''}</h3>
+              <h3>{record.title}{record.uploaded ? ' (uploaded)' : ''}</h3>
               <p>
               created {dateFromNow(record.createdAt)} by <span className='author'>{record.author || 'unknown'}</span>
               </p>

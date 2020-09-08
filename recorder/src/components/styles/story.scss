@@ -1,0 +1,19 @@
+.story {
+  padding: 10px;
+  overflow:scroll;
+  height:100%;
+
+  .item {
+    padding: 10px;
+  }
+
+  .image {
+    width: 100%;
+    text-align: center;
+
+    img {
+      max-height: 400px;
+      max-width: 100%;
+    }
+  }
+}
