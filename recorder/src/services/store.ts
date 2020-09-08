@@ -15,6 +15,7 @@ type StorySchema = {
   projectId : string,
   createdAt: number,
   author: string,
+  title: string,
   text: string,
   recording: string,
   image : string,

@@ -38,7 +38,7 @@ const MainComponent = () => {
         <Switch>
           <Route path='/:projectName/'>
             <MapComponent stories={stories} selected={selectedStory} onMarkerClick={(id) => setSelectedStory(id)} showButtons={true}/>
-            <ProjectComponent selected={selectedStory} onStoriesChanged={setStories}/>
+            <ProjectComponent selected={selectedStory} onStorySelected={(id) => setSelectedStory(id)} onStoriesChanged={setStories}/>
           </Route>
           <Route path="/">
             <MapComponent stories={[]} onMarkerClick={(id) => alert('click')} showButtons={false}/>

@@ -1,10 +1,30 @@
 @import '_vars.scss';
 
 .project-info {
-  @include flex-column;
   padding: 10px;
   overflow:scroll;
   height:100%;
+
+  .story-list {
+    width:100%;
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    ul:after {
+      content: ' ';
+      display: block;
+      margin-bottom: 3em;
+    }
+
+    li {
+      background-color: lightgray;
+      padding: 10px;
+      margin: 10px 0px;
+    }
+  }
 }
 
 .project {

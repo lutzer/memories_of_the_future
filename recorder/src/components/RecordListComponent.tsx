@@ -5,7 +5,7 @@ import _ from 'lodash'
 import { config } from "../config";
 import { dateFromNow } from "../utils/utils";
 
-import './styles/story.scss'
+import './styles/record.scss'
 import './styles/input.scss'
 import { RecordSchema, ProjectSchema, Store } from "../services/store";
 
@@ -18,14 +18,14 @@ const RecordListComponent = ({project, records} : Properties) => {
 
   return (
     _.isEmpty(records) ?
-      <div className="story-list center">
+      <div className="records-list center">
         <div className='center-item'>
           <p>No memories saved.</p>
           <Link className='button' to={`/${project.name}/add`}>Create Memory</Link>
         </div>
       </div>
     : 
-    <div className="story-list">
+    <div className="records-list">
       <h3>Memories - {records.length}/{config.maxStories}</h3>
       { records.map( (record: RecordSchema, i) => {
         return( 

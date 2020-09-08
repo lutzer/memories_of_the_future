@@ -15,6 +15,7 @@ import './styles/animations.scss'
 import { ProjectInfoComponent } from "./ProjectInfoComponent";
 import { DialogBoxComponent } from "./DialogBoxComponent";
 import _ from "lodash";
+import { StoryComponent } from "./StoryComponent";
 
 function handleDbError(err : any) {
   console.log(err)
@@ -23,10 +24,11 @@ function handleDbError(err : any) {
 
 type Props = {
   onStoriesChanged : (record : StorySchema[]) => void,
+  onStorySelected : (id: string) => void,
   selected : string
 }
 
-const ProjectComponent = ({selected, onStoriesChanged} : Props ) => {
+const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props ) => {
   const [ project, setProject ] = useState<ProjectSchema>(null)
   const [ records, setRecords ] = useState<RecordSchema[]>([])
   const [ stories, setStories ] = useState<StorySchema[]>([])
@@ -123,11 +125,16 @@ const ProjectComponent = ({selected, onStoriesChanged} : Props ) => {
           </Route>
           <Route path={`/${projectName}/info`}>
             <SlideContainerComponent fullscreen={false} closePath={`/${projectName}/`}>
-              <ProjectInfoComponent project={project}/>
+              <ProjectInfoComponent project={project} stories={stories}/>
             </SlideContainerComponent>
           </Route>
           <Route path={`/${projectName}/upload/:storyId`}>
             <UploadComponent/>
+          </Route>
+          <Route path={`/${projectName}/stories/:storyId`}>
+            <SlideContainerComponent fullscreen={false} closePath={`/${projectName}/`}>
+              <StoryComponent stories={stories}/>
+            </SlideContainerComponent>
           </Route>
         </Switch>
       </div>

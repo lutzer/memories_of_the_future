@@ -10,7 +10,7 @@ import _ from "lodash";
 import { dateFromNow } from "../utils/utils";
 
 import './styles/input.scss'
-import './styles/story.scss'
+import './styles/record.scss'
 import { DeleteButtonComponent } from "./DeleteButtonComponent";
 import { RecordSchema } from "../services/store";
 
@@ -61,7 +61,7 @@ const RecordComponent = ({records, onDelete, onChange} : Properties) => {
   return (
     record ?
       !record.uploaded ? 
-        <div className="story">
+        <div className="record">
           <h3>Memory of {record.projectName}</h3>
           <div className='item info'>
             <div className='item-content'>
@@ -83,11 +83,10 @@ const RecordComponent = ({records, onDelete, onChange} : Properties) => {
           <div className='button-group'>
             <DeleteButtonComponent text='Delete Memory' onConfirm={() => { onDelete(record.id) }}/>
             <button onClick={() => history.push(`/${record.projectName}/upload/${record.id}`)} disabled={!record.recording || !record.image || !record.location}>Upload</button>
-            <p> </p>
           </div>
         </div>
       :
-      <div className="story">
+      <div className="record">
         <h3>Memory of {record.projectName}</h3>
         <div className='item info'>
           <div className='item-content'>
@@ -101,10 +100,10 @@ const RecordComponent = ({records, onDelete, onChange} : Properties) => {
         <button onClick={() => { onDelete(storyId) }}>Delete from Device</button>
       </div>
     :
-      <div className="story center">
+      <div className="record center">
         <div className='center-item'>
           <p>This memory was forgotten.</p>
-          <button onClick={() => history.push('/stories/')}>Back</button>
+          <button onClick={() => history.push('./../')}>Back</button>
         </div>
       </div>
   )

@@ -37,7 +37,7 @@ router.delete('/stories/:id', async (context) => {
 
 router.post('/stories/'/*?projectId*/, bodyParser(), async (context) => {
   const db = await getDatabase()
-  const storyData = _.pick(context.request.body, ['author','projectId','location','text','createdAt'])
+  const storyData = _.pick(context.request.body, ['author','projectId','location','text','title','createdAt'])
   let story = new StoryModel(storyData)
   // check if project with project id exists in database
   let project = db.get('projects').find({ id : story.data.projectId }).value()

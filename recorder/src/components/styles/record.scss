@@ -1,6 +1,6 @@
 @import '_vars.scss';
 
-.story-list {
+.records-list {
   @include flex-column;
   padding: 10px;
   overflow: scroll;
@@ -43,11 +43,17 @@
   }
 }
 
-.story {
+.record {
   @include flex-column;
   padding: 10px;
   overflow:scroll;
   height:100%;
+
+  &:after {
+    content: '';
+    display: block;
+    margin-bottom: 3.5em;
+  }
 
   &.center {
     justify-content: center;

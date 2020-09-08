@@ -46,21 +46,21 @@ describe('Create Test Data', () => {
     result = await connect().post('/api/stories').send({
       projectId : projectId,
       author: "Nitsa",
-      title: "Lutz",
+      title: "Graefe 32",
       location: [52.547695, 13.359864]
     }).auth('Project1', 'password')
     expect(result).to.have.status(200);
     result = await connect().post('/api/stories').send({
       projectId : projectId,
       author: "Felix",
-      title: "Lutz",
+      title: "Test Titel",
       location: [52.538293, 13.343924]
     }).auth('Project1', 'password')
     expect(result).to.have.status(200);
     result = await connect().post('/api/stories').send({
       projectId : projectId,
       author: "Sidra",
-      title: "Lutz",
+      title: "Eis essen",
       location: [51.563887, 10.803122]
     }).auth('Project1', 'password')
     expect(result).to.have.status(200);
@@ -79,7 +79,7 @@ describe('Create Test Data', () => {
     result = await connect().post('/api/stories').send({
       projectId : projectId,
       author: "Nitsa",
-      title: "Lutz",
+      title: "Geht nicht",
       location: [52.547695, 13.359864]
     }).auth('Project2', 'password')
     expect(result).to.have.status(200);
@@ -92,7 +92,7 @@ describe('Create Test Data', () => {
     result = await connect().post('/api/stories').send({
       projectId : projectId,
       author: "Felix",
-      title: "Lutz",
+      title: "Musik",
       location: [52.538293, 13.343924]
     }).auth('Project2', 'password')
     expect(result).to.have.status(200);
@@ -105,7 +105,7 @@ describe('Create Test Data', () => {
     result = await connect().post('/api/stories').send({
       projectId : projectId,
       author: "Sidra",
-      title: "Lutz",
+      title: "Achja",
       location: [51.563887, 10.803122]
     }).auth('Project2', 'password')
     expect(result).to.have.status(200);
