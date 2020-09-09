@@ -2,6 +2,7 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 const expect = chai.expect
 const fs = require('fs')
+const { loremIpsum } = require('lorem-ipsum');
 
 // start server
 const { app } = require('../dist/app')
@@ -47,6 +48,7 @@ describe('Create Test Data', () => {
       projectId : projectId,
       author: "Nitsa",
       title: "Graefe 32",
+      text: loremIpsum({count : 5}),
       location: [52.547695, 13.359864]
     }).auth('Project1', 'password')
     expect(result).to.have.status(200);
@@ -54,6 +56,7 @@ describe('Create Test Data', () => {
       projectId : projectId,
       author: "Felix",
       title: "Test Titel",
+      text: loremIpsum({count : 5}),
       location: [52.538293, 13.343924]
     }).auth('Project1', 'password')
     expect(result).to.have.status(200);
@@ -61,6 +64,7 @@ describe('Create Test Data', () => {
       projectId : projectId,
       author: "Sidra",
       title: "Eis essen",
+      text: loremIpsum({count : 5}),
       location: [51.563887, 10.803122]
     }).auth('Project1', 'password')
     expect(result).to.have.status(200);
@@ -80,6 +84,7 @@ describe('Create Test Data', () => {
       projectId : projectId,
       author: "Nitsa",
       title: "Geht nicht",
+      text: loremIpsum({count : 5}),
       location: [52.547695, 13.359864]
     }).auth('Project2', 'password')
     expect(result).to.have.status(200);
@@ -93,6 +98,7 @@ describe('Create Test Data', () => {
       projectId : projectId,
       author: "Felix",
       title: "Musik",
+      text: loremIpsum({count : 5}),
       location: [52.538293, 13.343924]
     }).auth('Project2', 'password')
     expect(result).to.have.status(200);
@@ -106,6 +112,7 @@ describe('Create Test Data', () => {
       projectId : projectId,
       author: "Sidra",
       title: "Achja",
+      text: loremIpsum({count : 5}),
       location: [51.563887, 10.803122]
     }).auth('Project2', 'password')
     expect(result).to.have.status(200);
@@ -131,6 +138,7 @@ describe('Create Test Data', () => {
       projectId : projectId,
       author: "Nitsa",
       title: "Lutz",
+      text: loremIpsum({count : 5}),
       location: [52.547695, 13.359864]
     }).auth('Project3', 'password')
     const storyId = result.body.story.id;
@@ -146,6 +154,7 @@ describe('Create Test Data', () => {
       storyId : storyId,
       type: 'text',
       author: 'Peter',
+      text: loremIpsum({count : 5}),
       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
     }).auth('Project3', 'password')
     expect(result).to.have.status(200);
@@ -153,6 +162,7 @@ describe('Create Test Data', () => {
       storyId : storyId,
       type: 'text',
       author: 'Anna',
+      text: loremIpsum({count : 5}),
       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
     }).auth('Project3', 'password')
     expect(result).to.have.status(200);

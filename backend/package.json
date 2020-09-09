@@ -47,6 +47,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "koa-proxy": "^1.0.0-alpha.3",
+    "lorem-ipsum": "^2.0.3",
     "nyc": "^15.0.1",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.3"
