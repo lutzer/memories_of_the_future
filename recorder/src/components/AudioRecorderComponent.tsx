@@ -11,19 +11,39 @@ import playArrow from './../assets/play-arrow.png'
 import pauseButton from './../assets/pause-button.png'
 import { DeleteButtonComponent } from "./DeleteButtonComponent";
 
-const AudioPlayerComponent = ({audioData} : {audioData : AudioRecording}) => {
+type AudioPlayerproperties = {
+  audioData? : AudioRecording, 
+  audioUrl? : string
+}
+
+const AudioPlayerComponent = ({audioData = null, audioUrl = null} : AudioPlayerproperties) => {
   const [audio, setAudio] = useState<HTMLAudioElement>(null)
   const [playhead, setPlayhead] = useState<number>(0)
   const [playing, setPlaying] = useState<boolean>(false)
+  const [duration, setDuration] = useState(0)
 
+  //load from blob
   useEffect( () => {
     if (audioData && _.has(audioData, 'blob')) {
       const url = URL.createObjectURL(audioData.blob)
       const audioObj = new Audio(url)
       setAudio(audioObj)
+      setDuration(audioData.duration)
       audioObj.onended = resetAudio
     }
   },[audioData])
+
+  // load from url
+  useEffect( () => {
+    if (audioUrl) {
+      const audioObj = new Audio(audioUrl)
+      setAudio(audioObj)
+      audioObj.addEventListener('loadeddata', () => setDuration(audioObj.duration * 1000))
+      audioObj.onended = resetAudio
+    }
+  },[audioUrl])
+
+
 
   useEffect( () => {
     if (!audio)
@@ -46,13 +66,13 @@ const AudioPlayerComponent = ({audioData} : {audioData : AudioRecording}) => {
 
   function resetAudio() {
     setPlaying(false)
-    setPlayhead(audioData.duration)
+    setPlayhead(duration)
     if (audio)
       audio.currentTime = 0
   }
 
   const timeString = convertSecondsToMinuteString(playhead / 1000) 
-  const progress = audioData ? playhead / audioData.duration : 0
+  const progress = audio ? playhead / duration : 0
 
   return(
     <div className='audio-player' onClick={() => setPlaying(!playing)}>
@@ -151,4 +171,4 @@ const AudioRecorderComponent = ({onSave, onDelete, recording} :
   )
 }
 
-export { AudioRecorderComponent }
+export { AudioRecorderComponent, AudioPlayerComponent }

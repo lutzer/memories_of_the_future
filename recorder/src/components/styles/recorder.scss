@@ -1,31 +1,6 @@
 .recorder {
   width: 100%;
 
-  .audio-player {
-    display: flex;
-    justify-items: center;
-    align-items: center;
-    text-align: center;
-    width:100%;
-    height: 40px;
-
-    .play-button {
-      width: 30px;
-      height: 30px;
-
-      img {
-        width: 100%;
-        height: 100%;
-        opacity: 0.4;
-      }
-    }
-
-    .bar {
-      flex: 1 1 0;
-      padding: 0 10px;
-    }
-  }
-
   .recording-time {
     display: flex;
     align-items: center;
@@ -50,5 +25,34 @@
       flex: 1 1 auto;
       padding: 0 10px;
     }
+  }
+}
+
+.audio-player {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  text-align: center;
+  width:100%;
+  height: 40px;
+
+  .play-button {
+    width: 30px;
+    height: 30px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      opacity: 0.4;
+    }
+  }
+
+  .bar {
+    flex: 1 1 0;
+    padding: 0 10px;
+  }
+
+  .number {
+    padding: 0 5px ;
   }
 }

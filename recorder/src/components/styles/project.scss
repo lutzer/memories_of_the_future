@@ -14,9 +14,7 @@
     }
 
     ul:after {
-      content: ' ';
-      display: block;
-      margin-bottom: 3em;
+      @include after-content;
     }
 
     li {

@@ -36,6 +36,7 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
   const { projectName } = useParams();
   const history = useHistory();
 
+  // load project
   useEffect( () => {
     Store.getProject(projectName).then( data => {
       setProject(data)
@@ -56,11 +57,6 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
       setStories([])
   }, [project])
 
-  // on story changed callback
-  useEffect( () => {
-    onStoriesChanged(stories)
-  }, [stories])
-
   // load records
   useEffect( () => {
     Store.getRecords().then( data => {
@@ -69,6 +65,11 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
       setRecords([])
     })
   },[])
+
+  // on story changed callback
+  useEffect( () => {
+    onStoriesChanged(stories)
+  }, [stories])
 
   async function addRecord(author: string) {
     try {

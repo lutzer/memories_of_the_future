@@ -6,6 +6,10 @@
   overflow: scroll;
   height:100%;
 
+  &:after {
+    @include after-content;
+  }
+
   &.center {
     justify-content: center;
   }
@@ -50,9 +54,7 @@
   height:100%;
 
   &:after {
-    content: '';
-    display: block;
-    margin-bottom: 3.5em;
+    @include after-content;
   }
 
   &.center {

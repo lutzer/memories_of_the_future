@@ -12,3 +12,9 @@ $border-radius: 5px;
   justify-content: flex-start;
   flex-direction: column;
 }
+
+@mixin after-content {
+  content: ' ';
+  display: block;
+  margin-bottom: 3em;
+}

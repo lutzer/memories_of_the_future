@@ -1,3 +1,5 @@
+@import '_vars.scss';
+
 .story {
   padding: 10px;
   overflow:scroll;
@@ -15,5 +17,9 @@
       max-height: 400px;
       max-width: 100%;
     }
+  }
+
+  &:after {
+    @include after-content;
   }
 }
