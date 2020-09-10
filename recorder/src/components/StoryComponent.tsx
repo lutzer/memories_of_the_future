@@ -10,11 +10,16 @@ import { AudioRecording } from "../media/recorder";
 
 type Properties = {
   story : StorySchema
+  setSelected : (id : string) => void
 }
 
 
-const StoryComponent = ( {story} : Properties ) => {
-  const [ recording, setRecording ] = useState<AudioRecording>(null)
+const StoryComponent = ( {story, setSelected} : Properties ) => {
+
+  useEffect(() => { 
+    setSelected(story.id) 
+    return () => setSelected(null)
+  },[story])
 
   return (
     story ?

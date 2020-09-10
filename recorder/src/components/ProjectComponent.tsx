@@ -155,7 +155,7 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
           <Route path={`/${projectName}/stories/:storyId`} render={({match}) => {
             return(
               <SlideContainerComponent fullscreen={false} closePath={`/${projectName}/`}>
-                <StoryComponent story={_.find(stories,{id : match.params.storyId})}/>
+                <StoryComponent story={_.find(stories,{id : match.params.storyId})} setSelected={onStorySelected}/>
               </SlideContainerComponent>
             )
           }}/>

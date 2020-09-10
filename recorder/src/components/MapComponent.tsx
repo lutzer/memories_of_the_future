@@ -65,7 +65,7 @@ type MapProps = {
 
 const MapComponent = ({ stories = [], selected = null, showButtons = true, onMarkerClick }: MapProps) => {
 
-  console.log(stories)
+  console.log(['selected',selected])
 
   return (
     <div className="map-container">
