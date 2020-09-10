@@ -35,8 +35,8 @@ type RecordSchema = {
   title : string,
   recording?: AudioRecording,
   image? : Blob,
-  location? : [ number, number ],
-  uploaded : boolean
+  location? : [ number, number ]
+  uploaded: boolean
 }
 
 class StoreException extends Error {
@@ -119,6 +119,11 @@ class Store {
   static async updateRecord(record: RecordSchema) : Promise<void> {
     const db = await getDatabase()
     await db.writeRecord(record)
+  }
+
+  static async moveRecord(from: string, to: string) : Promise<void> {
+    const db = await getDatabase()
+    await db.changeRecordId(from, to)
   }
 }
 

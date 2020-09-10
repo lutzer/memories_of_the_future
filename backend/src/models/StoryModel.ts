@@ -12,7 +12,6 @@ type StoryModelSchema = {
   recording : string,
 
   color : string,
-  visible: boolean,
   createdAt : number
 }
 
@@ -30,7 +29,6 @@ class StoryModel extends BaseModel {
     recording : null,
 
     color : '#ffffff',
-    visible: true,
     createdAt : Date.now()
   }
 

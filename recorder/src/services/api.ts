@@ -14,12 +14,12 @@ class ApiException extends Error {
   }
 }
 
-async function uploadFiles(story: RecordSchema, password: string, controller?: AbortController) : Promise<Response> {
+async function uploadFiles(id: string, story: RecordSchema, password: string, controller?: AbortController) : Promise<Response> {
   var data = new FormData()
   data.append('recording', story.recording.blob, getFilename(story.recording.blob))
   data.append('image', story.image, getFilename(story.image))
 
-  let response = await fetch(config.apiAdress + 'upload/story/' + story.id, {
+  let response = await fetch(config.apiAdress + 'upload/story/' + id, {
     method: 'POST',
     headers: new Headers( generateAuthHeader(story.projectName, password)),
     body: data,
@@ -48,14 +48,15 @@ class Api {
     return json
   }
 
-  static async uploadStory(story: RecordSchema, password: string, controller?: AbortController) : Promise<void> {
+  static async uploadStory(record: RecordSchema, password: string, controller?: AbortController) : Promise<string> {
+    
     // post story
     let response = await fetch(config.apiAdress + 'stories', {
       method: 'POST',
       headers: Object.assign({},{
         'Content-Type': 'application/json'
-      }, generateAuthHeader(story.projectName, password)),
-      body: JSON.stringify(story),
+      }, generateAuthHeader(record.projectName, password)),
+      body: JSON.stringify(record),
       signal: controller ? controller.signal : null
     });
 
@@ -65,14 +66,16 @@ class Api {
     }
     // find out story id from server
     let json = await response.json()
-    story.id = json.story.id
+    let serverId = json.story.id
 
     // upload files
-    response = await uploadFiles(story, password, controller) 
+    response = await uploadFiles(serverId, record, password, controller) 
     if (response.status != 200) {
       let text = await response.text()
       throw new ApiException(response.status, text)
     }
+    //return new id
+    return serverId
   }
 }
 

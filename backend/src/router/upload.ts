@@ -7,6 +7,7 @@ import { deleteFile, fileFilter, errorMiddleware, moveFile, checkBasicAuth } fro
 import { config } from './../config'
 import { handleAudioUpload, handleImageUpload, FileUpload, getFileUrl } from './../upload'
 import { ApiError } from './../exceptions'
+import { StoryModelSchema } from '../models/StoryModel'
 
 const router = new Router()
 

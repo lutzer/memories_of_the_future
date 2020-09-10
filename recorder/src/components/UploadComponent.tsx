@@ -5,37 +5,29 @@ import { getDatabase } from "../services/storage";
 
 import './styles/upload.scss'
 import { Api, ApiException } from "../services/api";
-import { RecordSchema } from "../services/store";
+import { RecordSchema, StorySchema } from "../services/store";
+import _ from "lodash";
 
-function handleDbError(err : any) {
-  console.log(err)
-  if (err instanceof Error) showModal('Error', err.message)
-}
+// async function setStoryUploaded(story : RecordSchema, oldStoryId : string) {
+//   const db = await getDatabase()
+//   const data : RecordSchema = Object.assign({}, story, { uploaded: true })
+//   await db.writeRecord(data)
 
-async function readStory(storyId : string) {
-  try {
-    const db = await getDatabase()
-    const data = await db.getRecord(storyId)
-    return data
-  } catch (err) {
-    return null;
-  }
-}
-
-async function setStoryUploaded(story : RecordSchema, oldStoryId : string) {
-  const db = await getDatabase()
-  const data : RecordSchema = Object.assign({}, story, { uploaded: true})
-  await db.writeRecord(data)
-
-  // remove old story
-  await db.removeRecord(oldStoryId)
-}
+//   // remove old story
+//   await db.removeRecord(oldStoryId)
+// }
 
 enum UploadState {
   PASSWORD, LOADING, TRANSFERING, COMPLETE, CANCELED, ERROR
 }
 
-const UploadComponent = () => {
+type Properties = {
+  records : RecordSchema[],
+  onUploadSuccess : (record : RecordSchema, serverId : string) => void,
+  onCancelled : () => void
+}
+
+const UploadComponent = ({ records, onUploadSuccess, onCancelled } : Properties) => {
   const { storyId } = useParams()
   const history = useHistory()
 
@@ -47,22 +39,22 @@ const UploadComponent = () => {
   useEffect( () => {
     const controller = new AbortController()
     if (uploading)
-      uploadStory(storyId, controller)
+    uploadRecord(storyId, controller)
     return function cleanup() {
       controller.abort()
     }
   }, [uploading])
 
-  async function uploadStory(id : string, controller: AbortController) {
-    const story = await readStory(id)
+  async function uploadRecord(id : string, controller: AbortController) {
+    const record = _.find(records, { id: id} )
 
-    if (!story) {
+    if (!record) {
       setState(UploadState.ERROR)
       setError('Can not retrieve memory.')
       return
     }
 
-    if (story.uploaded) {
+    if (record.uploaded) {
       setState(UploadState.ERROR)
       setError('Story has been uploaded already.')
       return
@@ -70,9 +62,9 @@ const UploadComponent = () => {
       
     try {
       setState(UploadState.TRANSFERING)
-      await Api.uploadStory(story, password, controller)
-      setStoryUploaded(story, id);
+      const newId = await Api.uploadStory(record, password, controller)
       setState(UploadState.COMPLETE)
+      onUploadSuccess(record, newId)
     } catch (err) {
       console.log(err)
       if (err.name === "AbortError") {
@@ -90,8 +82,9 @@ const UploadComponent = () => {
     }
   }
 
-  function onCancel() {
+  function onCancelButtonPress() {
     setUploading(false)
+    onCancelled()
   }
 
   function onOk() {
@@ -143,9 +136,9 @@ const UploadComponent = () => {
             completed={state == UploadState.COMPLETE}/> 
           }
           { state == UploadState.TRANSFERING ?
-            <button onClick={onCancel}>Cancel</button>
+            <button onClick={onCancelButtonPress}>Cancel</button>
           :
-            <button onClick={onOk}>OK</button>
+            <button onClick={onCancelled}>OK</button>
           }
         </div>
       </div>

@@ -84,7 +84,9 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
   async function deleteRecord(id: string) {
     try {
       await Store.deleteRecord(id)
-      setRecords(await Store.getRecords())
+      setRecords(_.filter(records, (data) => {
+        return data.id != id
+      }))
       history.push(`./`)
     } catch (err) {
       handleDbError(err)
@@ -97,6 +99,19 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
       setRecords(_.map(records, (data) => {
         return data.id == record.id ? record : data
       }))
+    } catch (err) {
+      handleDbError(err)
+    }
+  }
+
+  async function onRecordUploaded(record : RecordSchema, serverId : string) {
+    console.log(record, serverId)
+    try {
+      record.uploaded = true
+      await Store.updateRecord(record)
+      await Store.moveRecord(record.id, serverId)
+      setRecords(await Store.getRecords())
+      history.push(`/${projectName}/records/${serverId}`)
     } catch (err) {
       handleDbError(err)
     }
@@ -131,7 +146,7 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
           </Route>
           <Route path={`/${projectName}/upload/:storyId`}>
             <DialogBoxComponent>
-              <UploadComponent/>
+              <UploadComponent records={records} onUploadSuccess={onRecordUploaded} onCancelled={() => history.push(`/${projectName}/records`)}/>
             </DialogBoxComponent>
           </Route>
           <Route path={`/${projectName}/stories/:storyId`}>
