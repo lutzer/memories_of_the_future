@@ -17,49 +17,44 @@ import { RecordSchema } from "../services/store";
 type Properties = {
   onDelete : (id : string) => void
   onChange : (record: RecordSchema) => void
-  records: RecordSchema[]
+  record: RecordSchema
 }
 
-const RecordComponent = ({records, onDelete, onChange} : Properties) => {
+const RecordComponent = ({record, onDelete, onChange} : Properties) => {
   const history = useHistory();
-  const { storyId } = useParams();
-  const [ record, setRecord ] = useState(null)
+  const [ recordData, setRecordData ] = useState(record)
 
   useEffect(() => {
-    setRecord(_.find(records,{id: storyId}))
-  },[storyId, records])
-
-  useEffect(() => {
-    if (record)
-      onChange(record)
-  },[record])
+    if (recordData)
+      onChange(recordData)
+  },[recordData])
 
   function saveRecording(recording: AudioRecording) {
-    setRecord(Object.assign({} ,record, { recording: recording}))
+    setRecordData(Object.assign({} ,record, { recording: recording}))
   }
 
   function deleteRecording() {
-    setRecord(Object.assign({}, record, { recording: null}))
+    setRecordData(Object.assign({}, record, { recording: null}))
   }
 
   function saveImage(image: Blob) {
-    setRecord(Object.assign({}, record, { image: image } ))
+    setRecordData(Object.assign({}, record, { image: image } ))
   }
 
   async function deleteImage() {
-    setRecord(Object.assign({}, record, { image: null}))
+    setRecordData(Object.assign({}, record, { image: null}))
   }
 
   const updateText = _.debounce( async (text : string) => {
-    setRecord(Object.assign({}, record, { text: text}))
+    setRecordData(Object.assign({}, record, { text: text}))
   },500)
 
   const updateTitle = _.debounce( async (title : string) => {
-    setRecord(Object.assign({}, record, { title: title}))
+    setRecordData(Object.assign({}, record, { title: title}))
   },500)
 
   async function updateLocation(loc : [number, number]) {
-    setRecord(Object.assign({}, record, { location: loc}))
+    setRecordData(Object.assign({}, record, { location: loc}))
   }
 
   const uploadEnabled = function() {
@@ -105,7 +100,7 @@ const RecordComponent = ({records, onDelete, onChange} : Properties) => {
           <PhotoViewComponent imageData={record.image}/>
         </div>
         <p>Memory has been uploaded.</p>
-        <button onClick={() => { onDelete(storyId) }}>Delete from Device</button>
+        <button onClick={() => { onDelete(record.id) }}>Delete from Device</button>
       </div>
     :
       <div className="record center">

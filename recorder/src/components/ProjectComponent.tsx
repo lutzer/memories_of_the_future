@@ -105,7 +105,6 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
   }
 
   async function onRecordUploaded(record : RecordSchema, serverId : string) {
-    console.log(record, serverId)
     try {
       record.uploaded = true
       await Store.updateRecord(record)
@@ -124,11 +123,13 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
       <div>
         <MenuBarComponent projectName={projectName}/>
         <Switch>
-          <Route path={`/${projectName}/records/:storyId`}>
-            <SlideContainerComponent closePath={`/${projectName}/`}>
-              <RecordComponent records={records} onDelete={(id) => deleteRecord(id)} onChange={(record) => updateRecord(record)}/>
-            </SlideContainerComponent>
-          </Route>
+          <Route path={`/${projectName}/records/:storyId`}  render={({match}) => {
+            return(
+              <SlideContainerComponent closePath={`/${projectName}/`}>
+                <RecordComponent record={_.find(records,{id : match.params.storyId})} onDelete={(id) => deleteRecord(id)} onChange={(record) => updateRecord(record)}/>
+              </SlideContainerComponent>
+            )
+          }}/>
           <Route path={`/${projectName}/records`}>
             <SlideContainerComponent closePath={`/${projectName}/`}>
               <RecordListComponent project={project} records={records}/>
@@ -144,16 +145,20 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
               <ProjectInfoComponent project={project} stories={stories}/>
             </SlideContainerComponent>
           </Route>
-          <Route path={`/${projectName}/upload/:storyId`}>
-            <DialogBoxComponent>
-              <UploadComponent records={records} onUploadSuccess={onRecordUploaded} onCancelled={() => history.push(`/${projectName}/records`)}/>
-            </DialogBoxComponent>
-          </Route>
-          <Route path={`/${projectName}/stories/:storyId`}>
-            <SlideContainerComponent fullscreen={false} closePath={`/${projectName}/`}>
-              <StoryComponent stories={stories}/>
-            </SlideContainerComponent>
-          </Route>
+          <Route path={`/${projectName}/upload/:storyId`} render={({match}) => {
+            return(
+              <DialogBoxComponent>
+                <UploadComponent record={_.find(records,{id : match.params.storyId})} onUploadSuccess={onRecordUploaded} onCancelled={() => history.push(`/${projectName}/records`)}/>
+              </DialogBoxComponent>
+            )
+          }}/>
+          <Route path={`/${projectName}/stories/:storyId`} render={({match}) => {
+            return(
+              <SlideContainerComponent fullscreen={false} closePath={`/${projectName}/`}>
+                <StoryComponent story={_.find(stories,{id : match.params.storyId})}/>
+              </SlideContainerComponent>
+            )
+          }}/>
         </Switch>
       </div>
       :

@@ -22,12 +22,12 @@ enum UploadState {
 }
 
 type Properties = {
-  records : RecordSchema[],
+  record : RecordSchema,
   onUploadSuccess : (record : RecordSchema, serverId : string) => void,
   onCancelled : () => void
 }
 
-const UploadComponent = ({ records, onUploadSuccess, onCancelled } : Properties) => {
+const UploadComponent = ({ record, onUploadSuccess, onCancelled } : Properties) => {
   const { storyId } = useParams()
   const history = useHistory()
 
@@ -46,7 +46,6 @@ const UploadComponent = ({ records, onUploadSuccess, onCancelled } : Properties)
   }, [uploading])
 
   async function uploadRecord(id : string, controller: AbortController) {
-    const record = _.find(records, { id: id} )
 
     if (!record) {
       setState(UploadState.ERROR)

@@ -9,15 +9,12 @@ import { AudioPlayerComponent } from "./AudioRecorderComponent";
 import { AudioRecording } from "../media/recorder";
 
 type Properties = {
-  stories : StorySchema[]
+  story : StorySchema
 }
 
 
-const StoryComponent = ( {stories} : {stories : StorySchema[] } ) => {
-  const { storyId } = useParams()
+const StoryComponent = ( {story} : Properties ) => {
   const [ recording, setRecording ] = useState<AudioRecording>(null)
-  
-  const story = _.find(stories, { id: storyId })
 
   return (
     story ?
