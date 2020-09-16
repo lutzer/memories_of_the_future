@@ -1,5 +1,52 @@
 @import '_vars.scss';
 
+.project-select {
+  @include flex-column;
+  margin: $outer-margin;
+  justify-content: center;
+  height:100%;
+  align-items: stretch;
+  padding: 0 10%;
+
+  & > div {
+    pointer-events: auto;
+  }
+  
+  a {
+    display:inline-block;
+    width:100%;
+    height:100%;
+  }
+
+  .project-select-last {
+    margin-top: $standard-spacing;
+    padding: 10px;
+    border-radius: $border-radius;
+    display: block;
+    background: #ffffff;
+    text-align: center;
+  }
+
+  .error {
+    color: white;
+    background-color: red;
+    font-weight: bold;
+    opacity: 0.4;
+    font-size: 0.9rem;
+    margin: 10px 0px;
+    padding: 5px;
+    text-align: center;
+    height: 3em;
+    border-radius: 5px;
+    visibility: visible;
+
+    &:empty {
+      visibility: hidden;
+    }
+  }
+
+}
+
 .project-info {
   padding: 10px;
   overflow:scroll;
@@ -80,22 +127,6 @@
     .input-element {
       width: 80%;
       margin: 0 auto;
-    }
-  }
-
-  .error {
-    color: white;
-    background-color: red;
-    font-weight: bold;
-    opacity: 0.4;
-    height: 15px;
-    font-size: 0.9rem;
-    margin: 10px 0px;
-    padding: 3px;
-    border-radius: 5px;
-
-    &:empty {
-      background-color: transparent;
     }
   }
 }

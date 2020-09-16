@@ -118,7 +118,7 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
   
   return(
     <div className='main-container'>
-      <HeaderComponent backButtonLink='/'/>
+      <HeaderComponent/>
       { project ?
       <div>
         <MenuBarComponent projectName={projectName}/>

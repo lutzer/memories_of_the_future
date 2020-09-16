@@ -7,6 +7,7 @@ type ProjectSchema = {
   id: string,
   name : string,
   description: string,
+  color: string,
   createdAt: number
 }
 

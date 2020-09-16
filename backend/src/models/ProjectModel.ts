@@ -7,6 +7,7 @@ type ProjectModelSchema = {
   description : string,
   password: string,
   visible : boolean,
+  color : string,
   createdAt : number
 }
 
@@ -18,6 +19,7 @@ class ProjectModel extends BaseModel {
     description : '',
     password : generateRandomString(),
     visible : true,
+    color : '#ff0000',
     createdAt : Date.now()
   }
 
