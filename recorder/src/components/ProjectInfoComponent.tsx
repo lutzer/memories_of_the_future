@@ -16,7 +16,7 @@ const ProjectInfoComponent = ({ project, stories } : Properties) => {
   return (
     <div className="project-info">
       <div>
-        <h2>{project.name}</h2>
+      <h2 className='slideheader'>{project.name}</h2>
         <p>{project.description}</p>
       </div>
       <div>

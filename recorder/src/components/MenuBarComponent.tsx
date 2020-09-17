@@ -3,9 +3,9 @@ import { Link, useRouteMatch } from "react-router-dom";
 import './styles/menubar.scss'
 
 import ArrowBackImg from './../assets/arrow_back_black.png'
-import RecordsImg from './../assets/records_black.png'
+import DraftImg from './../assets/drafts_black.png'
 import AddRecordImg from './../assets/add_record_black.png'
-import ProjectImg from './../assets/project_black.png'
+import MemoriesImg from './../assets/memories_black.png'
 
 type Properties = {
   projectName : string
@@ -21,7 +21,7 @@ const MenuBarComponent = ({projectName} : Properties) => {
           <span>Home</span>
         </Link>
         <Link className='button-with-icon' to={`/${projectName}/records`}>
-          <img src={RecordsImg}/>
+          <img src={DraftImg}/>
           <span>Drafts</span>
         </Link>
         <Link className='button-with-icon' to={`/${projectName}/add`}>
@@ -29,8 +29,8 @@ const MenuBarComponent = ({projectName} : Properties) => {
           <span>Add</span>
         </Link>
         <Link className='button-with-icon' to={`/${projectName}/info`}>
-          <img src={ProjectImg}/>
-          <span>Project</span>
+          <img src={MemoriesImg}/>
+          <span>Memories</span>
         </Link>
       </div>
     </div>

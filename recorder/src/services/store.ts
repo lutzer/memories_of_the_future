@@ -105,7 +105,7 @@ class Store {
       projectId: project.id,
       projectName: project.name,
       author: _.capitalize(author),
-      title: 'Memory of ' + project.name,
+      title: '',
       createdAt: Date.now(),
       uploaded: false
     })

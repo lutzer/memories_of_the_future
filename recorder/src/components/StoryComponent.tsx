@@ -17,14 +17,15 @@ type Properties = {
 const StoryComponent = ( {story, setSelected} : Properties ) => {
 
   useEffect(() => { 
-    setSelected(story.id) 
+    if (story)
+      setSelected(story.id) 
     return () => setSelected(null)
   },[story])
 
   return (
     story ?
       <div className='story'>
-        <h2>{story.title}</h2>
+        <h2 className='slideheader'>{story.title}</h2>
         <div className='item text'>
           <p>{story.text}</p>
         </div>

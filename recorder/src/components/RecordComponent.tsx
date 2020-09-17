@@ -58,14 +58,17 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
   }
 
   const uploadEnabled = function() {
-    return record.recording && record.image && record.location && record.title.length > 0
+    return record.recording && record.image && record.location && record.title.length > 3
   }
 
   return (
     record ?
       !record.uploaded ? 
         <div className="record">
-          <TextInputComponent maxLength={64} placeholder='Title of the memory' text={record.title} onChange={updateTitle}/>
+          <h2 className='slideheader'>Memory of {record.projectName}</h2>
+          <div className='item'>
+            <TextInputComponent maxLength={64} placeholder='Title of the memory' text={record.title} onChange={updateTitle}/>
+          </div>
           <div className='item info'>
             <div className='item-content'>
             <p>Created {dateFromNow(record.createdAt)} by <span className='author'>{record.author}</span>.</p>

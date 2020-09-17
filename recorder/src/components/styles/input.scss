@@ -10,7 +10,7 @@
   font-size: 1rem;
 
   input, textarea {
-    font-family: monospace;
+    font-family: 'Roboto', sans-serif;
     width: 100%;
     display: block;
     border: none;
@@ -20,6 +20,7 @@
     font-size: inherit;
     resize: none;
     box-shadow: none;
+    font-style: italic;
   }
 
   textarea:focus, input:focus{
