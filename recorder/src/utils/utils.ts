@@ -35,4 +35,10 @@ function generateAuthHeader(name: string, password: string) : { Authorization : 
   }
 }
 
-export { dateFromNow, getFilename, convertSecondsToMinuteString, generateAuthHeader }
+function sleep(ms: number) : Promise<void> {
+  return new Promise<void>( (resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
+export { dateFromNow, getFilename, convertSecondsToMinuteString, generateAuthHeader, sleep }

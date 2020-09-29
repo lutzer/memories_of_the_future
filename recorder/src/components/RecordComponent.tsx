@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, Link } from "react-router-dom";
 import { getDatabase } from "../services/storage";
 import { AudioRecorderComponent } from "./AudioRecorderComponent";
 import { AudioRecording } from "../media/recorder";
@@ -103,7 +103,10 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
           <PhotoViewComponent imageData={record.image}/>
         </div>
         <p>Memory has been uploaded.</p>
-        <button onClick={() => { onDelete(record.id) }}>Delete from Device</button>
+        <div className='button-group'>
+          <button onClick={() => history.push(`/${record.projectName}/stories/${record.id}`)}>Goto memory</button>
+          <button onClick={() => { onDelete(record.id) }}>Delete from Device</button>
+        </div>
       </div>
     :
       <div className="record center">

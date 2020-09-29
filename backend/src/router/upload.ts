@@ -8,6 +8,7 @@ import { config } from './../config'
 import { handleAudioUpload, handleImageUpload, FileUpload, getFileUrl } from './../upload'
 import { ApiError } from './../exceptions'
 import { StoryModelSchema } from '../models/StoryModel'
+import { AppContext } from '../app'
 
 const router = new Router()
 
@@ -25,7 +26,7 @@ const upload = multer({
 router.post('/upload/story/:id', errorMiddleware, upload.fields([
   { name: 'recording', maxCount: 1},
   { name: 'image', maxCount: 1}
-]), async (context) => {
+]), async (context : AppContext) => {
   const db = await getDatabase()
   const story = db.get('stories').find({id : context.params.id})
   const project = db.get('projects').find({id : story.get('projectId').value()}).value()
@@ -67,6 +68,7 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
             story.set('image', getFileUrl(path)).write()
           })
       })
+      context.io.sockets.emit('stories-updated', { projectId: story.get('projectId').value() })
       context.body = { msg : `${uploadList.length} files uploaded to story ${story.get('id').value()}` }
     }
   } catch (err) {

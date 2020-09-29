@@ -6,10 +6,16 @@ import cors from '@koa/cors';
 import { config } from './config'
 import { router } from './router'
 import { staticRouter } from './staticRouter'
+import { connectSocket } from './socket'
+import { Socket } from 'dgram';
 
 const devMode = process.argv.includes('-dev')
 
-const app = new Koa();
+interface AppContext extends Koa.DefaultContext {
+  io : SocketIO.Server
+}
+
+const app = new Koa<null,AppContext>();
 
 if (devMode) {
   // enable pretty json response for development
@@ -25,4 +31,11 @@ app.use(staticRouter.routes())
 // serve api routes
 app.use(router.routes())
 
-export { app, config }
+function startServer(cb) {
+  const server = app.listen(config.port, () => {
+    app.context.io = connectSocket(server)
+    cb(server)
+  })
+}
+
+export { startServer, config, AppContext }

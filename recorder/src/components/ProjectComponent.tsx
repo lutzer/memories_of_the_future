@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import _ from "lodash";
 import { useParams, Switch, Route, useRouteMatch, useHistory } from "react-router-dom";
 import { ProjectSchema, StorySchema, Store, RecordSchema } from "../services/store";
 import { HeaderComponent } from "./HeaderComponent";
@@ -8,14 +9,15 @@ import { UploadComponent } from "./UploadComponent";
 import { MenuBarComponent } from "./MenuBarComponent";
 import { SlideContainerComponent } from "./SlideContainterComponent";
 import { AuthorInputComponent } from "./AuthorInputComponent";
+import { ProjectInfoComponent } from "./ProjectInfoComponent";
+import { DialogBoxComponent } from "./DialogBoxComponent";
+import { StoryComponent } from "./StoryComponent";
+import { Socket } from './../services/socket'
 
 import './styles/project.scss'
 import './styles/input.scss'
 import './styles/animations.scss'
-import { ProjectInfoComponent } from "./ProjectInfoComponent";
-import { DialogBoxComponent } from "./DialogBoxComponent";
-import _ from "lodash";
-import { StoryComponent } from "./StoryComponent";
+import { sleep } from "../utils/utils";
 
 function handleDbError(err : any) {
   console.log(err)
@@ -35,6 +37,11 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
 
   const { projectName } = useParams();
   const history = useHistory();
+
+  // connect socket
+  useEffect( () => {
+    connectSocket()
+  },[])
 
   // load project
   useEffect( () => {
@@ -70,6 +77,17 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
   useEffect( () => {
     onStoriesChanged(stories)
   }, [stories])
+
+  async function connectSocket() {
+    try {
+      var socket = await Socket.connect()
+      socket.on('stories-updated', async (msg : any) => {
+        console.log('stories updated')
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   async function addRecord(author: string) {
     try {
@@ -111,6 +129,7 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
       await Store.moveRecord(record.id, serverId)
       setRecords(await Store.getRecords())
       history.push(`/${projectName}/records/${serverId}`)
+      setStories(await Store.getStories(project.id))
     } catch (err) {
       handleDbError(err)
     }

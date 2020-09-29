@@ -1,11 +1,13 @@
 const config: {
-  apiAdress: string;
-  maxStories: number;
-  maxRecordingDuration: number;
-  defaultLocation: [number, number];
-  mapboxToken: string;
+  apiAdress: string
+  backendPort: number
+  maxStories: number
+  maxRecordingDuration: number
+  defaultLocation: [number, number]
+  mapboxToken: string
 } = {
   apiAdress: "/api/",
+  backendPort: 3000,
   maxStories: 5,
   maxRecordingDuration: 300, // in seconds
   defaultLocation: [52.508239, 13.329132],

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { HashRouter as Router, Switch, Route, useParams } from "react-router-dom";
 import { ProjectSelectComponent } from "./ProjectSelectComponent";
 import { ModalComponent, ModalProperties } from "./ModalComponent";
-import { HeaderComponent } from "./HeaderComponent";
 import { ProjectComponent } from "./ProjectComponent";
 
 import './styles/main.scss'

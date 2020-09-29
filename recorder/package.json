@@ -21,6 +21,7 @@
     "react-leaflet": "^2.7.0",
     "react-recorder": "^1.0.0",
     "react-router-dom": "^5.2.0",
+    "socket.io-client": "^2.3.0",
     "uuid": "^8.0.0"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "@types/react-leaflet": "^2.5.1",
     "@types/react-map-gl": "^5.2.2",
     "@types/react-router-dom": "^5.1.5",
+    "@types/socket.io-client": "^1.4.33",
     "@types/uuid": "^7.0.3",
     "awesome-typescript-loader": "^5.2.1",
     "babel-plugin-react-css-modules": "^5.2.6",

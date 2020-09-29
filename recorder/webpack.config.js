@@ -119,7 +119,11 @@ module.exports = (env, argv) => {
       },
       proxy: [{
         context: ['/api', '/files'],
+        target: 'http://localhost:3000'
+      },{
+        context: ['/socket.io'],
         target: 'http://localhost:3000',
+        ws: true
       }]
     },
   }
