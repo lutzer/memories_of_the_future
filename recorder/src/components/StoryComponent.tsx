@@ -26,9 +26,9 @@ const StoryComponent = ( {story, setSelected} : Properties ) => {
     story ?
       <div className='story'>
         <h2 className='slideheader'>{story.title}</h2>
-        <div className='item text'>
+        { story.text && <div className='item text'>
           <p>{story.text}</p>
-        </div>
+        </div> }
         <div className='item'>
           <div className='image'>
             <img src={story.image}/>
