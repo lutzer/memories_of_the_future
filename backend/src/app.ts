@@ -8,6 +8,7 @@ import { router } from './router'
 import { staticRouter } from './staticRouter'
 import { connectSocket } from './socket'
 import { Socket } from 'dgram';
+import { Server } from 'http';
 
 const devMode = process.argv.includes('-dev')
 
@@ -31,11 +32,14 @@ app.use(staticRouter.routes())
 // serve api routes
 app.use(router.routes())
 
-function startServer(cb) {
-  const server = app.listen(config.port, () => {
+function startServer() : Promise<Server> {
+  return new Promise<Server>( (resolve) => {
+    const server = app.listen(config.port, () => {
     app.context.io = connectSocket(server)
-    cb(server)
+    resolve(server)
+    })
   })
+  
 }
 
 export { startServer, config, AppContext }

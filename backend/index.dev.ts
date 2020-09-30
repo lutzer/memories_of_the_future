@@ -1,4 +1,4 @@
 import { startServer, config } from './src/app'
-startServer(() => {
+startServer().then( () => {
   console.info("Server started on port " + config.port)
 })

@@ -2,7 +2,7 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 const expect = chai.expect
 
-const { app } = require('../dist/app')
+const { startServer } = require('../dist/app')
 const { generateRandomString } = require('../dist/utils')
 
 chai.use(chaiHttp);
@@ -14,7 +14,7 @@ describe('Project & Story Routes', () => {
   function connect() { return chai.request(server) }
 
   before( async () => {
-    server = await app.listen()
+    server = await startServer()
   })
 
   after( async () => {

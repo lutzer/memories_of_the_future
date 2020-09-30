@@ -40,7 +40,7 @@ router.post('/attachments/'/*?storyId*/, bodyParser(), async (context) => {
     if (!checkBasicAuth(context.header, project.name, project.password))
       throw new ApiError(401, 'No Authorization')
     if (!attachment.validate())
-      throw new ApiError(400, 'Attahment data invalid')
+      throw new ApiError(400, 'Attachment data invalid')
     db.get('attachments').push(attachment.data).write()
     context.body = { attachment: attachment.data }
   } catch (err) {
@@ -51,12 +51,21 @@ router.post('/attachments/'/*?storyId*/, bodyParser(), async (context) => {
 router.delete('/attachments/:id', async (context) => {
   const db = await getDatabase()
   const attachment = db.get('attachments').find({ id : context.params.id })
-  if (attachment.isObject().value()) {
+
+  try {
+    if (!attachment.isObject().value()) {
+      throw new ApiError(400, 'Attachment does not exist.');
+    }
+    const story = db.get('stories').find({ id : attachment.get('storyId').value() })
+    const project = db.get('projects').find({ id : story.get('projectId').value() }).value()
+    if (story && project && !checkBasicAuth(context.header, project.name, project.password))
+      throw new ApiError(401, 'No Authorization')  
     db.get('attachments').remove({ id : context.params.id }).write()
     context.body = { message: `Attachment ${context.params.id} removed.`}
-  } else {
-    context.throw(400, 'Attachment does not exist.');
+  } catch (err) {
+    context.throw( err instanceof ApiError ? err.statusCode : 400, err.message)
   }
+  
 })
 
 export { router }

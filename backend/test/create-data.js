@@ -5,7 +5,7 @@ const fs = require('fs')
 const { loremIpsum } = require('lorem-ipsum');
 
 // start server
-const { app } = require('../dist/app')
+const { startServer } = require('../dist/app')
 const { config } = require('../dist/config')
 
 chai.use(chaiHttp);
@@ -18,7 +18,7 @@ describe('Create Test Data', () => {
 
   before( async () => {
     fs.unlinkSync(config.databaseFile)
-    server = await app.listen()
+    server = await startServer()
   })
 
   after( async () => {

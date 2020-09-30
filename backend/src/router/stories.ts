@@ -5,6 +5,7 @@ import _ from 'lodash'
 import { getDatabase } from './../database'
 import { checkBasicAuth } from './../utils'
 import { StoryModel } from './../models/StoryModel'
+import { ApiError } from '../exceptions'
 
 const router = new Router()
 
@@ -27,11 +28,17 @@ router.get('/stories/:id', async (context) => {
 router.delete('/stories/:id', async (context) => {
   const db = await getDatabase()
   const story = db.get('stories').find({ id : context.params.id })
-  if (story.isObject().value()) {
+  // get corresponding project
+  try {
+    if (!story.isObject().value())
+      throw new ApiError(400, 'Story does not exist.');
+    const project = db.get('projects').find({ id : story.get('projectId').value() }).value()
+    if (project && !checkBasicAuth(context.header, project.name, project.password))
+      throw new ApiError(401,'No Authorization.');
     db.get('stories').remove({ id : context.params.id }).write()
     context.body = { message: `Story ${context.params.id} removed.`}
-  } else {
-    context.throw(400, 'Story does not exist.');
+  } catch (err) {
+    context.throw( err instanceof ApiError ? err.statusCode : 400, err.message)
   }
 })
 

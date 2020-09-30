@@ -4,7 +4,7 @@ const expect = chai.expect
 const fs = require('fs')
 const { resolve, extname, basename } = require('path')
 
-const { app } = require('../dist/app')
+const { startServer } = require('../dist/app')
 const { config } = require('../dist/config')
 const { handleImageUpload, handleAudioUpload, FileUpload } = require('../dist/upload')
 const { deleteFile, copyFile, generateRandomString } = require('../dist/utils')
@@ -103,7 +103,7 @@ describe('File Upload', () => {
     function connect() { return chai.request(server) }
 
     before( async () => {
-      server = await app.listen()
+      server = await startServer()
     })
 
     after( async () => {
@@ -240,7 +240,7 @@ describe('File Upload', () => {
       function connect() { return chai.request(server) }
 
       before( async () => {
-        server = await app.listen()
+        server = await startServer()
       })
 
       after( async () => {
