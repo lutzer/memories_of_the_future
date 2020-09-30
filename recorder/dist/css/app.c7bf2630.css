@@ -27,7 +27,7 @@ body,html{font-family:'Roboto', sans-serif;height:100%;margin:0;padding:0;width:
 
 .slide-container{position:absolute;bottom:0;left:0;width:100%;pointer-events:auto;transition:bottom 500ms ease}.slide-container.fullscreen{height:100%}.slide-container.fullscreen.closed{bottom:-100%}.slide-container.halfscreen{height:50%}.slide-container.halfscreen.closed{bottom:-50%}.slide-container .slide-inner-container{padding-top:45px;background-color:#f0f;height:100%}.slide-container .slide-close-button{position:absolute;top:0;left:0px;text-align:center;width:100%}.slide-container .slide-close-button button{background:none;width:42px;height:42px;margin:5px;padding:4px}.slide-container .slide-close-button button img{width:100%;height:100%}.slide-container .slide-close-button.detached{top:-25px;left:10px}.slide-container .slide-close-button.detached button{background:#fff;border-radius:50%}.slide-container .drag-handle{position:absolute;top:0;left:100px;right:100px}.slide-container .drag-handle>div{margin:8px auto;background:cyan;height:5px;width:50px;border-radius:2px;opacity:0.8}
 
-.dialog-box-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:flex-start;flex-direction:column;justify-content:center;pointer-events:auto}.dialog-box{display:flex;max-width:80%}.dialog-box .inner-container{padding:10px;background-color:#0ff;min-width:200px;border-radius:5px}
+.dialog-box-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(255,255,255,0.8);display:flex;align-items:center;justify-content:flex-start;flex-direction:column;justify-content:center;pointer-events:auto}.dialog-box{display:flex;max-width:80%}.dialog-box h3{margin:10px 0;text-align:center}.dialog-box .inner-container{padding:10px;min-width:200px}
 
 .story{padding:10px;overflow:scroll;height:100%}.story .item{padding:10px}.story .image{width:100%;text-align:center}.story .image img{max-height:400px;max-width:100%}.story:after{content:' ';display:block;margin-bottom:3em}
 
@@ -36,4 +36,4 @@ body,html{font-family:'Roboto', sans-serif;height:100%;margin:0;padding:0;width:
 .map-container{position:absolute;top:0;bottom:0;left:0;right:0;background:linear-gradient(0deg, #22c1c3 0%, #fdbb2d 100%)}
 
 
-/*# sourceMappingURL=app.5daee4ee.css.map*/
+/*# sourceMappingURL=app.c7bf2630.css.map*/
