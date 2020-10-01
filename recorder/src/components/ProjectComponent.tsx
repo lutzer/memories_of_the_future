@@ -26,11 +26,10 @@ function handleDbError(err : any) {
 
 type Props = {
   onStoriesChanged : (record : StorySchema[]) => void,
-  onStorySelected : (id: string) => void,
-  selected : string
+  onStorySelected : (id: string) => void
 }
 
-const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props ) => {
+const ProjectComponent = ({onStorySelected, onStoriesChanged} : Props ) => {
   const [ project, setProject ] = useState<ProjectSchema>(null)
   const [ records, setRecords ] = useState<RecordSchema[]>([])
   const [ stories, setStories ] = useState<StorySchema[]>([])

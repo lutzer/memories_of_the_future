@@ -29,6 +29,10 @@ const MainComponent = () => {
     })
   }
 
+  function onMarkerClick(storyId: string) {
+    console.log(`clicked on story: ${storyId}`)
+  }
+
   window.showModal = showModal;
 
   return (
@@ -36,8 +40,8 @@ const MainComponent = () => {
        <Router>
         <Switch>
           <Route path='/:projectName/'>
-            <MapComponent stories={stories} selected={selectedStory} onMarkerClick={(id) => setSelectedStory(id)} showButtons={true}/>
-            <ProjectComponent selected={selectedStory} onStorySelected={(id) => setSelectedStory(id)} onStoriesChanged={setStories}/>
+            <MapComponent stories={stories} selected={selectedStory} onMarkerClick={(id) => onMarkerClick(id)} showButtons={true}/>
+            <ProjectComponent onStorySelected={(id) => setSelectedStory(id)} onStoriesChanged={setStories}/>
           </Route>
           <Route path="/">
             <MapComponent stories={[]} onMarkerClick={(id) => alert('click')} showButtons={false}/>
