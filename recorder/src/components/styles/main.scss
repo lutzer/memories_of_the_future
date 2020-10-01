@@ -23,7 +23,7 @@ body, html {
   padding: 0;
   width: 100%;
   font-size: 10pt;
-  font-style: normal;
+  font-style: italic;
   letter-spacing: 0.05em;
 }
 
@@ -55,7 +55,7 @@ body, html {
 }
 
 p {
-  font-style: italic;
+  font-style: normal;
 }
 
 h1,h2,h3,h4 {
@@ -84,12 +84,12 @@ h2 {
 
 h3 {
   font-size: 1.0rem;
-  margin:0.3rem;
+  margin:0.3rem 0;
   text-align: left;
 }
 
 h4 {
-  margin: 5px;
+  margin: 5px 0;
 }
 
 button, .button {
