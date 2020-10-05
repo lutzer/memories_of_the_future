@@ -3,16 +3,18 @@ import { HashRouter as Router, Switch, Route, useParams } from "react-router-dom
 import { ProjectSelectComponent } from "./ProjectSelectComponent";
 import { ModalComponent, ModalProperties } from "./ModalComponent";
 import { ProjectComponent } from "./ProjectComponent";
-
 import './styles/main.scss'
 import { MapComponent } from "./MapComponent";
 import { StorySchema } from "../services/store";
 
+
 declare global {
+
   var showModal: (title: string, text: string, cancelable? : boolean) => Promise<boolean>
 }
 
 const MainComponent = () => {
+
   const [modal, setModal] = useState<ModalProperties>(null)
   const [stories, setStories] = useState<StorySchema[]>([])
   const [selectedStory, setSelectedStory] = useState<string>(null)
@@ -29,8 +31,13 @@ const MainComponent = () => {
     })
   }
 
-  function onMarkerClick(storyId: string) {
-    console.log(`clicked on story: ${storyId}`)
+
+  const onMarkerClick = (storyId: string)  => {
+    //const history = useHistory();
+
+    //history.push(`/:projectName/stories/${storyId}`)
+    //window.location = `/:projectName/stories/${storyId}`
+    
   }
 
   window.showModal = showModal;
@@ -41,7 +48,7 @@ const MainComponent = () => {
         <Switch>
           <Route path='/:projectName/'>
             <MapComponent stories={stories} selected={selectedStory} onMarkerClick={(id) => onMarkerClick(id)} showButtons={true}/>
-            <ProjectComponent onStorySelected={(id) => setSelectedStory(id)} onStoriesChanged={setStories}/>
+            <ProjectComponent  onStorySelected={(id) => setSelectedStory(id)} onStoriesChanged={setStories}/>
           </Route>
           <Route path="/">
             <MapComponent stories={[]} onMarkerClick={(id) => alert('click')} showButtons={false}/>

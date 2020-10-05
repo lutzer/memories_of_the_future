@@ -52,10 +52,12 @@ const MapComponent = ({ stories, onMarkerClick }: MapProps) => {
 
 
 import React, { useState, useEffect } from "react";
-import { StorySchema, Store } from "../services/store";
+import { StorySchema, Store, ProjectSchema } from "../services/store";
 import ReactMapGL, { Marker } from "react-map-gl";
 import { config } from "../config";
 import './styles/map.scss'
+import { StoryComponent } from "./StoryComponent";
+import { useHistory } from 'react-router-dom'
 
 type MapProps = {
   stories?: StorySchema[],
@@ -76,36 +78,35 @@ const MapComponent = ({ stories = [], selected = null, showButtons = true, onMar
     stories: { stories },
   });
 
+ 
+
   return (
     <div className="map-container">
       <ReactMapGL
         width="100vw"
-        height="100vh"
+        height="90vh"
         {...viewport}
         mapboxApiAccessToken={config.mapboxToken}
         onViewportChange={(viewport) => {
           setViewport(viewport);
         }}
-        mapStyle="mapbox://styles/ninoglonti/ck99qscv60l0g1imgpdteyqfw"
+        mapStyle="mapbox://styles/ninoglonti/ckfwuw3g97zks19k2l0ze0b1k"
       >
         {stories.map((story) => (
-          console.log('hey I am stories bgitch', story)
+          <Marker
 
-          /* < Marker
-              key = { story.id }
-              latitude = { story.location[0] }
-              longitude = { story.location[1] }
-            >
-  
-            <button
-              className="marker-btn"
-              onClick={(story) => {
-                console.log("hey I am klicked", story);
-                //setStory({story.id});
-              }}
-            ></button>
-  
-            </Marker> **/
+          key = {story.id}
+          latitude={story.location[0]}
+          longitude={story.location[1]}
+          >
+           <button className = 'storyBtn'
+            onClick = {() => onMarkerClick(story.id) }
+           >
+
+             
+           </button>
+          </Marker>   
+          
         ))}
 
       </ReactMapGL>

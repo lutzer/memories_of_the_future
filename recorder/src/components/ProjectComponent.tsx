@@ -33,6 +33,7 @@ const ProjectComponent = ({onStorySelected, onStoriesChanged} : Props ) => {
   const [ project, setProject ] = useState<ProjectSchema>(null)
   const [ records, setRecords ] = useState<RecordSchema[]>([])
   const [ stories, setStories ] = useState<StorySchema[]>([])
+ // const [ st, setSt] = useState<StorySchema[]>([])
 
   const { projectName } = useParams();
   const history = useHistory();
