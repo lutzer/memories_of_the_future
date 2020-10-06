@@ -4,9 +4,9 @@
   text-align: center;
   padding: 5px;
   margin: 0px;
-  background-color: #fff;
+  background-color: $input-box-color;
   // border-bottom: 1px solid #aaa;
-  border-radius: 5px;
+  border-radius: $border-radius;
   font-size: 1rem;
 
   input, textarea {
@@ -17,10 +17,11 @@
     margin: 0;
     padding: 0;
     background-color: none;
-    font-size: inherit;
+    font-size: 1.1em;
     resize: none;
     box-shadow: none;
     font-style: italic;
+    background-color: transparent;
   }
 
   textarea:focus, input:focus{
@@ -69,10 +70,6 @@
 
 .text-input {
   padding:0px;
-
-  .input-element {
-    border-radius: 0;
-  }
 }
 
 .button-delete {

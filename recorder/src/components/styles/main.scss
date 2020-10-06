@@ -25,6 +25,7 @@ body, html {
   font-size: 10pt;
   font-style: italic;
   letter-spacing: 0.05em;
+  color: $text-color;
 }
 
 /* Center the content in the browser window */
@@ -69,13 +70,13 @@ h1 {
 }
 
 h2 {
-  font-size: 1.0rem;
+  font-size: 1.1rem;
   margin:0.3rem;
   text-align: center;
 
   &.slideheader {
     position: absolute;
-    top: 15px;
+    top: 11px;
     left: 0;
     right: 0;
     pointer-events: none;
@@ -96,8 +97,8 @@ button, .button {
   font-style: italic;
   margin: 10px auto;
   display: block;
-  background-color: #525252;
-  color: #ffffff;
+  background-color: $button-color;
+  color: $button-text-color;
   padding: 5px 10px;
   font-weight: bold;
   border-radius: 5px;
@@ -107,7 +108,7 @@ button, .button {
   text-align: center;
 
   &:disabled {
-    background-color: #ddd;
+    opacity: 0.2;
   }
 
   &:focus {
@@ -117,7 +118,7 @@ button, .button {
 
 a {
   text-decoration: none;
-  color: #000000;
+  color: $text-color;
 }
 
 p {

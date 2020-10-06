@@ -55,19 +55,20 @@
   .story-list {
     width:100%;
 
+    &:after {
+      @include after-content;
+    }
+
     ul {
       list-style-type: none;
       padding: 0;
     }
 
-    ul:after {
-      @include after-content;
-    }
-
     li {
-      background-color: lightgray;
-      padding: 10px;
-      margin: 10px 0px;
+      background-color: $list-item-color;
+      padding: $standard-spacing;
+      margin: $standard-spacing 0px;
+      border-radius: $border-radius;
     }
 
     h4 {

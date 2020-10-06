@@ -27,15 +27,15 @@ function handleDbError(err : any) {
 type Props = {
   onStoriesChanged : (record : StorySchema[]) => void,
   onStorySelected : (id: string) => void,
-  selected : string
+  selected? : string
 }
 
-const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props ) => {
+const ProjectComponent = ({selected = null, onStorySelected, onStoriesChanged} : Props ) => {
   const [ project, setProject ] = useState<ProjectSchema>(null)
   const [ records, setRecords ] = useState<RecordSchema[]>([])
   const [ stories, setStories ] = useState<StorySchema[]>([])
 
-  const { projectName } = useParams();
+  const { projectName } = useParams<{projectName : string}>();
   const history = useHistory();
 
   // connect socket
@@ -156,7 +156,7 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
           </Route>
           <Route path={`/${projectName}/add`}>
             <DialogBoxComponent >
-              <AuthorInputComponent enabled={records.length < 5} onCancel={() => history.push(`/${projectName}/`)} onSave={(author) => addRecord(author)}/>
+              <AuthorInputComponent enabled={records.length < 5} onCancel={() => history.push(`/${projectName}/`)} onAccept={(author) => addRecord(author)}/>
             </DialogBoxComponent>
           </Route>
           <Route path={`/${projectName}/info`}>
@@ -174,7 +174,7 @@ const ProjectComponent = ({selected, onStorySelected, onStoriesChanged} : Props 
           <Route path={`/${projectName}/stories/:storyId`} render={({match}) => {
             return(
               <SlideContainerComponent fullscreen={false} closePath={`/${projectName}/`}>
-                <StoryComponent story={_.find(stories,{id : match.params.storyId})} setSelected={onStorySelected}/>
+                <StoryComponent story={_.find(stories,{id : match.params.storyId})} projectName={project.name} setSelected={onStorySelected}/>
               </SlideContainerComponent>
             )
           }}/>

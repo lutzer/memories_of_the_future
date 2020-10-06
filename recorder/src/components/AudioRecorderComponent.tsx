@@ -71,7 +71,7 @@ const AudioPlayerComponent = ({audioData = null, audioUrl = null} : AudioPlayerp
       audio.currentTime = 0
   }
 
-  const timeString = convertSecondsToMinuteString(playhead / 1000) 
+  const timeString = playhead > 0 ? convertSecondsToMinuteString(playhead / 1000) : convertSecondsToMinuteString(duration / 1000)
   const progress = audio ? playhead / duration : 0
 
   return(

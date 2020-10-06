@@ -1,12 +1,52 @@
 @import '_vars.scss';
 
 .story {
-  padding: 10px;
   overflow:scroll;
   height:100%;
 
   .item {
     padding: 10px;
+
+    &.text {
+
+      p {
+        text-align: justify;
+        margin: 0px
+      }
+    }
+
+    .createdAt {
+      margin: 0;
+      font-style: italic;
+      text-align: center;
+      opacity: 0.4;
+    }
+
+    &.player {
+      background-color: $list-item-color;
+      border-radius: $border-radius;
+      margin: 10px;
+    }
+
+  }
+
+  .project-name {
+    display: inline;
+  }
+
+  .story-color-icon {
+    height: 30px;
+    width: 30px;
+    border-radius: 30px;
+    float: right;
+    margin-top: -8px;
+  
+    >div {
+      height: 18px;
+      width: 18px;
+      border-radius: 18px;
+      margin: 6px;
+    }
   }
 
   .image {
@@ -23,3 +63,4 @@
     @include after-content;
   }
 }
+

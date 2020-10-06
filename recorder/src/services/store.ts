@@ -107,6 +107,7 @@ class Store {
       author: _.capitalize(author),
       title: '',
       createdAt: Date.now(),
+      modifiedAt: Date.now(),
       uploaded: false
     })
     return story
@@ -119,6 +120,7 @@ class Store {
 
   static async updateRecord(record: RecordSchema) : Promise<void> {
     const db = await getDatabase()
+    record.modifiedAt = Date.now()
     await db.writeRecord(record)
   }
 

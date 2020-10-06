@@ -11,7 +11,7 @@ type Properties = {
 }
 
 const TextInputComponent = ({text = '', placeholder, maxLength=512, disabled = false, rows=1, onChange} : Properties ) => {
-  const [expanded, setExpand] = useState(false)
+  const [expanded, setExpand] = useState(true)
 
   function onTextAreaChange(text: string){
     onChange(text)
@@ -26,8 +26,8 @@ const TextInputComponent = ({text = '', placeholder, maxLength=512, disabled = f
           placeholder={placeholder} 
           defaultValue={text}
           onChange={(e) => onTextAreaChange(e.target.value)}
-          onFocus={() => setExpand(true)}
-          onBlur={() => setExpand(false)}
+          // onFocus={() => setExpand(true)}
+          // onBlur={() => setExpand(false)}
           maxLength={maxLength}
           disabled={disabled}>
         </textarea>

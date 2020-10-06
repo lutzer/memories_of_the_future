@@ -26,7 +26,7 @@
 
   .slide-inner-container {
     padding-top: 45px;
-    background-color: #f0f;
+    background-color: #ffffff;
     height:100%
   }
 
@@ -41,7 +41,7 @@
       background: none;
       width: $icon-size-big;
       height: $icon-size-big;
-      margin: 5px;
+      margin: 3px;
       padding: $icon-padding;
 
       img {
@@ -57,7 +57,14 @@
         button {
           background: #fff;
           border-radius: 50%;
+          background-color: $button-dark-color;
+
+          img {
+            filter: invert(1);
+          }
         }
+
+        
     }
   }
 

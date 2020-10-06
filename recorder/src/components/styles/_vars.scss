@@ -12,6 +12,13 @@ $icon-padding: 4px;
 
 $standard-spacing: 10px;
 
+$text-color: #000000;
+$list-item-color: #DFE7F5;
+$button-color: #6E8CC7;
+$button-text-color: #ffffff;
+$button-dark-color: #6E8CC7;
+$input-box-color: #DFE7F5;
+
 @mixin flex-column {
   display: flex;
   align-items: center;

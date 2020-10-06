@@ -23,38 +23,47 @@ type Properties = {
 const RecordComponent = ({record, onDelete, onChange} : Properties) => {
   const history = useHistory();
   const [ recordData, setRecordData ] = useState(record)
+  const [ saved, isSaved ] = useState(false)
 
   useEffect(() => {
-    if (recordData)
+    if (recordData) {
       onChange(recordData)
+    }
   },[recordData])
 
   function saveRecording(recording: AudioRecording) {
     setRecordData(Object.assign({} ,record, { recording: recording}))
+    isSaved(true)
   }
 
   function deleteRecording() {
     setRecordData(Object.assign({}, record, { recording: null}))
+    isSaved(true)
   }
 
   function saveImage(image: Blob) {
     setRecordData(Object.assign({}, record, { image: image } ))
+    isSaved(true)
   }
 
   async function deleteImage() {
     setRecordData(Object.assign({}, record, { image: null}))
+    isSaved(true)
   }
 
   const updateText = _.debounce( async (text : string) => {
     setRecordData(Object.assign({}, record, { text: text}))
+    isSaved(true)
   },500)
 
   const updateTitle = _.debounce( async (title : string) => {
     setRecordData(Object.assign({}, record, { title: title}))
+    isSaved(true)
   },500)
 
   async function updateLocation(loc : [number, number]) {
     setRecordData(Object.assign({}, record, { location: loc}))
+    isSaved(true)
   }
 
   const uploadEnabled = function() {
@@ -67,18 +76,16 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
         <div className="record">
           <h2 className='slideheader'>Memory of {record.projectName}</h2>
           <div className='item'>
+            <p className='createdAt'>Created {dateFromNow(record.createdAt)} by <span className='author'>{record.author}</span>.</p>
+          </div>
+          <div className='item'>
             <TextInputComponent maxLength={64} placeholder='Title of the memory' text={record.title} onChange={updateTitle}/>
           </div>
           <div className='item info'>
-            <div className='item-content'>
-            <p>Created {dateFromNow(record.createdAt)} by <span className='author'>{record.author}</span>.</p>
             <TextInputComponent placeholder='Say something about your memory.' text={record.text} rows={6} onChange={updateText}/>
-            </div>
           </div>
           <div className='item recorder'>
-            <div className='item-content'>
               <AudioRecorderComponent onSave={(rec) => saveRecording(rec)} onDelete={deleteRecording} recording={record.recording}/>
-            </div>
           </div>
           <div className='item camera'>
             <PhotoCaptureComponent imageData={record.image} onCapture={saveImage} onDelete={deleteImage}/>
@@ -86,6 +93,11 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
           <div className='item location'> 
             <LocationPickerComponent location={record.location} onPick={updateLocation}/>
           </div>
+          { saved &&
+          <div className='item saved'>
+            <p>Record has been automatically saved.</p>
+          </div>
+           }
           <div className='button-group'>
             <DeleteButtonComponent text='Delete Memory' onConfirm={() => { onDelete(record.id) }}/>
             <button onClick={() => history.push(`/${record.projectName}/upload/${record.id}`)} disabled={!uploadEnabled()}>Upload</button>
@@ -95,9 +107,7 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
       <div className="record">
         <h3>Memory of {record.projectName}</h3>
         <div className='item info'>
-          <div className='item-content'>
           <p>Created {dateFromNow(record.createdAt)} by <span className='author'>{record.author}</span>.</p>
-          </div>
         </div>
         <div className='item camera'>
           <PhotoViewComponent imageData={record.image}/>
