@@ -1,46 +1,90 @@
 @import '_vars.scss';
 
+$logo-size: 56px;
+
 .header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  flex: 0 1 auto;
-  padding: 5px;
-  height: $header-height;
-  display: flex;
-  background-color: #fff;
-  opacity: 0.5;
-  color: black;
-  pointer-events: auto;
+  pointer-events: none;
 
-  .left {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: $header-height;
-    width: 50px;
+  .logo {
+    width: $logo-size;
+    height: $logo-size;
+    margin: 10px;
+    border-radius: 50%;
 
-    .backbutton {
-      font-size: 30px;
-      font-weight: bold;
-      color: red;
+    div.outer {
+      position:absolute;
+      margin: 10px;
+      top: 1px;
+      left: 1px;
+      width: $logo-size - 2px;
+      height: $logo-size - 2px;
+      border-radius: 50%;
+      animation: animColor 30s linear infinite;
+      opacity: 0.5;
+    }
+
+    div.inner {
+      position: absolute;
+      margin: 10px;
+      top: 8px;
+      left: 8px;
+      width: $logo-size - 16px;
+      height: $logo-size - 16px;
+      border-radius: 50%;
+      animation: animColor 30s linear infinite;
+    } 
+
+    img {
+      position: absolute;
+      width: inherit;
+      height: inherit;
+    }
+
+    @keyframes animColor {
+      0% {
+      background: #A3F050;
+      background: hsl(89, 85%, 63%);  }
+      10% {
+      background: #53F050;
+      background: hsl(119, 85%, 63%);  }
+      20% {
+      background: #50F09D;
+      background: hsl(149, 85%, 63%);  }
+      30% {
+      background: #50F0EE;
+      background: hsl(179, 85%, 63%);  }
+      40% {
+      background: #50A3F0;
+      background: hsl(209, 85%, 63%);  }
+      50% {
+      background: #5053F0;
+      background: hsl(239, 85%, 63%);  }
+      60% {
+      background: #9D50F0;
+      background: hsl(269, 85%, 63%);  }
+      70% {
+      background: #EE50F0;
+      background: hsl(299, 85%, 63%);  }
+      80% {
+      background: #F050A3;
+      background: hsl(329, 85%, 63%);  }
+      90% {
+      background: #F05053;
+      background: hsl(359, 85%, 63%);  }
+      95% {
+      background: #F09D50;
+      background: hsl(29, 85%, 63%);  }
+      100% {
+      background: #A3F050;
+      background: hsl(89, 85%, 63%);  }
     }
 
   }
 
-  .title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1 0;
-
-    h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      text-align: center;
-    }
-  }
-
+  
   
 }

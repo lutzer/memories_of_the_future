@@ -68,16 +68,17 @@ const MapComponent = ({ stories = [], selected = null, showButtons = true }: Map
   const history = useHistory()
   const { projectName } = useParams<{projectName : string}>()
 
-  console.log(['selected',selected])
-
   function onMarkerClick(id : string) {
     history.push(`/${projectName}/stories/${id}`)
   }
 
+
+  console.log(['selected',selected])
+
   return (
     <div className="map-container">
       {/* <div>Map: {JSON.stringify(stories)}</div> */}
-      <div><a onClick={() => onMarkerClick('28479382-324dfs-3424')}>Marker</a></div>
+      {/* <div><a onClick={() => onMarkerClick('28479382-324dfs-3424')}>Marker</a></div> */}
     </div>
   );
 };
