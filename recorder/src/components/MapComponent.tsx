@@ -57,7 +57,7 @@ import ReactMapGL, { Marker } from "react-map-gl";
 import { config } from "../config";
 import './styles/map.scss'
 import { StoryComponent } from "./StoryComponent";
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 type MapProps = {
   stories?: StorySchema[],
@@ -66,7 +66,7 @@ type MapProps = {
   onMarkerClick: (storyId: string) => void
 }
 
-const MapComponent = ({ stories = [], selected = null, showButtons = true, onMarkerClick }: MapProps) => {
+const MapComponent = ({ stories = [], selected = null, showButtons = true,  }: MapProps) => {
 
   const [viewport, setViewport] = useState({
     latitude: 52.51763153076172,
@@ -78,6 +78,12 @@ const MapComponent = ({ stories = [], selected = null, showButtons = true, onMar
     stories: { stories },
   });
 
+  const history = useHistory() 
+  const { projectName } = useParams <{projectName : string}> ()
+  
+  function onMarkerClick (id : string) {
+     history.push(`/${projectName}/stories/${id}`)
+  }
  
 
   return (
