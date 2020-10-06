@@ -25,6 +25,11 @@
       flex: 1 1 auto;
       padding: 0 10px;
     }
+
+    .number {
+      padding-right: 5px;
+      font-style: normal;
+    }
   }
 }
 
@@ -53,7 +58,7 @@
   }
 
   .number {
-    padding: 0 5px ;
+    padding-right: 5px;
     font-style: normal;
   }
 }

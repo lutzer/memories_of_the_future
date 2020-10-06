@@ -56,7 +56,11 @@ body, html {
 }
 
 p {
-  font-style: normal;
+  font-style: italic;
+
+  &.no-italic {
+    // font-style: normal;
+  }
 }
 
 h1,h2,h3,h4 {

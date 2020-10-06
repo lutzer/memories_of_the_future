@@ -52,6 +52,7 @@ const MapComponent = ({ stories, onMarkerClick }: MapProps) => {
 
 
 import React, { useState, useEffect } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import { StorySchema } from "../services/store";
 
 import './styles/map.scss'
@@ -59,18 +60,24 @@ import './styles/map.scss'
 type MapProps = {
   stories?: StorySchema[],
   selected?: string,
-  showButtons: boolean,
-  onMarkerClick: (storyId: string) => void
+  showButtons: boolean
 }
 
-const MapComponent = ({ stories = [], selected = null, showButtons = true, onMarkerClick }: MapProps) => {
+const MapComponent = ({ stories = [], selected = null, showButtons = true }: MapProps) => {
+
+  const history = useHistory()
+  const { projectName } = useParams<{projectName : string}>()
 
   console.log(['selected',selected])
+
+  function onMarkerClick(id : string) {
+    history.push(`/${projectName}/stories/${id}`)
+  }
 
   return (
     <div className="map-container">
       {/* <div>Map: {JSON.stringify(stories)}</div> */}
-      {/* <div><a onClick={() => onMarkerClick('28479382-324dfs-3424')}>Marker</a></div> */}
+      <div><a onClick={() => onMarkerClick('28479382-324dfs-3424')}>Marker</a></div>
     </div>
   );
 };

@@ -44,11 +44,11 @@ const StoryComponent = ( {story, projectName, setSelected} : Properties ) => {
           <p className='createdAt'>Created {dateFromNow(story.createdAt)} by {story.author}.</p>
         </div>
         <div className='item general'>
-          <p className='project-name'>Project: {projectName}</p>
+          <p className='project-name'>{projectName}</p>
           <StoryColorIcon color={story.color}/>
         </div>
         { story.text && <div className='item text'>
-          <p>{story.text}</p>
+          <p className='no-italic'>{story.text}</p>
         </div> }
         <div className='item player'>
           <AudioPlayerComponent audioUrl={story.recording}/>
@@ -60,7 +60,7 @@ const StoryComponent = ( {story, projectName, setSelected} : Properties ) => {
         </div>
       </div>
     :
-      <div>
+      <div style={{textAlign : 'center'}}>
         <p> Story does not exist</p>
       </div>
   )
