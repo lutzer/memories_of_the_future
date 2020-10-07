@@ -4,12 +4,23 @@ import { useHistory } from "react-router-dom";
 
 import './styles/input.scss'
 
-const AuthorInputComponent = ({onCancel, onSave, enabled} : 
-  { onCancel: () => void, onSave : (name: string) => void, enabled : boolean}) => {
+const AuthorInputComponent = ({onCancel, onAccept, enabled} : 
+  { onCancel: () => void, onAccept : (name: string) => void, enabled : boolean}) => {
   const [name, setName] = useState('')
 
   function onCancelButtonPressed() {
     onCancel()
+  }
+
+  function onKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
+    var code = event.keyCode || event.which;
+    if(code === 13 && !isDisabled()) { //enter pressed
+      onAccept(name)
+    } 
+  }
+
+  function isDisabled() {
+    return name.length < 2
   }
 
   return(
@@ -21,11 +32,12 @@ const AuthorInputComponent = ({onCancel, onSave, enabled} :
             <input type='text' 
               placeholder='Enter your name' 
               value={name}
-              onChange={(e) => setName(e.target.value)}/>
+              onChange={(e) => setName(e.target.value)}
+              onKeyPress={onKeyPress}/>
           </div>
           <div className='button-group'>
             <button onClick={() => onCancelButtonPressed()}>Cancel</button>
-            <button onClick={() => onSave(name)} disabled={name.length < 2}>Create</button>
+            <button onClick={() => onAccept(name)} disabled={isDisabled()}>Create</button>
           </div>
         </div>
       </div>

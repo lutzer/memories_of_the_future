@@ -2,7 +2,7 @@ import base64 from 'base-64'
 import formatDistance from 'date-fns/formatDistance';
 
 function dateFromNow(time : number) {
-  return formatDistance(new Date(time), new Date(), { addSuffix: true });
+  return formatDistance(new Date(time), new Date(), { addSuffix: true, includeSeconds: true });
 }
 
 function getFilename(blob: Blob) : string {

@@ -28,7 +28,7 @@ class StoryModel extends BaseModel {
     image : null,
     recording : null,
 
-    color : '#ffffff',
+    color : '#ff0000',
     createdAt : Date.now()
   }
 

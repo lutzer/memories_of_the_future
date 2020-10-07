@@ -16,6 +16,10 @@
   display: flex;
   max-width: 80%;
 
+  .input-element {
+    background-color: white;
+  }
+
   // &.closed {
   //   bottom: -$slider-height;
   // }
