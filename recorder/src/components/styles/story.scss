@@ -28,6 +28,16 @@
       margin: 10px;
     }
 
+    &.attachments {
+      margin: $standard-spacing;
+      border-radius: $border-radius;
+      background: $list-item-color;
+      
+      .no-attachments {
+        text-align: center;
+      }
+    }
+
   }
 
   .project-name {

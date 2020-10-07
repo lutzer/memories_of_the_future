@@ -68,6 +68,14 @@ describe('Create Test Data', () => {
       location: [51.563887, 10.803122]
     }).auth('Project1', 'password')
     expect(result).to.have.status(200);
+
+    //add attachment
+    result = await connect().post('/api/attachments').send({
+      storyId: result.body.story.id,
+      type: 'text',
+      text : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.'
+    }).auth('Project1', 'password')
+    expect(result).to.have.status(200);
   })
 
   it('should add another project with 2 stories with recordings and images', async () => {

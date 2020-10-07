@@ -58,6 +58,19 @@ const StoryComponent = ( {story, projectName, setSelected} : Properties ) => {
             <img src={story.image}/>
           </div>
         </div>
+        <div className='item attachments'>
+          <h2>Attachments</h2>
+          { !_.isEmpty(story.attachments) ?
+            story.attachments.map( (attachment, i) => {
+              return(
+                <p key={i}>{attachment.text}</p>
+              )
+            })
+            :
+            <p className='no-attachments'>Nothing attached to this memory</p>
+          }
+        <button>Add Attachment</button>
+        </div>
       </div>
     :
       <div style={{textAlign : 'center'}}>

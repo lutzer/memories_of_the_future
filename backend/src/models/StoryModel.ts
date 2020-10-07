@@ -1,3 +1,4 @@
+import { AttachmentModelSchema } from './AttachmentModel'
 import { BaseModel } from './BaseModel'
 
 type StoryModelSchema = {
@@ -12,7 +13,8 @@ type StoryModelSchema = {
   recording : string,
 
   color : string,
-  createdAt : number
+  createdAt : number,
+  attachments: AttachmentModelSchema[]
 }
 
 class StoryModel extends BaseModel {
@@ -29,7 +31,8 @@ class StoryModel extends BaseModel {
     recording : null,
 
     color : '#ff0000',
-    createdAt : Date.now()
+    createdAt : Date.now(),
+    attachments : []
   }
 
   constructor(data : any) {

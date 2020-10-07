@@ -22,7 +22,15 @@ type StorySchema = {
   image : string,
   color: string,
   location : [ number, number ],
-  visible: boolean
+  visible: boolean,
+  attachments : AttachmentSchema[]
+}
+
+type AttachmentSchema = {
+  id : string,
+  storyId : string,
+  text : string,
+  createdAt : number
 }
 
 type RecordSchema = {
