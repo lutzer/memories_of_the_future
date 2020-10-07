@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { config } from "../config"
 import { getFilename, generateAuthHeader } from '../utils/utils'
-import { RecordSchema, StorySchema, ProjectSchema } from './store'
+import { RecordSchema, StorySchema, ProjectSchema, AttachmentSchema } from './store'
 
 
 class ApiException extends Error {
@@ -76,6 +76,21 @@ class Api {
     }
     //return new id
     return serverId
+  }
+
+  static async addAttachment(attachment : AttachmentSchema, password: string, projectName: string) {
+    // post story
+    let response = await fetch(config.apiAdress + 'attachments', {
+      method: 'POST',
+      headers: Object.assign({},{
+        'Content-Type': 'application/json'
+      }, generateAuthHeader(projectName, password)),
+      body: JSON.stringify(attachment)
+    });
+    if (response.status != 200) {
+      let text = await response.text()
+      throw new ApiException(response.status, text)
+    }
   }
 }
 

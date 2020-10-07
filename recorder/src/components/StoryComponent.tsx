@@ -8,6 +8,7 @@ import './styles/story.scss'
 import { AudioPlayerComponent } from "./AudioRecorderComponent";
 import { AudioRecording } from "../media/recorder";
 import { dateFromNow } from "../utils/utils";
+import { AttachmentComponent } from "./AttachmentComponent";
 
 const StoryColorIcon = ( { color } : { color : string}) => {
   const primaryColor = color
@@ -53,23 +54,16 @@ const StoryComponent = ( {story, projectName, setSelected} : Properties ) => {
         <div className='item player'>
           <AudioPlayerComponent audioUrl={story.recording}/>
         </div>
+        { story.image && 
         <div className='item'>
           <div className='image'>
             <img src={story.image}/>
           </div>
         </div>
+        }
         <div className='item attachments'>
-          <h2>Attachments</h2>
-          { !_.isEmpty(story.attachments) ?
-            story.attachments.map( (attachment, i) => {
-              return(
-                <p key={i}>{attachment.text}</p>
-              )
-            })
-            :
-            <p className='no-attachments'>Nothing attached to this memory</p>
-          }
-        <button>Add Attachment</button>
+          <h2>Attachment</h2>
+          <AttachmentComponent attachments={story.attachments} storyId={story.id}/>
         </div>
       </div>
     :

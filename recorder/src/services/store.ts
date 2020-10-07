@@ -138,4 +138,4 @@ class Store {
   }
 }
 
-export { Store, RecordSchema, ProjectSchema, StorySchema }
+export { Store, RecordSchema, ProjectSchema, StorySchema, AttachmentSchema }
