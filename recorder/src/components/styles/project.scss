@@ -23,8 +23,12 @@
     padding: 10px;
     border-radius: $border-radius;
     display: block;
-    background: #ffffff;
     text-align: center;
+    background: $button-color;
+
+    a {
+      color: $button-text-color;
+    }
   }
 
   .error {

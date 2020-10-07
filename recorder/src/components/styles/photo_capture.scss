@@ -1,3 +1,5 @@
+@import '_vars.scss';
+
 $box-height : 200px;
 
 .photo_capture {
@@ -7,6 +9,7 @@ $box-height : 200px;
   align-items: center; 
   justify-content: center;
   overflow: hidden;
+  border-radius: $border-radius;
 
   .photo {
     

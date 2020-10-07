@@ -33,7 +33,7 @@ const MainComponent = () => {
 
   return (
     <div className='content'>
-       <Router>
+      <Router>
         <Switch>
           <Route path='/:projectName/'>
             <MapComponent stories={stories} selected={selectedStory} showButtons={true}/>

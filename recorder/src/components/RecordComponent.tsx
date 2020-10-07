@@ -79,7 +79,7 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
             <p className='createdAt'>Created {dateFromNow(record.createdAt)} by <span className='author'>{record.author}</span>.</p>
           </div>
           <div className='item'>
-            <TextInputComponent maxLength={64} placeholder='Title of the memory' text={record.title} onChange={updateTitle}/>
+            <TextInputComponent maxLength={64} placeholder='Name the memory' text={record.title} onChange={updateTitle}/>
           </div>
           <div className='item info'>
             <TextInputComponent placeholder='Say something about your memory.' text={record.text} rows={6} onChange={updateText}/>
@@ -95,7 +95,7 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
           </div>
           { saved &&
           <div className='item saved'>
-            <p>Record has been automatically saved.</p>
+            <p>Changes have been saved.</p>
           </div>
            }
           <div className='button-group'>
@@ -106,8 +106,8 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
       :
       <div className="record">
         <h3>Memory of {record.projectName}</h3>
-        <div className='item info'>
-          <p>Created {dateFromNow(record.createdAt)} by <span className='author'>{record.author}</span>.</p>
+        <div className='item'>
+          <p className='createdAt'>Created {dateFromNow(record.createdAt)} by <span className='author'>{record.author}</span>.</p>
         </div>
         <div className='item camera'>
           <PhotoViewComponent imageData={record.image}/>

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import _ from "lodash";
 import { useParams, Switch, Route, useRouteMatch, useHistory } from "react-router-dom";
 import { ProjectSchema, StorySchema, Store, RecordSchema } from "../services/store";
-import { HeaderComponent } from "./HeaderComponent";
 import { RecordListComponent } from "./RecordListComponent";
 import { RecordComponent } from "./RecordComponent";
 import { UploadComponent } from "./UploadComponent";
@@ -136,7 +135,6 @@ const ProjectComponent = ({onStorySelected, onStoriesChanged} : Props ) => {
   
   return(
     <div className='main-container'>
-      <HeaderComponent/>
       { project ?
       <div>
         <MenuBarComponent projectName={projectName}/>

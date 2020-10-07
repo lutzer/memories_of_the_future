@@ -76,7 +76,7 @@ const ProjectSelectComponent = () => {
     <div className='main-container'>
       <div className='project-select'>
         <ProjectNameInputComponent onAccept={changeProject} showError={error}/>
-        { project && <div className='project-select-last' style={{background: project.color}}>
+        { project && <div className='project-select-last'>
           <Link to={`/${project.name}/`}>
             {project.name}
           </Link>

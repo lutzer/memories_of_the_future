@@ -54,6 +54,7 @@ const MapComponent = ({ stories, onMarkerClick }: MapProps) => {
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { StorySchema } from "../services/store";
+import { HeaderComponent } from "./HeaderComponent";
 
 import './styles/map.scss'
 
@@ -77,6 +78,7 @@ const MapComponent = ({ stories = [], selected = null, showButtons = true }: Map
 
   return (
     <div className="map-container">
+      <HeaderComponent/>
       {/* <div>Map: {JSON.stringify(stories)}</div> */}
       {/* <div><a onClick={() => onMarkerClick('28479382-324dfs-3424')}>Marker</a></div> */}
     </div>
