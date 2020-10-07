@@ -57,6 +57,7 @@ import ReactMapGL, { Marker } from "react-map-gl";
 import { config } from "../config";
 import './styles/map.scss'
 import { useHistory, useParams } from 'react-router-dom'
+import { HeaderComponent } from "./HeaderComponent";
 
 type MapProps = {
   stories?: StorySchema[],
@@ -104,6 +105,7 @@ const MapComponent = ({ stories = [], selected = null, showButtons = true }: Map
         ))}
 
       </ReactMapGL>
+      <HeaderComponent/>
       {/* <div>Map: {JSON.stringify(stories)}</div> */}
       {/* <div><a onClick={() => onMarkerClick('28479382-324dfs-3424')}>Marker</a></div> */}
     </div >

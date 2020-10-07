@@ -28,6 +28,7 @@
 
     a {
       color: $button-text-color;
+      font-weight: bold;
     }
   }
 
@@ -47,10 +48,6 @@
     &:empty {
       visibility: hidden;
     }
-  }
-
-  .input-element {
-    background-color: white;
   }
 
 }
