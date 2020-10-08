@@ -13,13 +13,14 @@ type Properties = {
 const AttachmentComponent = ({ storyId, attachments } : Properties) => {
   const [ createMode, setCreateMode ] = useState(false)
   const [ text, setText ] = useState('')
-
-  function onTextChanged(text: string) {
-    setText(text)
-  }
+  const [ author, setAuthor ] = useState('')
 
   function onSaveClicked() {
-    
+
+  }
+
+  function isDisabled() {
+    return text.length < 6 || author.length < 3
   }
 
   return(
@@ -35,10 +36,13 @@ const AttachmentComponent = ({ storyId, attachments } : Properties) => {
       }
       { createMode ?
         <div>
-          <TextInputComponent rows={5} maxLength={512} placeholder='Write comment' onChange={onTextChanged}/>
+          <div className='item'></div>
+          <TextInputComponent rows={5} maxLength={512} placeholder='Write comment' onChange={setText}/>
+          <div className='spacer'/>
+          <TextInputComponent rows={1} maxLength={64} placeholder='Your Name' onChange={setAuthor}/>
           <div className='button-group'>
             <button onClick={() => setCreateMode(false)}>Cancel</button>
-            <button onClick={onSaveClicked} disabled={text.length <= 5}>Save</button>
+            <button onClick={onSaveClicked} disabled={isDisabled()}>Save</button>
           </div>
         </div>
         :

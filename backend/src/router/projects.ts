@@ -32,7 +32,7 @@ router.get('/projects/:id', async (context) => {
 
 router.post('/projects/', bodyParser(), async (context) => {
   const db = await getDatabase()
-  const projectData = _.pick(context.request.body, ['name','description','password'])
+  const projectData = _.pick(context.request.body, ['name','description','password','color'])
   let project = new ProjectModel(projectData)
   // check if project with this name already exists
   let nameExists = db.get('projects').find({ name : project.data.name}).isObject().value()

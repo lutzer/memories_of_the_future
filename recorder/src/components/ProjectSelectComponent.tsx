@@ -70,8 +70,6 @@ const ProjectSelectComponent = () => {
     },2000)
   }
 
-  console.log(project)
-
   return(
     <div className='main-container'>
       <div className='project-select'>

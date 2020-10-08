@@ -65,6 +65,7 @@ router.post('/stories/'/*?projectId*/, bodyParser(), async (context) => {
     context.throw(400,'Story data invalid.');
   } else {
     context.body = { story: story.data }
+    story.data.color = project.color
     db.get('stories').push(story.data).write()
   }
 })
