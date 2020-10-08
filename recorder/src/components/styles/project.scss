@@ -23,8 +23,13 @@
     padding: 10px;
     border-radius: $border-radius;
     display: block;
-    background: #ffffff;
     text-align: center;
+    background: $button-color;
+
+    a {
+      color: $button-text-color;
+      font-weight: bold;
+    }
   }
 
   .error {
@@ -55,19 +60,20 @@
   .story-list {
     width:100%;
 
+    &:after {
+      @include after-content;
+    }
+
     ul {
       list-style-type: none;
       padding: 0;
     }
 
-    ul:after {
-      @include after-content;
-    }
-
     li {
-      background-color: lightgray;
-      padding: 10px;
-      margin: 10px 0px;
+      background-color: $list-item-color;
+      padding: $standard-spacing;
+      margin: $standard-spacing 0px;
+      border-radius: $border-radius;
     }
 
     h4 {
@@ -79,7 +85,7 @@
     }
 
     .empty {
-      padding: 10px;
+      padding: 10px 0;
       text-align: center;
       width: 100%;
     }

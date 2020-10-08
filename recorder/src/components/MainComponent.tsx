@@ -31,27 +31,18 @@ const MainComponent = () => {
     })
   }
 
-
-  const onMarkerClick = (storyId: string)  => {
-    //const history = useHistory();
-
-    //history.push(`/:projectName/stories/${storyId}`)
-    //window.location = `/:projectName/stories/${storyId}`
-    
-  }
-
   window.showModal = showModal;
 
   return (
     <div className='content'>
-       <Router>
+      <Router>
         <Switch>
           <Route path='/:projectName/'>
-            <MapComponent stories={stories} selected={selectedStory} onMarkerClick={(id) => onMarkerClick(id)} showButtons={true}/>
-            <ProjectComponent  onStorySelected={(id) => setSelectedStory(id)} onStoriesChanged={setStories}/>
+            <MapComponent stories={stories} selected={selectedStory} showButtons={true}/>
+            <ProjectComponent onStorySelected={(id) => setSelectedStory(id)} onStoriesChanged={setStories}/>
           </Route>
           <Route path="/">
-            <MapComponent stories={[]} onMarkerClick={(id) => alert('click')} showButtons={false}/>
+            <MapComponent stories={[]} showButtons={false}/>
             <ProjectSelectComponent/>
           </Route>
         </Switch>

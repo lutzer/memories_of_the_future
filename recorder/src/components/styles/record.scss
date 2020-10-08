@@ -15,11 +15,11 @@
   }
 
   .item {
-    background-color: #eeeeee;
+    background-color: $list-item-color;
     text-align: left;
     width: 100%;
-    box-shadow: $item-shadow;
     margin: 10px 0px;
+    border-radius: $border-radius;
 
     .item-content {
       margin: 10px;
@@ -30,7 +30,7 @@
     }
 
     &.uploaded {
-      opacity: 0.2
+      opacity: 0.5
     }
   }
 
@@ -60,27 +60,46 @@
   &.center {
     justify-content: center;
   }
+  
 
   .item {
-    background-color: #eeeeee;
     text-align: left;
     width: 100%;
-    box-shadow: $item-shadow;
-    margin: 10px 0px;
+    margin: 5px 0px;
 
-    .item-content {
-      margin: 10px;
+    .createdAt {
+      margin: 0;
+      font-style: italic;
+      text-align: center;
+      opacity: 0.4;
     }
+
 
     &.location {
       height: 200px;
     }
 
+    &.camera {
+      background-color: $input-box-color;
+      border-radius: $border-radius;
+    }
+
+    &.recorder {
+      background-color: $input-box-color;
+      border-radius: $border-radius;
+    }
+
+    &.saved {
+      p {
+        margin: 0;
+        font-style: italic;
+        text-align: center;
+        opacity: 0.4;
+      }
+    }
+
+    
+
   }
 
-  .info {
-    .author {
-      font-style: italic;
-    }
-  }
 }

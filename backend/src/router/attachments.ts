@@ -25,7 +25,7 @@ router.get('/attachments/:id', async (context) => {
   context.body = { attachment : db.get('attachments').find({ id : context.params.id })}
 })
 
-router.post('/attachments/'/*?storyId*/, bodyParser(), async (context) => {
+router.post('/attachments/', bodyParser(), async (context) => {
   const db = await getDatabase()
   const attachmentData = _.pick(context.request.body, ['storyId','type','text'])
   let attachment = new AttachmentModel(attachmentData)

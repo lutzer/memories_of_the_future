@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import _ from "lodash";
 import { useParams, Switch, Route, useRouteMatch, useHistory } from "react-router-dom";
 import { ProjectSchema, StorySchema, Store, RecordSchema } from "../services/store";
-import { HeaderComponent } from "./HeaderComponent";
 import { RecordListComponent } from "./RecordListComponent";
 import { RecordComponent } from "./RecordComponent";
 import { UploadComponent } from "./UploadComponent";
@@ -35,7 +34,7 @@ const ProjectComponent = ({onStorySelected, onStoriesChanged} : Props ) => {
   const [ stories, setStories ] = useState<StorySchema[]>([])
  // const [ st, setSt] = useState<StorySchema[]>([])
 
-  const { projectName } = useParams();
+  const { projectName } = useParams<{projectName : string}>();
   const history = useHistory();
 
   // connect socket
@@ -137,7 +136,6 @@ const ProjectComponent = ({onStorySelected, onStoriesChanged} : Props ) => {
   
   return(
     <div className='main-container'>
-      <HeaderComponent/>
       { project ?
       <div>
         <MenuBarComponent projectName={projectName}/>
@@ -156,7 +154,7 @@ const ProjectComponent = ({onStorySelected, onStoriesChanged} : Props ) => {
           </Route>
           <Route path={`/${projectName}/add`}>
             <DialogBoxComponent >
-              <AuthorInputComponent enabled={records.length < 5} onCancel={() => history.push(`/${projectName}/`)} onSave={(author) => addRecord(author)}/>
+              <AuthorInputComponent enabled={records.length < 5} onCancel={() => history.push(`/${projectName}/`)} onAccept={(author) => addRecord(author)}/>
             </DialogBoxComponent>
           </Route>
           <Route path={`/${projectName}/info`}>
@@ -174,7 +172,7 @@ const ProjectComponent = ({onStorySelected, onStoriesChanged} : Props ) => {
           <Route path={`/${projectName}/stories/:storyId`} render={({match}) => {
             return(
               <SlideContainerComponent fullscreen={false} closePath={`/${projectName}/`}>
-                <StoryComponent story={_.find(stories,{id : match.params.storyId})} setSelected={onStorySelected}/>
+                <StoryComponent story={_.find(stories,{id : match.params.storyId})} projectName={project.name} setSelected={onStorySelected}/>
               </SlideContainerComponent>
             )
           }}/>

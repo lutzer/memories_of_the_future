@@ -22,7 +22,15 @@ type StorySchema = {
   image : string,
   color: string,
   location : [ number, number ],
-  visible: boolean
+  visible: boolean,
+  attachments : AttachmentSchema[]
+}
+
+type AttachmentSchema = {
+  id : string,
+  storyId : string,
+  text : string,
+  createdAt : number
 }
 
 type RecordSchema = {
@@ -107,6 +115,7 @@ class Store {
       author: _.capitalize(author),
       title: '',
       createdAt: Date.now(),
+      modifiedAt: Date.now(),
       uploaded: false
     })
     return story
@@ -119,6 +128,7 @@ class Store {
 
   static async updateRecord(record: RecordSchema) : Promise<void> {
     const db = await getDatabase()
+    record.modifiedAt = Date.now()
     await db.writeRecord(record)
   }
 
@@ -128,4 +138,4 @@ class Store {
   }
 }
 
-export { Store, RecordSchema, ProjectSchema, StorySchema }
+export { Store, RecordSchema, ProjectSchema, StorySchema, AttachmentSchema }
