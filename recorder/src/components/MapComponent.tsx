@@ -67,7 +67,7 @@ type MapProps = {
 }
 
 const MapComponent = ({ stories = [], selected = null, showButtons = true,  }: MapProps) => {
-
+  
   const [viewport, setViewport] = useState({
     latitude: 52.51763153076172,
     longitude: 13.40965747833252,
@@ -80,9 +80,10 @@ const MapComponent = ({ stories = [], selected = null, showButtons = true,  }: M
 
   const history = useHistory() 
   const { projectName } = useParams <{projectName : string}> ()
-  
-  function onMarkerClick (id : string) {
-     history.push(`/${projectName}/stories/${id}`)
+  function onMarkerClick (id : string) 
+  {
+    console.log('what is selected', selected)
+    history.push(`/${projectName}/stories/${id}`)
   }
  
 
@@ -90,7 +91,7 @@ const MapComponent = ({ stories = [], selected = null, showButtons = true,  }: M
     <div className="map-container">
       <ReactMapGL
         width="100vw"
-        height="90vh"
+        height="100vh"
         {...viewport}
         mapboxApiAccessToken={config.mapboxToken}
         onViewportChange={(viewport) => {
@@ -116,8 +117,7 @@ const MapComponent = ({ stories = [], selected = null, showButtons = true,  }: M
         ))}
 
       </ReactMapGL>
-      {/* <div>Map: {JSON.stringify(stories)}</div> */}
-      {/* <div><a onClick={() => onMarkerClick('28479382-324dfs-3424')}>Marker</a></div> */}
+     
     </div >
   );
 };
