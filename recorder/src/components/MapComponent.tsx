@@ -46,16 +46,21 @@ const MapComponent = ({ stories = [], selected = null, showButtons = true }: Map
           setViewport(viewport);
         }}
         mapStyle="mapbox://styles/ninoglonti/ckfwuw3g97zks19k2l0ze0b1k"
-      >
+      > 
+      
         {stories.map((story) => (
-          <Marker
+        <Marker
             key = {story.id}
             latitude={story.location[0]}
-            longitude={story.location[1]}>
-            <button className = 'storyBtn' onClick = {() => onMarkerClick(story.id) }/>
+            longitude={story.location[1]}
+            >
+            <div className="markerBorder" style = {{backgroundColor: story.color + "55"}}  onClick = {() => onMarkerClick(story.id) }>
+             <div style = {{backgroundColor: story.color}} className = 'storyBtn'/>
+            </div>
           </Marker>   
           
         ))}
+          
 
       </ReactMapGL>
       <HeaderComponent/>
