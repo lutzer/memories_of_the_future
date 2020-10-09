@@ -34,4 +34,18 @@ describe('Models', () => {
     expect((new StoryModel({location : [0,0], projectId : '1' })).validate()).is.true
   });
 
+  it('should create color for storyModel depending on author', async () => {
+    const story1 = new StoryModel({
+      author: 'anna'
+    })
+    const story2 = new StoryModel({
+      author: 'hans'
+    })
+    const story3 = new StoryModel({
+      author: 'anna'
+    })
+    expect(story1.data.color).to.be.equal(story3.data.color)
+    expect(story1.data.color).to.be.not.equal(story2.data.color)
+  })
+
 });

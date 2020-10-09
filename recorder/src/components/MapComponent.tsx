@@ -45,7 +45,7 @@ const MapComponent = ({ stories = [], selected = null, showButtons = true }: Map
         onViewportChange={(viewport) => {
           setViewport(viewport);
         }}
-        mapStyle="mapbox://styles/ninoglonti/ckfwuw3g97zks19k2l0ze0b1k"
+        mapStyle="mapbox://styles/tommasuki/ckemlgukz2ekk19lq0udzo4n7"
       > 
       
         {stories.map((story) => (

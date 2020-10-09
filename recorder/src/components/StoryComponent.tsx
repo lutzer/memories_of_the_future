@@ -19,7 +19,6 @@ const StoryColorIcon = ( { color } : { color : string}) => {
       <div style={{ background : primaryColor}}></div>
     </div>
   )
-  
 }
 
 type Properties = {

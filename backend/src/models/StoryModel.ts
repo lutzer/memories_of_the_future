@@ -1,5 +1,8 @@
 import { AttachmentModelSchema } from './AttachmentModel'
 import { BaseModel } from './BaseModel'
+import _ from 'lodash'
+
+import { config } from './../config' 
 
 type StoryModelSchema = {
   id : string,
@@ -15,6 +18,17 @@ type StoryModelSchema = {
   color : string,
   createdAt : number,
   attachments: AttachmentModelSchema[]
+}
+
+// hashes a string to a number from [0..range]
+function hashString(str, range) {
+  const charSum = str.split('').reduce( (acc, c) => {
+    return acc + c.charCodeAt(0)
+  },0)
+  const crossSum = charSum.toString().split('').reduce( (acc, c) => {
+    return acc + c.charCodeAt(0)
+  })
+  return crossSum % range
 }
 
 class StoryModel extends BaseModel {
@@ -37,6 +51,9 @@ class StoryModel extends BaseModel {
 
   constructor(data : any) {
     super(data)
+    
+    //pick color from author hash
+    data.color = data.author ? config.markerColors[hashString(_.lowerCase(data.author), config.markerColors.length)] : config.markerColors[0]
     Object.assign(this.data, data)
   }
 

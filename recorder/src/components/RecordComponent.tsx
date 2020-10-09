@@ -95,7 +95,7 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
           </div>
           { saved &&
           <div className='item saved'>
-            <p>Changes have been saved.</p>
+            <p>Changes have been saved as draft.</p>
           </div>
            }
           <div className='button-group'>
@@ -114,8 +114,8 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
         </div>
         <p>Memory has been uploaded.</p>
         <div className='button-group'>
-          <button onClick={() => history.push(`/${record.projectName}/stories/${record.id}`)}>Goto memory</button>
-          <button onClick={() => { onDelete(record.id) }}>Delete from Device</button>
+          <button onClick={() => history.push(`/${record.projectName}/stories/${record.id}`)}>Go to memory</button>
+          <button onClick={() => { onDelete(record.id) }}>Delete from device</button>
         </div>
       </div>
     :

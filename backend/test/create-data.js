@@ -2,13 +2,19 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 const expect = chai.expect
 const fs = require('fs')
-const { loremIpsum } = require('lorem-ipsum');
+const { loremIpsum } = require('lorem-ipsum')
+const _ = require('lodash')
 
 // start server
 const { startServer } = require('../dist/app')
 const { config } = require('../dist/config')
+const { SSL_OP_EPHEMERAL_RSA } = require('constants')
 
 chai.use(chaiHttp);
+
+function pickRandom(array) {
+  return array[Math.floor(Math.random() * array.length)]
+}
 
 describe('Create Test Data', () => {
 
@@ -25,7 +31,7 @@ describe('Create Test Data', () => {
     await server.close()
   });
 
-  it('should add a project', async () => {
+  it('should add an empty project', async () => {
     let result = await connect().post('/api/projects').send({
       name : "Tempelhof",
       color: '#00ff00',
@@ -36,7 +42,10 @@ describe('Create Test Data', () => {
     expect(result.body.project.id).to.be.string
   })
 
-  it('should add another project with 3 stories', async () => {
+  it('should add another project with 20 random stories', async () => {
+
+    const authors = ['Peter','Nitsa','Lutz','Erich','Sidra','Tuukka','Hannah','Mara','Sunke']
+
     let result = await connect().post('/api/projects').send({
       name : "Project1",
       password: 'password',
@@ -45,38 +54,35 @@ describe('Create Test Data', () => {
     expect(result).to.have.status(200);
     expect(result.body.project.id).to.be.string
     const projectId = result.body.project.id
-    result = await connect().post('/api/stories').send({
-      projectId : projectId,
-      author: "Nitsa",
-      title: "Graefe 32",
-      text: loremIpsum({count : 5}),
-      location: [52.547695, 13.359864]
-    }).auth('Project1', 'password')
-    expect(result).to.have.status(200);
-    result = await connect().post('/api/stories').send({
-      projectId : projectId,
-      author: "Felix",
-      title: "Test Titel",
-      text: loremIpsum({count : 5}),
-      location: [52.538293, 13.343924]
-    }).auth('Project1', 'password')
-    expect(result).to.have.status(200);
-    result = await connect().post('/api/stories').send({
-      projectId : projectId,
-      author: "Sidra",
-      title: "Eis essen",
-      text: loremIpsum({count : 5}),
-      location: [51.563887, 10.803122]
-    }).auth('Project1', 'password')
-    expect(result).to.have.status(200);
 
-    //add attachment
-    result = await connect().post('/api/attachments').send({
-      storyId: result.body.story.id,
-      type: 'text',
-      text : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.'
-    }).auth('Project1', 'password')
-    expect(result).to.have.status(200);
+    async function addStory() {
+      var result = await connect().post('/api/stories').send({
+        projectId : projectId,
+        author: pickRandom(authors),
+        title: loremIpsum({units: 'words', count: 2}),
+        text: loremIpsum({count : Math.floor(Math.random() * 10)}),
+        location: [52.547695 + (Math.random()-0.5), 13.359864 + (Math.random()-0.5)]
+      }).auth('Project1', 'password')
+      expect(result).to.have.status(200);
+
+      //add attachment
+      result = await connect().post('/api/attachments').send({
+        storyId: result.body.story.id,
+        type: 'text',
+        author: pickRandom(authors),
+        text : loremIpsum({count : Math.floor(Math.random() * 10)}),
+      }).auth('Project1', 'password')
+      expect(result).to.have.status(200);
+    }
+
+    // add 20 stories
+    await (async function() {
+      var p = Promise.resolve()
+      _.range(0,20).forEach(() =>
+          p = p.then(() => addStory())
+      )
+      return p;
+    })()
   })
 
   it('should add another project with 2 stories with recordings and images', async () => {
