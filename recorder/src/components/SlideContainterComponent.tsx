@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import './styles/slider.scss'
 
 import CloseIconImg from './../assets/icon_close.png'
+import { sleep } from "../utils/utils";
 
 type Properties = {
   closePath? : string,
@@ -10,7 +11,7 @@ type Properties = {
   fullscreen? : boolean
 }
 
-const DragHandleComponent = ({onDrag} : { onDrag : (x : number, y: number) => void}) => {
+const DragHandleComponent = ({onDrag, threshold} : { onDrag : (x : number, y: number) => void, threshold : number}) => {
   const [ mouseDown, setMouseDown ] = useState<[number, number]>(null)
   
 
@@ -26,7 +27,11 @@ const DragHandleComponent = ({onDrag} : { onDrag : (x : number, y: number) => vo
   function onMouseMove(event : React.TouchEvent<HTMLDivElement>) {
     if (mouseDown) {
       const pos : [number, number] = [event.touches[0].screenX, event.touches[0].screenY]
-      onDrag( mouseDown[0] - pos[0], mouseDown[1] - pos[1])
+      const diff = [mouseDown[0] - pos[0], mouseDown[1] - pos[1]]
+      if (Math.abs(diff[1]) > threshold) {
+        onDrag( mouseDown[0] - pos[0], mouseDown[1] - pos[1])
+        setMouseDown(null)
+      }
     }
   }
 
@@ -45,7 +50,7 @@ const SlideContainerComponent : FunctionComponent<Properties> = ({fullscreen = t
   const history = useHistory();
 
   //close
-  function onCloseButtonPressed() {
+  function closeSlider() {
     setClosed(true)
     onClose()
     setTimeout( () => {
@@ -53,11 +58,14 @@ const SlideContainerComponent : FunctionComponent<Properties> = ({fullscreen = t
     },500)
   }
 
-  function onDragged(x: number, y: number) {
-    if (y > window.innerHeight * 0.1 && !isFullscreen)
+  async function onDragged(x: number, y: number) {
+
+    if (y > 0 && !isFullscreen)
       setFullscreen(true)
-    else if (y < -window.innerHeight * 0.1  && isFullscreen)
+    else if (y < 0  && isFullscreen)
       setFullscreen(false)
+    else if (y < 0  && !isFullscreen)
+      closeSlider()
   }
 
   // open
@@ -70,11 +78,11 @@ const SlideContainerComponent : FunctionComponent<Properties> = ({fullscreen = t
   return(
     <div className={ 'slide-container' + (isFullscreen ? ' fullscreen' : ' halfscreen') + (closed ? ' closed' : '') }>
       <div className={'slide-close-button' + (!isFullscreen ? ' detached' : '') + (closed ? ' closed' : '')}>
-        <button onClick={onCloseButtonPressed}>
+        <button onClick={closeSlider}>
           <img src={CloseIconImg}/>
         </button>
       </div>
-      <DragHandleComponent onDrag={onDragged}/>
+      <DragHandleComponent onDrag={onDragged} threshold={window.innerHeight * 0.1}/>
       <div className='slide-inner-container'>
         
         {children}
