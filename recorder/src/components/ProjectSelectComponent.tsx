@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { ProjectSchema, Store } from "../services/store";
 
-import ArrowForwardImg from "./../assets/arrow_forward_black.png"
+import ArrowForwardImg from "./../assets/arrow_right.svg"
 import './styles/project.scss'
 import './styles/input.scss'
 

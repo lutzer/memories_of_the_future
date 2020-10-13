@@ -37,10 +37,13 @@
     left: 0px;
     text-align: center;
     width: 100%;
-    transition: top 500ms ease;
+    transition: top 500ms ease, left 500ms ease, opacity 500ms ease;
+    left: 0px;
+    top:0px;
+    opacity: 1;
 
     button {
-      background-color: #fff;
+      background-color: transparent;
       width: $icon-size-big;
       height: $icon-size-big;
       margin: 3px;
@@ -56,7 +59,7 @@
 
     &.detached {
       top: -25px;
-      left: 10px;
+      left: 8px;
 
       button {
         background-color: $button-dark-color;
@@ -68,7 +71,7 @@
     }
 
     &.closed {
-      top: 25px;
+      opacity: 0;
     }
   }
 

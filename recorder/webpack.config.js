@@ -55,9 +55,9 @@ module.exports = (env, argv) => {
           test: /\.ts(x?)$/,
           exclude: /node_modules/,
           use: [
-              {
-                  loader: "ts-loader"
-              }
+            {
+              loader: "ts-loader"
+            }
           ]
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
@@ -86,12 +86,12 @@ module.exports = (env, argv) => {
             ]
           },
         {
-          test: /\.(png|svg|jpg|gif|ttf)$/,
+          test: /\.(png|svg|jpg|gif|ttf|svg)$/,
           use: [
             { 
               loader: 'file-loader',
               options: {
-                name: '[name].[ext]',
+                name: '[hash]-[name].[ext]',
                 outputPath: assetFolder
               },
             }

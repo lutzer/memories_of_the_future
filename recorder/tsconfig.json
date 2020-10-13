@@ -9,5 +9,6 @@
     "allowJs": true,
     "allowSyntheticDefaultImports" : true,
     "esModuleInterop" : true
-  }
+  },
+  "files": ["./src/custom.d.ts"]
 }

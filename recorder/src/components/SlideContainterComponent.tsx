@@ -2,7 +2,7 @@ import React, { useState, useEffect, FunctionComponent } from "react"
 import { useHistory } from "react-router-dom";
 import './styles/slider.scss'
 
-import CloseIconImg from './../assets/icon_close.png'
+import CloseIconImg from './../assets/cancel.svg'
 import { sleep } from "../utils/utils";
 
 type Properties = {

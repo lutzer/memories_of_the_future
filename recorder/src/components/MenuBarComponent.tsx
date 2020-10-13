@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import './styles/menubar.scss'
 
-import ArrowBackImg from './../assets/arrow_back_black.png'
-import DraftImg from './../assets/drafts_black.png'
-import AddRecordImg from './../assets/add_record_black.png'
-import MemoriesImg from './../assets/memories_black.png'
+import ArrowBackImg from './../assets/arrow_left.svg'
+import DraftImg from './../assets/drafts.svg'
+import AddRecordImg from './../assets/add.svg'
+import MemoriesImg from './../assets/memories.svg'
 
 type Properties = {
   projectName : string
