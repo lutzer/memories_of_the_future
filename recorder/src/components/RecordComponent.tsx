@@ -109,13 +109,10 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
         <div className='item'>
           <p className='createdAt'>Created {dateFromNow(record.createdAt)} by <span className='author'>{record.author}</span>.</p>
         </div>
-        <div className='item camera'>
-          <PhotoViewComponent imageData={record.image}/>
-        </div>
         <p>Memory has been uploaded.</p>
         <div className='button-group'>
           <button onClick={() => history.push(`/${record.projectName}/stories/${record.id}`)}>Go to memory</button>
-          <button onClick={() => { onDelete(record.id) }}>Delete from device</button>
+          <button onClick={() => { onDelete(record.id) }}>Remove from device</button>
         </div>
       </div>
     :

@@ -7,8 +7,8 @@ import _ from "lodash";
 
 import './styles/input.scss'
 import './styles/recorder.scss'
-import playArrow from './../assets/play-arrow.png'
-import pauseButton from './../assets/pause-button.png'
+import playArrow from './../assets/play.svg'
+import pauseButton from './../assets/pause.svg'
 import { DeleteButtonComponent } from "./DeleteButtonComponent";
 
 type AudioPlayerproperties = {

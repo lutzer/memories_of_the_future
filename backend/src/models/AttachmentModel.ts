@@ -9,6 +9,7 @@ type AttachmentModelSchema = {
   id : string,
   storyId : string,
   text : string,
+  author: string,
   type : AttachmentType,
   createdAt : number
 }
@@ -19,6 +20,7 @@ class AttachmentModel extends BaseModel {
     ...this.data,
     storyId : null,
     text : '',
+    author: 'unknown',
     createdAt : Date.now()
   }
 

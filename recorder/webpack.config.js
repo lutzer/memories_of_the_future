@@ -91,7 +91,7 @@ module.exports = (env, argv) => {
             { 
               loader: 'file-loader',
               options: {
-                name: '[hash]-[name].[ext]',
+                name: '[name].[ext]',
                 outputPath: assetFolder
               },
             }

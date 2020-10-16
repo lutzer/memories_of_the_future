@@ -27,10 +27,12 @@ type StorySchema = {
 }
 
 type AttachmentSchema = {
-  id : string,
+  id? : string,
   storyId : string,
   text : string,
-  createdAt : number
+  author: string,
+  type: string,
+  createdAt? : number
 }
 
 type RecordSchema = {

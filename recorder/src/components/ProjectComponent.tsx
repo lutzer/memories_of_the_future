@@ -124,6 +124,9 @@ const ProjectComponent = ({onStorySelected, onStoriesChanged} : Props ) => {
   async function onRecordUploaded(record : RecordSchema, serverId : string) {
     try {
       record.uploaded = true
+      // remove data from record
+      record.image = null
+      record.recording = null
       await Store.updateRecord(record)
       await Store.moveRecord(record.id, serverId)
       setRecords(await Store.getRecords())

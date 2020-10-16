@@ -3,10 +3,10 @@ import { HashRouter as Router, Switch, Route, useParams } from "react-router-dom
 import { ProjectSelectComponent } from "./ProjectSelectComponent";
 import { ModalComponent, ModalProperties } from "./ModalComponent";
 import { ProjectComponent } from "./ProjectComponent";
-import './styles/main.scss'
 import { MapComponent } from "./MapComponent";
 import { StorySchema } from "../services/store";
 
+import './styles/main.scss'
 
 declare global {
 

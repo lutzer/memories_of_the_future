@@ -27,7 +27,7 @@ router.get('/attachments/:id', async (context) => {
 
 router.post('/attachments/', bodyParser(), async (context) => {
   const db = await getDatabase()
-  const attachmentData = _.pick(context.request.body, ['storyId','type','text'])
+  const attachmentData = _.pick(context.request.body, ['storyId','type','text','author'])
   let attachment = new AttachmentModel(attachmentData)
   // check if project with project id exists in database
   try {

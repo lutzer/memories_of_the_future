@@ -62,7 +62,7 @@ const StoryComponent = ( {story, projectName, setSelected} : Properties ) => {
         }
         <div className='item attachments'>
           <h2>Attachment</h2>
-          <AttachmentComponent attachments={story.attachments} storyId={story.id}/>
+          <AttachmentComponent attachments={story.attachments} storyId={story.id} projectName={projectName}/>
         </div>
       </div>
     :

@@ -1,5 +1,5 @@
-// import main styles
-import './components/styles/main.scss'
+/// resolves svg import errors in vs code
+/// <reference path="custom.d.ts" />
 
 // import app
 import './app'
