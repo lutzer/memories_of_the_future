@@ -5,4 +5,24 @@
   .input-element {
     background-color: white;
   }
+
+  .attachment-list {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 20px;
+    }
+
+    .author {
+      opacity: 0.3;
+      text-align: right;
+      margin-top: 5px;
+    }
+
+    .text {
+      text-align: justify;
+      margin-bottom: 0
+    }
+  }
 }

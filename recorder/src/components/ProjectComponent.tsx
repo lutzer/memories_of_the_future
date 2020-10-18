@@ -157,7 +157,7 @@ const ProjectComponent = ({onStorySelected, onStoriesChanged} : Props ) => {
           </Route>
           <Route path={`/${projectName}/add`}>
             <DialogBoxComponent >
-              <AuthorInputComponent enabled={records.length < 5} onCancel={() => history.push(`/${projectName}/`)} onAccept={(author) => addRecord(author)}/>
+              <AuthorInputComponent enabled={records.filter((rec) => !rec.uploaded).length < 5} onCancel={() => history.push(`/${projectName}/`)} onAccept={(author) => addRecord(author)}/>
             </DialogBoxComponent>
           </Route>
           <Route path={`/${projectName}/info`}>

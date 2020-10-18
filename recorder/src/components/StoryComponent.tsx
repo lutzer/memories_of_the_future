@@ -47,12 +47,6 @@ const StoryComponent = ( {story, projectName, setSelected} : Properties ) => {
           <p className='project-name'>{projectName}</p>
           <StoryColorIcon color={story.color}/>
         </div>
-        { story.text && <div className='item text'>
-          <p className='no-italic'>{story.text}</p>
-        </div> }
-        <div className='item player'>
-          <AudioPlayerComponent audioUrl={story.recording}/>
-        </div>
         { story.image && 
         <div className='item'>
           <div className='image'>
@@ -60,8 +54,16 @@ const StoryComponent = ( {story, projectName, setSelected} : Properties ) => {
           </div>
         </div>
         }
+        { story.recording &&
+        <div className='item player'>
+          <AudioPlayerComponent audioUrl={story.recording}/>
+        </div>
+        }
+        { story.text && <div className='item text'>
+          <p className='no-italic'>{story.text}</p>
+        </div> }
         <div className='item attachments'>
-          <h2>Attachment</h2>
+          <h2>Attachments</h2>
           <AttachmentComponent attachments={story.attachments} storyId={story.id} projectName={projectName}/>
         </div>
       </div>

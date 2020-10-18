@@ -1,11 +1,12 @@
-import _, { create, initial } from "lodash";
+import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { AttachmentSchema } from "../services/store";
 import { TextInputComponent } from "./TextInputComponent";
-
-import './styles/attachment.scss'
 import { DialogBoxComponent } from "./DialogBoxComponent";
 import { Api } from "../services/api";
+import { dateFromNow } from "../utils/utils";
+
+import './styles/attachment.scss'
 
 type Properties = {
   attachments : AttachmentSchema[]
@@ -42,14 +43,20 @@ const AttachmentComponent = ({ storyId, attachments, projectName } : Properties)
 
   function renderAttachments() {
     return(
-      !_.isEmpty(attachments) ?
-        attachments.map( (attachment, i) => {
-          return(
-            <p key={i}>{attachment.text}</p>
-          )
-        })
-        :
-        <p className='no-attachments'>Nothing attached to this memory</p>
+      <ul className='attachment-list'>
+        { !_.isEmpty(attachments) ?
+          attachments.map( (attachment, i) => {
+            return(
+              <li key={i}>
+                <p className='text'>{attachment.text}</p>
+                <p className='author'>posted {dateFromNow(attachment.createdAt)} from {attachment.author}</p>
+              </li>
+            )
+          })
+          :
+          <p className='no-attachments'>Nothing attached to this memory</p>
+        }
+      </ul>
     )
   }
 
