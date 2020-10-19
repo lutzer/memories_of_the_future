@@ -49,7 +49,7 @@ const AttachmentComponent = ({ storyId, attachments, projectName } : Properties)
             return(
               <li key={i}>
                 <p className='text'>{attachment.text}</p>
-                <p className='author'>posted {dateFromNow(attachment.createdAt)} from {attachment.author}</p>
+                <p className='author'>{attachment.author}</p>
               </li>
             )
           })

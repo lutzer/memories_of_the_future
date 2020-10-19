@@ -8,6 +8,7 @@ const { startServer } = require('../dist/app')
 const { config } = require('../dist/config')
 const { handleImageUpload, handleAudioUpload, FileUpload } = require('../dist/upload')
 const { deleteFile, copyFile, generateRandomString } = require('../dist/utils')
+const Jimp = require('jimp')
 
 chai.use(chaiHttp);
 
@@ -20,6 +21,7 @@ describe('File Upload', () => {
   describe('Upload Functions', () => {
 
     const imageFile = 'files/blob.png'
+    const bigImageFile = 'files/big-image.jpg'
     const mp3File = 'files/sound-mp3.mp3'
     const oggFile = 'files/sound-ogg.ogg'
     const wavFile = 'files/sound-wav.wav'
@@ -36,6 +38,21 @@ describe('File Upload', () => {
       expect(fs.existsSync(path)).to.be.true
       await deleteFile(path)
     });
+
+    it.skip('should resize the image file', async () => {
+      const fileCopy = 'files/copy.jpg'
+      await copyFile(resolve(__dirname, bigImageFile), resolve(__dirname, fileCopy))
+      const file = {
+        type : 'image',
+        name: 'copy.jpg',
+        path : resolve(__dirname, fileCopy)
+      }
+      let path = await handleImageUpload(file, '1')
+      const image = await Jimp.read(path)
+      expect(image.getHeight()).to.be.most(config.imageMaxSideSize)
+      expect(image.getWidth()).to.be.most(config.imageMaxSideSize)
+      await deleteFile(path)
+    }).timeout(5000);
 
     it('should be able to handle an mp3 file and place it in the files folder', async () => {
       const fileCopy = 'files/copy.mp3'
@@ -140,12 +157,12 @@ describe('File Upload', () => {
           'image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png'
         ).auth(project.name, project.password)
         expect(result).to.have.status(200);
-        await sleep(200)
+        await sleep(4000)
         result =  await connect().get('/api/stories/' + storyId)
         expect(result).to.have.status(200);
         expect(fs.existsSync(config.fileDirectory + '/' + basename(result.body.story.image))).to.be.true
         uploads.push(result.body.story.image)
-      });
+      }).timeout(5000);
 
       it('should not be able to upload an image without auth', async () => {
         let { storyId, project } = await createStory()
@@ -209,13 +226,13 @@ describe('File Upload', () => {
           .attach('recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3')
           .auth(project.name, project.password)
         expect(result).to.have.status(200);
-        await sleep(200)
+        await sleep(4000)
         result = await connect().get('/api/stories/' + storyId)
         expect(result).to.have.status(200);
         expect(fs.existsSync(config.fileDirectory + '/' + basename(result.body.story.image))).to.be.true
         expect(fs.existsSync(config.fileDirectory + '/' + basename(result.body.story.recording))).to.be.true
         uploads.push(result.body.story.image, result.body.story.recording)
-      })
+      }).timeout(5000)
     })
 
     describe('/files/*', () => {
@@ -257,12 +274,13 @@ describe('File Upload', () => {
           .attach('image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png')
           .auth(project.name, project.password)
         expect(result).to.have.status(200);
+        await sleep(4000)
         result =  await connect().get('/api/stories/' + storyId)
         expect(result).to.have.status(200);
         uploads.push(result.body.story.image)
         connect().get(result.body.story.image)
         expect(result).to.have.status(200);
-      })
+      }).timeout(5000)
 
       it('should be able to get recording from files dir', async () => {
         const { storyId, project } = await createStory()
@@ -270,6 +288,7 @@ describe('File Upload', () => {
           .attach('recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3')
           .auth(project.name, project.password)
         expect(result).to.have.status(200);
+        await sleep(200)
         result =  await connect().get('/api/stories/' + storyId)
         expect(result).to.have.status(200);
         uploads.push(result.body.story.recording)
