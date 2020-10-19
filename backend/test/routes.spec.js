@@ -4,6 +4,7 @@ const expect = chai.expect
 
 const { startServer } = require('../dist/app')
 const { generateRandomString } = require('../dist/utils')
+const { config } = require('../dist/config')
 
 chai.use(chaiHttp);
 
@@ -21,6 +22,14 @@ describe('Project & Story Routes', () => {
     await server.close()
   });
 
+  async function postProject(name = generateRandomString(), password = null) {
+    let result = await connect().post('/api/projects').send({
+      name: name,
+      password: password
+    }).auth(config.adminLogin,config.adminPassword)
+    return result
+  }
+
   describe('/api/projects/', () => {
 
     it('should get Projects', async () => {
@@ -33,17 +42,37 @@ describe('Project & Story Routes', () => {
       let name = generateRandomString()
       let result = await connect().post('/api/projects').send({
         name: name
-      })
+      }).auth(config.adminLogin,config.adminPassword)
       expect(result).to.have.status(200);
       expect(result.body.project.name).equal(name);
       expect(result.body.project.id).is.not.empty
     })
 
-    it('should be able to get a project by name', async () => {
+    it('should not be able to add a project with wrong auth', async () => {
       let name = generateRandomString()
       let result = await connect().post('/api/projects').send({
         name: name
-      })
+      }).auth(generateRandomString(),generateRandomString())
+      expect(result).to.have.status(401);
+    })
+
+    it('should not be able to delete a project withaut auth', async() => {
+      let result = await postProject()
+      expect(result).to.have.status(200);
+      result = await connect().delete('/api/projects/' + result.body.project.id)
+      expect(result).to.have.status(401);
+    })
+
+    it('should be able to delete a project with auth', async() => {
+      let result = await postProject()
+      expect(result).to.have.status(200);
+      result = await connect().delete('/api/projects/' + result.body.project.id).auth(config.adminLogin, config.adminPassword)
+      expect(result).to.have.status(200);
+    })
+
+    it('should be able to get a project by name', async () => {
+      let name = generateRandomString()
+      let result = await postProject(name)
       expect(result).to.have.status(200);
       result = await connect().get('/api/projects?name='+name)
       expect(result).to.have.status(200);
@@ -53,51 +82,38 @@ describe('Project & Story Routes', () => {
 
     it('should be able to get a project by name, beeing case insenstive', async () => {
       let name = generateRandomString()
-      let result = await connect().post('/api/projects').send({
-        name: name
-      })
+      let result = await postProject(name)
       expect(result).to.have.status(200);
       result = await connect().get('/api/projects?name='+name.toLowerCase())
       expect(result).to.have.status(200);
       expect(result.body.project.name).equal(name);
-      expect(result.body.project).to.not.haveOwnProperty('password');
     })
 
     it('should not be able to add two projects with same name', async () => {
       let name = generateRandomString()
-      let result = await connect().post('/api/projects').send({
-        name: name
-      })
+      let result = await postProject(name)
       expect(result).to.have.status(200);
-      result = await connect().post('/api/projects').send({
-        name: name
-      })
+      result = await postProject(name)
       expect(result).to.have.status(400);
     })
 
     it('should get a project by id', async () => {
       let name = generateRandomString()
-      let result = await connect().post('/api/projects').send({
-        name: name
-      })
+      let result = await postProject(name)
       expect(result).to.have.status(200);
       let id = result.body.project.id
       result = await connect().get('/api/projects/' + id)
       expect(result.body.project.name).to.equal(name)
       expect(result.body.project.id).to.equal(id)
-      expect(result.body.project).to.not.haveOwnProperty('password')
     })
 
     it('should not be able to add a project without a name', async () => {
-      let result = await connect().post('/api/projects').send({})
+      let result = await connect().post('/api/projects').send({}).auth(config.adminLogin, config.adminPassword)
       expect(result).to.have.status(400);
     })
 
     it('should not display the password of an added project', async () => {
-      let name = generateRandomString()
-      let result = await connect().post('/api/projects').send({
-        name: name
-      })
+      let result = await postProject()
       expect(result).to.have.status(200);
       result = await connect().get('/api/projects/')
       expect(result).to.have.status(200);
@@ -129,7 +145,7 @@ describe('Project & Story Routes', () => {
 
     it('should get a story by id', async () => {
       const project = { name : generateRandomString(), password: generateRandomString() }
-      let result = await connect().post('/api/projects').send(project)
+      let result = await postProject(project.name, project.password)
       expect(result).to.have.status(200);
       let projectId = result.body.project.id
       result = await connect().post('/api/stories').send({
@@ -147,7 +163,7 @@ describe('Project & Story Routes', () => {
 
     it('should be able to post a story with an existing projectId and location', async () => {
       const project = { name : generateRandomString(), password: generateRandomString() }
-      let result = await connect().post('/api/projects').send(project)
+      let result = await postProject(project.name, project.password)
       expect(result).to.have.status(200);
       let projectId = result.body.project.id
       result = await connect().post('/api/stories').send({
@@ -159,7 +175,7 @@ describe('Project & Story Routes', () => {
 
     it('should not be able to post a story without auth', async () => {
       const project = { name : generateRandomString(), password: generateRandomString() }
-      let result = await connect().post('/api/projects').send(project)
+      let result = await postProject(project.name, project.password)
       expect(result).to.have.status(200);
       let projectId = result.body.project.id
       result = await connect().post('/api/stories').send({
@@ -172,7 +188,7 @@ describe('Project & Story Routes', () => {
     it('should get Stories for a specific project', async () => {
       const project = { name : generateRandomString(), password: generateRandomString() }
       // add project
-      let result = await connect().post('/api/projects').send(project)
+      let result = await postProject(project.name, project.password)
       expect(result).to.have.status(200);
       let projectId = result.body.project.id
       // add story
@@ -191,7 +207,7 @@ describe('Project & Story Routes', () => {
 
     it('should be able to delete a story', async () => {
       const project = { name : generateRandomString(), password: generateRandomString() }
-      let result = await connect().post('/api/projects').send(project)
+      let result = await postProject(project.name, project.password)
       expect(result).to.have.status(200);
       let projectId = result.body.project.id
       result = await connect().post('/api/stories').send({
@@ -206,7 +222,7 @@ describe('Project & Story Routes', () => {
 
     it('should not be able to delete a story without auth', async () => {
       const project = { name : generateRandomString(), password: generateRandomString() }
-      let result = await connect().post('/api/projects').send(project)
+      let result = await postProject(project.name, project.password)
       expect(result).to.have.status(200);
       let projectId = result.body.project.id
       result = await connect().post('/api/stories').send({

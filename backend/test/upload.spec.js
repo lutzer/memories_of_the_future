@@ -103,7 +103,7 @@ describe('File Upload', () => {
     async function createStory() {
       const project = { name: generateRandomString(), password: generateRandomString() }
       // add project
-      let result = await connect().post('/api/projects').send(project)
+      let result = await connect().post('/api/projects').send(project).auth(config.adminLogin,config.adminPassword)
       // add story
       result = await connect().post('/api/stories').send({
         author: 'peter',
@@ -236,19 +236,6 @@ describe('File Upload', () => {
     })
 
     describe('/files/*', () => {
-
-      async function createStory() {
-        const project = { name: generateRandomString(), password: generateRandomString() }
-        // add project
-        let result = await connect().post('/api/projects').send(project)
-        // add story
-        result = await connect().post('/api/stories').send({
-          author: 'peter',
-          projectId : result.body.project.id,
-          location : [0,0]
-        }).auth(project.name, project.password)
-        return { storyId : result.body.story.id, project: project }
-      }
 
       var server = null
 

@@ -5,6 +5,8 @@ const config = {
   port : 3000,
   apiBasePath : '/api',
   fileBasePath : '/files',
+
+  adminLogin: 'admin',
   adminPassword: 'password',
 
   staticDirectory : resolve(__dirname, '../../recorder/dist/'),

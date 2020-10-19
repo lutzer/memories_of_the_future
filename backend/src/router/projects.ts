@@ -4,6 +4,9 @@ import _ from 'lodash'
 
 import { getDatabase } from './../database'
 import { ProjectModel } from './../models/ProjectModel'
+import { config } from '../config'
+import { checkBasicAuth } from '../utils'
+import { ApiError } from '../exceptions'
 
 const router = new Router()
 
@@ -30,17 +33,36 @@ router.get('/projects/:id', async (context) => {
   context.body = { project : _.omit(project.value(), 'password') }
 })
 
-router.post('/projects/', bodyParser(), async (context) => {
+router.delete('/projects/:id', async (context) => {
   const db = await getDatabase()
-  const projectData = _.pick(context.request.body, ['name','description','password','color'])
-  let project = new ProjectModel(projectData)
-  // check if project with this name already exists
-  let nameExists = db.get('projects').find({ name : project.data.name}).isObject().value()
-  if (project.validate() && !nameExists) {
+  const project = db.get('projects').find({ id : context.params.id }).value()
+  try {
+    if (!checkBasicAuth(context.header, config.adminLogin, config.adminPassword))
+      throw new ApiError(401, 'No Authorization')  
+    if (!project)
+      throw new ApiError(400, 'project does not exist.');
+    db.get('projects').remove({ id : context.params.id }).write()
+    context.body = { message: `Project ${context.params.id} removed.`}
+  } catch (err) {
+    context.throw( err instanceof ApiError ? err.statusCode : 400, err.message)
+  }
+})
+
+router.post('/projects/', bodyParser(), async (context) => {
+  try {
+    if (!checkBasicAuth(context.header, config.adminLogin, config.adminPassword))
+      throw new ApiError(401, 'No Authorization')  
+    const db = await getDatabase()
+    const projectData = _.pick(context.request.body, ['name','description','password','color'])
+    let project = new ProjectModel(projectData)
+    // check if project with this name already exists
+    let nameExists = db.get('projects').find({ name : project.data.name}).isObject().value()
+    if (!project.validate() || nameExists)
+      throw  new ApiError(400,'Project data invalid.');
     context.body = { project: project.data }
     db.get('projects').push(project.data).write()
-  } else {
-    context.throw(400,'Project data invalid.');
+  } catch (err) {
+    context.throw( err instanceof ApiError ? err.statusCode : 400, err.message)
   }
 })
 

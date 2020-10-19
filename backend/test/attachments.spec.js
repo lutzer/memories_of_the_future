@@ -4,6 +4,7 @@ const expect = chai.expect
 
 const { startServer } = require('../dist/app')
 const { generateRandomString } = require('../dist/utils')
+const { config } = require('../dist/config')
 
 chai.use(chaiHttp);
 
@@ -24,7 +25,7 @@ describe('Attachment Routes', () => {
   async function createStory() {
     const project = { name: generateRandomString(), password: generateRandomString(), id: undefined}
     // add project
-    let result = await connect().post('/api/projects').send(project)
+    let result = await connect().post('/api/projects').send(project).auth(config.adminLogin,config.adminPassword)
     project.id = result.body.project.id
     // add story
     result = await connect().post('/api/stories').send({
