@@ -16,14 +16,6 @@ type Properties = {
   projectName: string
 }
 
-// type AttachmentData = {
-//   storyId? : string
-//   projectName? : string
-//   text : string
-//   author : string
-//   image : Blob
-// }
-
 const AttachmentComponent = ({ storyId, attachments, projectName } : Properties) => {
   
   enum State {
@@ -91,7 +83,7 @@ const AttachmentInputComponent = ({ storyId, projectName, onCancel, onComplete }
 
   useEffect(() => {
     if (state == State.UPLOADING) {
-      Api.addAttachment({ text: text, author: author, storyId: storyId}, password, projectName).then(() => {
+      Api.addAttachment({ text: text, author: author, storyId: storyId}, image, password, projectName).then(() => {
         onComplete()
         clearState()
       }).catch( (err) => {

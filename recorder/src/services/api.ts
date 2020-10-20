@@ -78,7 +78,7 @@ class Api {
     return serverId
   }
 
-  static async addAttachment(attachment : AttachmentSchema, password: string, projectName: string) {
+  static async addAttachment(attachment : AttachmentSchema, image: Blob, password: string, projectName: string) {
     // post story
     let response = await fetch(config.apiAdress + 'attachments', {
       method: 'POST',

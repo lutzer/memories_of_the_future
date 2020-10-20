@@ -8,10 +8,6 @@ import { StorySchema } from "../services/store";
 
 import './styles/main.scss'
 
-declare global {
-  var showModal: (title: string, text: string, cancelable? : boolean) => Promise<boolean>
-}
-
 const MainComponent = () => {
 
   const [modal, setModal] = useState<ModalProperties>(null)

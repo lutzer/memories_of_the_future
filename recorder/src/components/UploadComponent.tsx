@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { SpinnerComponent } from "./ProgressBarComponent";
-import { getDatabase } from "../services/storage";
 
 import './styles/upload.scss'
 import { Api, ApiException } from "../services/api";
@@ -19,7 +18,7 @@ type Properties = {
 }
 
 const UploadComponent = ({ record, onUploadSuccess, onCancelled } : Properties) => {
-  const { storyId } = useParams()
+  const { storyId } = useParams<{storyId : string}>()
   const history = useHistory()
 
   const [state, setState] = useState(UploadState.PASSWORD)
