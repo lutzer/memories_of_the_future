@@ -1,16 +1,11 @@
 import { BaseModel } from './BaseModel'
 
-enum AttachmentType {
-  TEXT = 'text',
-  IMAGE = 'image'
-}
-
 type AttachmentModelSchema = {
   id : string,
   storyId : string,
   text : string,
   author: string,
-  type : AttachmentType,
+  image : string,
   createdAt : number
 }
 
@@ -21,6 +16,7 @@ class AttachmentModel extends BaseModel {
     storyId : null,
     text : '',
     author: 'unknown',
+    image: null,
     createdAt : Date.now()
   }
 
@@ -31,8 +27,6 @@ class AttachmentModel extends BaseModel {
 
   validate() : boolean {
     if (this.data.storyId == null)
-      return false
-    if (!Object.values(AttachmentType).includes(this.data.type))
       return false
     return true
   }

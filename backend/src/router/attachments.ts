@@ -5,7 +5,7 @@ import _ from 'lodash'
 import { getDatabase } from './../database'
 import { AttachmentModel } from './../models/AttachmentModel'
 import { ApiError } from './../exceptions'
-import { checkBasicAuth } from '../utils'
+import { checkBasicAuth, deleteFile } from '../utils'
 
 const router = new Router()
 
@@ -27,7 +27,7 @@ router.get('/attachments/:id', async (context) => {
 
 router.post('/attachments/', bodyParser(), async (context) => {
   const db = await getDatabase()
-  const attachmentData = _.pick(context.request.body, ['storyId','type','text','author'])
+  const attachmentData = _.pick(context.request.body, ['storyId','text','author'])
   let attachment = new AttachmentModel(attachmentData)
   // check if project with project id exists in database
   try {
@@ -50,16 +50,18 @@ router.post('/attachments/', bodyParser(), async (context) => {
 
 router.delete('/attachments/:id', async (context) => {
   const db = await getDatabase()
-  const attachment = db.get('attachments').find({ id : context.params.id })
+  const attachment = db.get('attachments').find({ id : context.params.id }).value()
 
   try {
-    if (!attachment.isObject().value()) {
+    if (!attachment) {
       throw new ApiError(400, 'Attachment does not exist.');
     }
-    const story = db.get('stories').find({ id : attachment.get('storyId').value() })
-    const project = db.get('projects').find({ id : story.get('projectId').value() }).value()
+    const story = db.get('stories').find({ id : attachment.storyId }).value()
+    const project = db.get('projects').find({ id : story.projectId }).value()
     if (story && project && !checkBasicAuth(context.header, project.name, project.password))
-      throw new ApiError(401, 'No Authorization')  
+      throw new ApiError(401, 'No Authorization')
+    if (attachment.image)
+      deleteFile(attachment.image)
     db.get('attachments').remove({ id : context.params.id }).write()
     context.body = { message: `Attachment ${context.params.id} removed.`}
   } catch (err) {

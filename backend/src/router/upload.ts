@@ -51,7 +51,7 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
       // convert and move files
       uploadList.forEach( (file) => {
         if (file.type == 'recording')
-          handleAudioUpload(file, story.get('id').value())
+          handleAudioUpload(file, 'story_' + story.get('id').value())
           .catch((err) => {
             console.error("Error uploading file: " + file.name,err)
             deleteFile(file.path)
@@ -59,7 +59,7 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
             story.set('recording', getFileUrl(path)).write()
           })
         else if (file.type == 'image')
-          handleImageUpload(file, story.get('id').value())
+          handleImageUpload(file, 'story_' + story.get('id').value())
           .catch((err) => {
             console.error("Error uploading file: " + file.name,err)
             deleteFile(file.path)
@@ -78,5 +78,44 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
     context.throw( err instanceof ApiError ? err.statusCode : 400, err.message)
   } 
 })
+
+router.post('/upload/attachment/:id', errorMiddleware, upload.fields([,
+  { name: 'image', maxCount: 1}
+]), async (context : AppContext) => {
+  try {
+    // get corresponding entries
+    const db = await getDatabase()
+    const attachment = db.get('attachments').find({id : context.params.id}).value()
+    if (!attachment)
+      throw new ApiError(400,'Attachment does not exist')
+    const story = db.get('stories').find({ id: attachment.storyId }).value()
+    if (!story)
+      throw new ApiError(400,'Corresponding Story does not exist')
+    const project = db.get('projects').find({id : story.projectId}).value()
+    if (!project)
+      throw new ApiError(400,'Corresponding Project does not exist')
+
+    // check auth
+    if (!checkBasicAuth(context.header, project.name, project.password))
+      throw new ApiError(401,'Authorization required');
+
+    const file : FileUpload = {
+      type: 'image',
+      name: context.request.files.image[0].originalname,
+      path: context.request.files.image[0].path
+    }
+    
+    // handle image file
+    handleImageUpload(file, 'attachment_' + attachment.id).catch( (err) => {
+      console.error("Error uploading file: " + file.name,err)
+    }).then( (path: string) => {
+      db.get('attachments').find({id : context.params.id}).set('image', getFileUrl(path)).write()
+    })
+    context.body = { msg : `image uploaded to attachment ${attachment.id}` }
+  } catch (err) {
+    context.throw( err instanceof ApiError ? err.statusCode : 400, err.message)
+  }
+  
+});
 
 export { router }

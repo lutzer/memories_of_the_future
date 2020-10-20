@@ -39,19 +39,19 @@ const compressImage = async function(path : string, newPath : string) : Promise<
   await image.writeAsync(newPath);
 }
 
-async function handleImageUpload(file: FileUpload, storyId: string) : Promise<string> {
+async function handleImageUpload(file: FileUpload, filename: string) : Promise<string> {
   if (!_.includes(['.gif','.png','.jpg','.jpeg'], extname(file.name)))
     throw new Error('File format not supported')
   // const newPath = config.fileDirectory + '/' + storyId + '.jpg'
   // await compressImage(file.path, newPath)
   // move file
-  const newPath = config.fileDirectory + '/' + storyId + extname(file.name)
+  const newPath = config.fileDirectory + '/' + filename + extname(file.name)
   await copyFile(file.path, newPath)
   await deleteFile(file.path)
   return newPath
 }
 
-async function handleAudioUpload(file: FileUpload, storyId: string) : Promise<string> {
+async function handleAudioUpload(file: FileUpload, filename: string) : Promise<string> {
   if (!_.includes(['.mp3','.ogg','.wav','.webm'], extname(file.name)))
     throw new Error('File format not supported')
 
@@ -65,7 +65,7 @@ async function handleAudioUpload(file: FileUpload, storyId: string) : Promise<st
   }
   
   // move file
-  const newPath = config.fileDirectory + '/' + storyId + '.mp3'
+  const newPath = config.fileDirectory + '/' + filename + '.mp3'
   await moveFile(path, newPath)
   return newPath
 }

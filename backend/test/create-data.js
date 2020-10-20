@@ -8,7 +8,6 @@ const _ = require('lodash')
 // start server
 const { startServer } = require('../dist/app')
 const { config } = require('../dist/config')
-const { SSL_OP_EPHEMERAL_RSA } = require('constants')
 
 chai.use(chaiHttp);
 
@@ -23,7 +22,8 @@ describe('Create Test Data', () => {
   function connect() { return chai.request(server) }
 
   before( async () => {
-    fs.unlinkSync(config.databaseFile)
+    if (fs.existsSync(config.databaseFile))
+      fs.unlinkSync(config.databaseFile)
     server = await startServer()
   })
 
@@ -31,38 +31,45 @@ describe('Create Test Data', () => {
     await server.close()
   });
 
-  it('should add an empty project', async () => {
+  async function postProject(project) {
     let result = await connect().post('/api/projects').send({
+      name: project.name,
+      password: project.password,
+      color: project.color,
+      description : project.description
+    }).auth(config.adminLogin,config.adminPassword)
+    return result.body.project
+  }
+
+  it('should add an empty project', async () => {
+    let project = await postProject({
       name : "Tempelhof",
       color: '#00ff00',
       password: 'password',
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     })
-    expect(result).to.have.status(200);
-    expect(result.body.project.id).to.be.string
+    expect(project.id).to.be.string
   })
 
   it('should add another project with 20 random stories', async () => {
 
     const authors = ['Peter','Nitsa','Lutz','Erich','Sidra','Tuukka','Hannah','Mara','Sunke']
 
-    let result = await connect().post('/api/projects').send({
+    let project = await postProject({
       name : "Project1",
       password: 'password',
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     })
-    expect(result).to.have.status(200);
-    expect(result.body.project.id).to.be.string
-    const projectId = result.body.project.id
+    expect(project.id).to.be.string
 
     async function addStory() {
       var result = await connect().post('/api/stories').send({
-        projectId : projectId,
+        projectId : project.id,
         author: pickRandom(authors),
         title: loremIpsum({units: 'words', count: 2}),
         text: loremIpsum({count : Math.floor(Math.random() * 10)}),
         location: [52.547695 + (Math.random()-0.5), 13.359864 + (Math.random()-0.5)]
-      }).auth('Project1', 'password')
+      }).auth(project.name, project.password)
       expect(result).to.have.status(200);
 
       //add attachment
@@ -71,7 +78,7 @@ describe('Create Test Data', () => {
         type: 'text',
         author: pickRandom(authors),
         text : loremIpsum({count : Math.floor(Math.random() * 10)}),
-      }).auth('Project1', 'password')
+      }).auth(project.name, project.password)
       expect(result).to.have.status(200);
     }
 
@@ -86,23 +93,21 @@ describe('Create Test Data', () => {
   })
 
   it('should add another project with 2 stories with recordings and images', async () => {
-    let result = await connect().post('/api/projects').send({
+    let project = await postProject({
       name : "Project2",
       password: 'password',
       color: '#0000ff',
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     })
-    expect(result).to.have.status(200);
-    expect(result.body.project.id).to.be.string
-    const projectId = result.body.project.id
+    expect(project.id).to.be.string
 
-    result = await connect().post('/api/stories').send({
-      projectId : projectId,
+    let result = await connect().post('/api/stories').send({
+      projectId : project.id,
       author: "Nitsa",
       title: "Geht nicht",
       text: loremIpsum({count : 5}),
       location: [52.547695, 13.359864]
-    }).auth('Project2', 'password')
+    }).auth(project.name, project.password)
     expect(result).to.have.status(200);
     result = await connect().post('/api/upload/story/'+result.body.story.id)
       .attach('image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png')
@@ -111,26 +116,26 @@ describe('Create Test Data', () => {
     expect(result).to.have.status(200);
 
     result = await connect().post('/api/stories').send({
-      projectId : projectId,
+      projectId : project.id,
       author: "Felix",
       title: "Musik",
       text: loremIpsum({count : 5}),
       location: [52.538293, 13.343924]
-    }).auth('Project2', 'password')
+    }).auth(project.name, project.password)
     expect(result).to.have.status(200);
     result = await connect().post('/api/upload/story/'+result.body.story.id)
       .attach('image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png')
       .attach('recording', fs.readFileSync(__dirname + '/files/sound-mp3.mp3'), 'sound-mp3.mp3')
-      .auth('Project2', 'password')
+      .auth(project.name, project.password)
     expect(result).to.have.status(200);
 
     result = await connect().post('/api/stories').send({
-      projectId : projectId,
+      projectId : project.id,
       author: "Sidra",
       title: "Achja",
       text: loremIpsum({count : 5}),
       location: [51.563887, 10.803122]
-    }).auth('Project2', 'password')
+    }).auth(project.name, project.password)
     expect(result).to.have.status(200);
     result = await connect().post('/api/upload/story/'+result.body.story.id)
       .attach('image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png')
@@ -140,24 +145,22 @@ describe('Create Test Data', () => {
   })
 
   it('should add another project with 1 story and attachments', async () => {
-    let result = await connect().post('/api/projects').send({
+    let project = await postProject({
       name : "Project3",
       password: 'password',
       color: '#00ffff',
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     })
-    expect(result).to.have.status(200);
-    expect(result.body.project.id).to.be.string
-    const projectId = result.body.project.id
+    expect(project.id).to.be.string
 
     // post story
     result = await connect().post('/api/stories').send({
-      projectId : projectId,
+      projectId : project.id,
       author: "Nitsa",
       title: "Lutz",
       text: loremIpsum({count : 5}),
       location: [52.547695, 13.359864]
-    }).auth('Project3', 'password')
+    }).auth(project.name, project.password)
     const storyId = result.body.story.id;
     expect(result).to.have.status(200);
     result = await connect().post('/api/upload/story/'+storyId)
@@ -173,7 +176,7 @@ describe('Create Test Data', () => {
       author: 'Peter',
       text: loremIpsum({count : 5}),
       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-    }).auth('Project3', 'password')
+    }).auth(project.name, project.password)
     expect(result).to.have.status(200);
     result = await connect().post('/api/attachments/').send({
       storyId : storyId,
@@ -181,7 +184,7 @@ describe('Create Test Data', () => {
       author: 'Anna',
       text: loremIpsum({count : 5}),
       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-    }).auth('Project3', 'password')
+    }).auth(project.name, project.password)
     expect(result).to.have.status(200);
   })
 
