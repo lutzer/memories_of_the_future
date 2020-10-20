@@ -26,54 +26,61 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
   { name: 'recording', maxCount: 1},
   { name: 'image', maxCount: 1}
 ]), async (context : AppContext) => {
-  const db = await getDatabase()
-  const story = db.get('stories').find({id : context.params.id})
-  const project = db.get('projects').find({id : story.get('projectId').value()}).value()
-  
-  // create list of uploaded files
+
   const uploadList = ['recording', 'image'].reduce( (acc, key) : FileUpload[] => {
     if (!_.has(context.request.files, key))
       return acc;
-    const file : FileUpload = {
-      type: key,
-      name: context.request.files[key][0].originalname,
-      path: context.request.files[key][0].path
-    }
-    return _.concat(acc, file)
+    return _.concat(acc, context.request.files[key][0].path)
   }, [])
 
   try {
-    if (!story.isObject().value() || !project) {
-      throw new ApiError(400,'Story or Project does not exist');
-    } else if (!checkBasicAuth(context.header, project.name, project.password)) {
-      throw new ApiError(401,'Authorization required');
-    } else {
-      // convert and move files
-      uploadList.forEach( (file) => {
-        if (file.type == 'recording')
-          handleAudioUpload(file, 'story_' + story.get('id').value())
-          .catch((err) => {
-            console.error("Error uploading file: " + file.name,err)
-            deleteFile(file.path)
-          }).then( (path : string) => {
-            story.set('recording', getFileUrl(path)).write()
-          })
-        else if (file.type == 'image')
-          handleImageUpload(file, 'story_' + story.get('id').value())
-          .catch((err) => {
-            console.error("Error uploading file: " + file.name,err)
-            deleteFile(file.path)
-          }).then( (path : string) => {
-            story.set('image', getFileUrl(path)).write()
-          })
+    const db = await getDatabase()
+    const story = db.get('stories').find({id : context.params.id}).value()
+    if (!story)
+      throw new ApiError(400,'Story does not exist')
+    const project = db.get('projects').find({id : story.projectId}).value()
+    if (!project)
+      throw new ApiError(400,'Connected project does not exist')
+      
+    if (!checkBasicAuth(context.header, project.name, project.password))
+        throw new ApiError(401,'Authorization required');
+
+    // upload image
+    if (_.has(context.request.files, 'image')) {
+      const file : FileUpload = {
+        type : 'image', 
+        name : context.request.files.image[0].originalname,
+        path: context.request.files.image[0].path
+      }
+      handleImageUpload(file, 'story_' + story.id).catch((err) => {
+        console.error("Error uploading file: " + file.name,err)
+        deleteFile(file.path)
+      }).then( (path : string) => {
+        db.get('stories').find({id : story.id}).set('image', getFileUrl(path)).write()
       })
-      context.io.sockets.emit('stories-updated', { projectId: story.get('projectId').value() })
-      context.body = { msg : `${uploadList.length} files uploaded to story ${story.get('id').value()}` }
     }
+
+    //upload recording
+    if (_.has(context.request.files, 'recording')) {
+      const file : FileUpload = {
+        type : 'recording', 
+        name : context.request.files.recording[0].originalname,
+        path: context.request.files.recording[0].path
+      }
+      handleAudioUpload(file, 'story_' + story.id)
+      .catch((err) => {
+        console.error("Error uploading file: " + file.name,err)
+        deleteFile(file.path)
+      }).then( (path : string) => {
+        db.get('stories').find({id : story.id}).set('recording', getFileUrl(path)).write()
+      })
+    }
+
+    context.body = { msg : `files uploaded to story ${story.id}` }
   } catch (err) {
     // cleanup files if there was en error
-    await Promise.all(uploadList.map( async (file) => {
-      await deleteFile(file.path)
+    await Promise.all(uploadList.map( async (path) => {
+      await deleteFile(path)
     }))
     context.throw( err instanceof ApiError ? err.statusCode : 400, err.message)
   } 
@@ -104,7 +111,7 @@ router.post('/upload/attachment/:id', errorMiddleware, upload.fields([,
       name: context.request.files.image[0].originalname,
       path: context.request.files.image[0].path
     }
-    
+
     // handle image file
     handleImageUpload(file, 'attachment_' + attachment.id).catch( (err) => {
       console.error("Error uploading file: " + file.name,err)
