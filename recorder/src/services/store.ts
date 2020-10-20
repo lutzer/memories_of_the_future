@@ -31,7 +31,7 @@ type AttachmentSchema = {
   storyId : string,
   text : string,
   author: string,
-  type: string,
+  image?: string,
   createdAt? : number
 }
 

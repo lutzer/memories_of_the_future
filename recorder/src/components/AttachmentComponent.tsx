@@ -7,6 +7,8 @@ import { Api } from "../services/api";
 import { dateFromNow } from "../utils/utils";
 
 import './styles/attachment.scss'
+import './styles/upload.scss'
+import { SpinnerComponent } from "./ProgressBarComponent";
 
 type Properties = {
   attachments : AttachmentSchema[]
@@ -14,32 +16,21 @@ type Properties = {
   projectName: string
 }
 
-enum State {
-  INIT, WRITE, PASSWORD, SUBMIT
-}
+// type AttachmentData = {
+//   storyId? : string
+//   projectName? : string
+//   text : string
+//   author : string
+//   image : Blob
+// }
 
 const AttachmentComponent = ({ storyId, attachments, projectName } : Properties) => {
-  const [ text, setText ] = useState('')
-  const [ author, setAuthor ] = useState('')
-  const [ password, setPassword] = useState('')
-  const [ state, setState] = useState<State>(State.INIT)
-
-  useEffect(() => {
-    if (state == State.SUBMIT) {
-      Api.addAttachment({ text: text, author: author, type: 'text', storyId: storyId}, password, projectName).then(() => {
-        setState(State.INIT)
-        setText('')
-        setAuthor('')
-      }).catch( (err) => {
-        if (err instanceof Error) showModal('Error', err.message)
-        setState(State.WRITE)
-      })
-    }
-  },[state])
-
-  function isDisabled() {
-    return text.length < 6 || author.length < 3
+  
+  enum State {
+    INIT, WRITE
   }
+
+  const [ state, setState] = useState<State>(State.INIT)
 
   function renderAttachments() {
     return(
@@ -64,40 +55,13 @@ const AttachmentComponent = ({ storyId, attachments, projectName } : Properties)
       return(
         <div className='attachment-component'>
         { renderAttachments() }
-        <div>
-          <div className='item'></div>
-          <TextInputComponent text={text} rows={5} maxLength={512} placeholder='Write comment' onChange={setText}/>
-          <div className='spacer'/>
-          <TextInputComponent text={author} rows={1} maxLength={64} placeholder='Your Name' onChange={setAuthor}/>
-          <div className='button-group'>
-            <button onClick={() => setState(State.INIT)}>Cancel</button>
-            <button onClick={() => setState(State.PASSWORD)} disabled={isDisabled()}>Save</button>
-          </div>
-        </div>
+        <AttachmentInputComponent 
+          storyId={storyId} 
+          projectName={projectName} 
+          onCancel={() => setState(State.INIT)}
+          onComplete={() => setState(State.INIT)}/>
         </div>
       )
-  else if ( state == State.PASSWORD)
-    return(
-      <div className='attachment-component'>
-        { renderAttachments() }
-        <div>
-          <div className='item'></div>
-          <p>{text}</p>
-          <div className='spacer'/>
-          <p>{author}</p>
-        </div>
-        <DialogBoxComponent>
-          <div className='center-item'>
-            <div className='input-element'>
-              <input type='password'
-                placeholder='Enter password'
-                onChange={(e) => setPassword(e.target.value)}/>
-            </div>
-            <button onClick={() => setState(State.SUBMIT)}>OK</button>
-          </div>
-        </DialogBoxComponent>
-      </div>
-    )
   else
     return(
       <div className='attachment-component'>
@@ -105,6 +69,114 @@ const AttachmentComponent = ({ storyId, attachments, projectName } : Properties)
         <button onClick={() => setState(State.WRITE)}>Add Attachment</button>
       </div>
     )
+}
+
+const AttachmentInputComponent = ({ storyId, projectName, onCancel, onComplete } : {
+  storyId : string,
+  projectName : string,
+  onCancel : () => void,
+  onComplete : () => void
+}) => {
+
+  enum State {
+    INIT, PASSWORD, UPLOADING
+  }
+
+  const [ state, setState ] = useState(State.INIT)
+
+  const [ text, setText ] = useState<string>('')
+  const [ author, setAuthor ] = useState<string>('')
+  const [ image, setImage ] = useState<Blob>(null)
+  const [ password, setPassword ] = useState<string>('')
+
+  useEffect(() => {
+    if (state == State.UPLOADING) {
+      Api.addAttachment({ text: text, author: author, storyId: storyId}, password, projectName).then(() => {
+        onComplete()
+        clearState()
+      }).catch( (err) => {
+        if (err instanceof Error) showModal('Error', err.message)
+        setState(State.INIT)
+      })
+    }
+  },[state])
+
+  function clearState() {
+    setState(State.INIT)
+    setAuthor('')
+    setImage(null)
+    setText('')
+    setPassword('')
+  }
+
+  function isDisabled() {
+    return !((text.length > 5 || image) && author.length > 2)
+  }
+
+  function onFileInputChange(e : React.ChangeEvent<HTMLInputElement>) {
+    const file : Blob = e.target.files[0]
+    setImage(file)
+  }
+
+  function renderInputFields() {
+    return(
+      <div>
+        <div className='item'></div>
+        <TextInputComponent text={text} rows={5} maxLength={512} placeholder='Write comment' onChange={setText}/>
+        <div className='spacer'/>
+        <TextInputComponent text={author} rows={1} maxLength={64} placeholder='Your Name' onChange={setAuthor}/>
+        <div className='input'>
+          <label htmlFor='cameraInput' className='button'>Add Image</label>
+          { image && <p>Image added</p>}
+          <input id='cameraInput' style={{visibility : 'hidden'}} onChange={onFileInputChange} type="file" name="image" accept="image/*"/>
+        </div>
+        <div className='button-group'>
+          <button onClick={() => onCancel()}>Cancel</button>
+          <button onClick={() => setState(State.PASSWORD)} disabled={isDisabled()}>Save</button>
+        </div>
+      </div>
+    )
+  }
+
+  if (state == State.PASSWORD)
+    return(
+      <div>
+        { renderInputFields() }
+        <DialogBoxComponent>
+          <div className='upload'>
+            <div className='center-item'>
+                <div className='input-element'>
+                  <input type='password' 
+                  placeholder='Enter password'
+                  onChange={(e) => setPassword(e.target.value)}/>
+                </div>
+                <button onClick={() => setState(State.UPLOADING)}>OK</button>
+            </div>
+          </div>
+        </DialogBoxComponent>
+      </div>
+    )
+  else if (state == State.UPLOADING)
+    return(
+      <div>
+        { renderInputFields() }
+        <DialogBoxComponent>
+          <div className='upload'>
+            <div className='center-item'>
+            <p>Uploading Attachment</p>
+            <SpinnerComponent spinning={true}/> 
+            </div>
+          </div>
+        </DialogBoxComponent>
+      </div>
+    )
+  else 
+    return(
+      <div>
+        { renderInputFields() }
+      </div>
+    )
+  
 }
 
 export { AttachmentComponent }

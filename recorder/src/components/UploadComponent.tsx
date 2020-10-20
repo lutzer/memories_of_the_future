@@ -8,15 +8,6 @@ import { Api, ApiException } from "../services/api";
 import { RecordSchema, StorySchema } from "../services/store";
 import _ from "lodash";
 
-// async function setStoryUploaded(story : RecordSchema, oldStoryId : string) {
-//   const db = await getDatabase()
-//   const data : RecordSchema = Object.assign({}, story, { uploaded: true })
-//   await db.writeRecord(data)
-
-//   // remove old story
-//   await db.removeRecord(oldStoryId)
-// }
-
 enum UploadState {
   PASSWORD, LOADING, TRANSFERING, COMPLETE, CANCELED, ERROR
 }
