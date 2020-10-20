@@ -14,7 +14,7 @@ class AttachmentModel extends BaseModel {
   data : AttachmentModelSchema = {
     ...this.data,
     storyId : null,
-    text : '',
+    text : null,
     author: 'unknown',
     image: null,
     createdAt : Date.now()

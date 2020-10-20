@@ -8,6 +8,7 @@ const _ = require('lodash')
 // start server
 const { startServer } = require('../dist/app')
 const { config } = require('../dist/config')
+const { result } = require('lodash')
 
 chai.use(chaiHttp);
 
@@ -154,7 +155,7 @@ describe('Create Test Data', () => {
     expect(project.id).to.be.string
 
     // post story
-    result = await connect().post('/api/stories').send({
+    let result = await connect().post('/api/stories').send({
       projectId : project.id,
       author: "Nitsa",
       title: "Lutz",
@@ -175,16 +176,20 @@ describe('Create Test Data', () => {
       type: 'text',
       author: 'Peter',
       text: loremIpsum({count : 5}),
-      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-    }).auth(project.name, project.password)
+      }).auth(project.name, project.password)
     expect(result).to.have.status(200);
     result = await connect().post('/api/attachments/').send({
       storyId : storyId,
       type: 'text',
       author: 'Anna',
       text: loremIpsum({count : 5}),
-      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
     }).auth(project.name, project.password)
+    expect(result).to.have.status(200);
+
+    // add file
+    result = await connect().post('/api/upload/attachment/' + result.body.attachment.id).attach(
+      'image', fs.readFileSync(__dirname + '/files/blob.png'), 'blob.png'
+    ).auth(project.name, project.password)
     expect(result).to.have.status(200);
   })
 
