@@ -31,7 +31,12 @@ const AttachmentComponent = ({ storyId, attachments, projectName } : Properties)
           attachments.map( (attachment, i) => {
             return(
               <li key={i}>
-                <p className='text'>{attachment.text}</p>
+                { attachment.text && <p className='text'>{attachment.text}</p> }
+                { attachment.image && 
+                <div className='image'>
+                  <img src={attachment.image}/>
+                </div>
+                }
                 <p className='author'>{attachment.author}</p>
               </li>
             )

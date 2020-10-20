@@ -14,7 +14,7 @@ class ApiException extends Error {
   }
 }
 
-async function uploadFiles(id: string, story: RecordSchema, password: string, controller?: AbortController) : Promise<Response> {
+async function uploadStoryFiles(id: string, story: RecordSchema, password: string, controller?: AbortController) : Promise<Response> {
   var data = new FormData()
   data.append('recording', story.recording.blob, getFilename(story.recording.blob))
   data.append('image', story.image, getFilename(story.image))
@@ -22,6 +22,18 @@ async function uploadFiles(id: string, story: RecordSchema, password: string, co
   let response = await fetch(config.apiAdress + 'upload/story/' + id, {
     method: 'POST',
     headers: new Headers( generateAuthHeader(story.projectName, password)),
+    body: data,
+    signal: controller ? controller.signal : null
+  })
+  return response
+}
+
+async function uploadAttachmentImage(id: string, image: Blob, password: string, projectName: string, controller?: AbortController) : Promise<Response> {
+  var data = new FormData()
+  data.append('image', image, getFilename(image))
+  let response = await fetch(config.apiAdress + 'upload/attachment/' + id, {
+    method: 'POST',
+    headers: new Headers( generateAuthHeader(projectName, password)),
     body: data,
     signal: controller ? controller.signal : null
   })
@@ -69,7 +81,7 @@ class Api {
     let serverId = json.story.id
 
     // upload files
-    response = await uploadFiles(serverId, record, password, controller) 
+    response = await uploadStoryFiles(serverId, record, password, controller) 
     if (response.status != 200) {
       let text = await response.text()
       throw new ApiException(response.status, text)
@@ -87,6 +99,19 @@ class Api {
       }, generateAuthHeader(projectName, password)),
       body: JSON.stringify(attachment)
     });
+    if (response.status != 200) {
+      let text = await response.text()
+      throw new ApiException(response.status, text)
+    }
+
+    // find out attachment id
+    let json = await response.json()
+    let serverId = json.attachment.id
+
+    //upload image
+    if (image) {
+      response = await uploadAttachmentImage(serverId, image, password, projectName)
+    }
     if (response.status != 200) {
       let text = await response.text()
       throw new ApiException(response.status, text)
