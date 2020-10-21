@@ -58,7 +58,7 @@ const PhotoCaptureComponent = ({imageData, onCapture, onDelete} : {imageData? : 
           </div>
           <div className='input'>
             <label htmlFor='cameraInput' className='button'>Take Picture</label>
-            <input id='cameraInput' style={{visibility : 'hidden'}} onChange={onInputChange} type="file" name="image" accept="image/*"/>
+            <input id='cameraInput' style={{display : 'none'}} onChange={onInputChange} type="file" name="image" accept="image/*"/>
           </div>
         </div>
       }

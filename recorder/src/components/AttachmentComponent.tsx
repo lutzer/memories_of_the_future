@@ -122,11 +122,16 @@ const AttachmentInputComponent = ({ storyId, projectName, onCancel, onComplete }
         <TextInputComponent text={text} rows={5} maxLength={512} placeholder='Write comment' onChange={setText}/>
         <div className='spacer'/>
         <TextInputComponent text={author} rows={1} maxLength={64} placeholder='Your Name' onChange={setAuthor}/>
+        { image ?
+        <div className='image-added'>
+          <button className='remove-button' onClick={() => setImage(null)}>Remove Image</button>
+        </div>
+        :
         <div className='input'>
           <label htmlFor='cameraInput' className='button'>Add Image</label>
-          { image && <p>Image added</p>}
-          <input id='cameraInput' style={{visibility : 'hidden'}} onChange={onFileInputChange} type="file" name="image" accept="image/*"/>
+          <input id='cameraInput' style={{display : 'none'}} onChange={onFileInputChange} type="file" name="image" accept="image/*"/>
         </div>
+        }
         <div className='button-group'>
           <button onClick={() => onCancel()}>Cancel</button>
           <button onClick={() => setState(State.PASSWORD)} disabled={isDisabled()}>Save</button>
