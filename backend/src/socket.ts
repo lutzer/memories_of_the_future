@@ -12,4 +12,10 @@ function connectSocket(server : Server) {
   // socketIo.sockets.emit('project')
 }
 
-export { connectSocket }
+function sendUpdate(server : io.Server, { 
+  projectId, storyId = null, attachmentId = null
+} : {projectId : string, storyId? : string, attachmentId? : string}) {
+  server.emit('/update/project/' + projectId, { storyId, attachmentId } )
+}
+
+export { connectSocket, sendUpdate }

@@ -32,36 +32,9 @@ const ProjectComponent = ({onStorySelected, onStoriesChanged} : Props ) => {
   const [ project, setProject ] = useState<ProjectSchema>(null)
   const [ records, setRecords ] = useState<RecordSchema[]>([])
   const [ stories, setStories ] = useState<StorySchema[]>([])
- // const [ st, setSt] = useState<StorySchema[]>([])
 
   const { projectName } = useParams<{projectName : string}>();
   const history = useHistory();
-
-  // connect socket
-  useEffect( () => {
-    connectSocket()
-  },[])
-
-  // load project
-  useEffect( () => {
-    Store.getProject(projectName).then( data => {
-      setProject(data)
-    }).catch( err => {
-      setProject(null)
-    })
-  }, [projectName])
-
-  //load stories
-  useEffect( () => {
-    if (project)
-      Store.getStories(project.id).then( data => {
-        setStories(data)
-      }).catch( err => {
-        setStories([])
-      })
-    else
-      setStories([])
-  }, [project])
 
   // load records
   useEffect( () => {
@@ -72,20 +45,36 @@ const ProjectComponent = ({onStorySelected, onStoriesChanged} : Props ) => {
     })
   },[])
 
+  // load project
+  useEffect( () => {
+    loadProject(projectName).catch( err => {
+      console.warn(err)
+    })
+  }, [projectName])
+
+  // connect socket
+  useEffect( () => {
+    if (!project)
+      return
+    const socket = Socket.connect()
+    socket.on('/update/project/' + project.id, (data : any) => {
+      loadProject(project.name)
+    })
+    return () => {
+      socket.disconnect()
+    }
+  },[project])
+
   // on story changed callback
   useEffect( () => {
     onStoriesChanged(stories)
   }, [stories])
 
-  async function connectSocket() {
-    try {
-      var socket = await Socket.connect()
-      socket.on('stories-updated', async (msg : any) => {
-        console.log('stories updated')
-      })
-    } catch (err) {
-      console.log(err)
-    }
+  async function loadProject(name : string) {
+    const projectData = await Store.getProject(name)
+    setProject(projectData)
+    const storiesData = await Store.getStories(projectData.id)
+    setStories(storiesData)
   }
 
   async function addRecord(author: string) {
@@ -131,7 +120,6 @@ const ProjectComponent = ({onStorySelected, onStoriesChanged} : Props ) => {
       await Store.moveRecord(record.id, serverId)
       setRecords(await Store.getRecords())
       history.push(`/${projectName}/records/${serverId}`)
-      setStories(await Store.getStories(project.id))
     } catch (err) {
       handleDbError(err)
     }

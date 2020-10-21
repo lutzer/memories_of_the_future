@@ -6,6 +6,8 @@ import { getDatabase } from './../database'
 import { AttachmentModel } from './../models/AttachmentModel'
 import { ApiError } from './../exceptions'
 import { checkBasicAuth, deleteFile } from '../utils'
+import { sendUpdate } from '../socket'
+import { AppContext } from '../app'
 
 const router = new Router()
 
@@ -25,7 +27,7 @@ router.get('/attachments/:id', async (context) => {
   context.body = { attachment : db.get('attachments').find({ id : context.params.id })}
 })
 
-router.post('/attachments/', bodyParser(), async (context) => {
+router.post('/attachments/', bodyParser(), async (context : AppContext) => {
   const db = await getDatabase()
   const attachmentData = _.pick(context.request.body, ['storyId','text','author'])
   let attachment = new AttachmentModel(attachmentData)
@@ -42,6 +44,7 @@ router.post('/attachments/', bodyParser(), async (context) => {
     if (!attachment.validate())
       throw new ApiError(400, 'Attachment data invalid')
     db.get('attachments').push(attachment.data).write()
+    sendUpdate(context.io, { projectId : project.id, storyId: story.id, attachmentId : attachment.data.id})
     context.body = { attachment: attachment.data }
   } catch (err) {
     context.throw( err instanceof ApiError ? err.statusCode : 400, err.message)
@@ -63,6 +66,7 @@ router.delete('/attachments/:id', async (context) => {
     if (attachment.image)
       deleteFile(attachment.image)
     db.get('attachments').remove({ id : context.params.id }).write()
+    sendUpdate(context.io, { projectId : project.id, storyId: story.id, attachmentId : attachment.id})
     context.body = { message: `Attachment ${context.params.id} removed.`}
   } catch (err) {
     context.throw( err instanceof ApiError ? err.statusCode : 400, err.message)

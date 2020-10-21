@@ -90,7 +90,7 @@ const AttachmentInputComponent = ({ storyId, projectName, onCancel, onComplete }
     if (state == State.UPLOADING) {
       Api.addAttachment({ text: text, author: author, storyId: storyId}, image, password, projectName).then(() => {
         onComplete()
-        clearState()
+        // clearState()
       }).catch( (err) => {
         if (err instanceof Error) showModal('Error', err.message)
         setState(State.INIT)

@@ -1,5 +1,4 @@
 import Koa from 'koa'
-import serveStatic from 'koa-static'
 import koaJson from 'koa-json'
 import cors from '@koa/cors';
 
@@ -7,7 +6,6 @@ import { config } from './config'
 import { router } from './router'
 import { staticRouter } from './staticRouter'
 import { connectSocket } from './socket'
-import { Socket } from 'dgram';
 import { Server } from 'http';
 
 const devMode = process.argv.includes('-dev')

@@ -6,6 +6,7 @@ import { DatabaseAdapter, getDatabase } from './../database'
 import { checkBasicAuth, deleteFile } from './../utils'
 import { StoryModel, StoryModelSchema } from './../models/StoryModel'
 import { ApiError } from '../exceptions'
+import { sendUpdate } from '../socket'
 
 const router = new Router()
 
@@ -47,7 +48,8 @@ router.delete('/stories/:id', async (context) => {
       deleteFile(story.image)
     if (story.recording)
       deleteFile(story.recording)
-    db.get('stories').remove({ id : context.params.id }).write()
+    await db.get('stories').remove({ id : context.params.id }).write()
+    sendUpdate(context.io, { projectId : project.id, storyId: story.id})
     context.body = { message: `Story ${context.params.id} removed.`}
   } catch (err) {
     context.throw( err instanceof ApiError ? err.statusCode : 400, err.message)
@@ -67,8 +69,9 @@ router.post('/stories/'/*?projectId*/, bodyParser(), async (context) => {
   } else if (!story.validate() && project) {
     context.throw(400,'Story data invalid.');
   } else {
+    await db.get('stories').push(story.data).write()
+    sendUpdate(context.io, { projectId : project.id, storyId: story.data.id})
     context.body = { story: story.data }
-    db.get('stories').push(story.data).write()
   }
 })
 

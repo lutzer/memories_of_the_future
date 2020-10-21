@@ -8,6 +8,7 @@ import { config } from './../config'
 import { handleAudioUpload, handleImageUpload, FileUpload, getFileUrl } from './../upload'
 import { ApiError } from './../exceptions'
 import { AppContext } from '../app'
+import { sendUpdate } from '../socket'
 
 const router = new Router()
 
@@ -57,6 +58,8 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
         deleteFile(file.path)
       }).then( (path : string) => {
         db.get('stories').find({id : story.id}).set('image', getFileUrl(path)).write()
+      }).then( () => {
+        sendUpdate(context.io, { projectId : project.id, storyId: story.id})
       })
     }
 
@@ -72,7 +75,9 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
         console.error("Error uploading file: " + file.name,err)
         deleteFile(file.path)
       }).then( (path : string) => {
-        db.get('stories').find({id : story.id}).set('recording', getFileUrl(path)).write()
+        return db.get('stories').find({id : story.id}).set('recording', getFileUrl(path)).write()
+      }).then( () => {
+        sendUpdate(context.io, { projectId : project.id, storyId: story.id})
       })
     }
 
@@ -117,6 +122,8 @@ router.post('/upload/attachment/:id', errorMiddleware, upload.fields([,
       console.error("Error uploading file: " + file.name,err)
     }).then( (path: string) => {
       db.get('attachments').find({id : context.params.id}).set('image', getFileUrl(path)).write()
+    }).then( () => {
+      sendUpdate(context.io, { projectId : project.id, storyId: story.id, attachmentId : attachment.id})
     })
     context.body = { msg : `image uploaded to attachment ${attachment.id}` }
   } catch (err) {
