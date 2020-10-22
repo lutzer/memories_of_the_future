@@ -1,3 +1,6 @@
+/// resolves svg import errors in vs code
+/// <reference path="./../custom.d.ts" />
+
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { ProjectSchema, Store } from "../services/store";

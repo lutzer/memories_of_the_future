@@ -95,7 +95,7 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
           </div>
           { saved &&
           <div className='item saved'>
-            <p>Changes have been saved as draft.</p>
+            <p>Changes have been saved.</p>
           </div>
            }
           <div className='button-group'>

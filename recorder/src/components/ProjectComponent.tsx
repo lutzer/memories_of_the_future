@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import _ from "lodash";
-import { useParams, Switch, Route, useRouteMatch, useHistory } from "react-router-dom";
+import { useParams, Switch, Route, useHistory } from "react-router-dom";
 import { ProjectSchema, StorySchema, Store, RecordSchema } from "../services/store";
 import { RecordListComponent } from "./RecordListComponent";
 import { RecordComponent } from "./RecordComponent";
@@ -12,11 +12,11 @@ import { ProjectInfoComponent } from "./ProjectInfoComponent";
 import { DialogBoxComponent } from "./DialogBoxComponent";
 import { StoryComponent } from "./StoryComponent";
 import { Socket } from './../services/socket'
+import './../global'
 
 import './styles/project.scss'
 import './styles/input.scss'
 import './styles/animations.scss'
-import { sleep } from "../utils/utils";
 
 function handleDbError(err : any) {
   console.log(err)

@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from "react";
-import { StorySchema, Store, ProjectSchema } from "../services/store";
+import React, { useState } from "react";
+import { StorySchema } from "../services/store";
 import ReactMapGL, { Marker } from "react-map-gl";
 import { config } from "../config";
 import './styles/map.scss'

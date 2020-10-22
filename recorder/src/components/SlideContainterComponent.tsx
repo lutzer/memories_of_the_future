@@ -1,3 +1,6 @@
+/// resolves svg import errors in vs code
+/// <reference path="./../custom.d.ts" />
+
 import React, { useState, useEffect, FunctionComponent } from "react"
 import { useHistory } from "react-router-dom";
 import './styles/slider.scss'

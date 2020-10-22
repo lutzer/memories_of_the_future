@@ -1,10 +1,9 @@
-import React, {useState, useEffect, createRef } from "react";
+import React, {useState, useEffect } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
 import _ from 'lodash'
 import { config } from "../config";
 
 import './styles/location.scss'
-import './../../node_modules/leaflet/dist/leaflet.css'
 import '../assets/marker-icon.png'
 import './styles/input.scss'
 

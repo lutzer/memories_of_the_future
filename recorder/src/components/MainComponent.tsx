@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { HashRouter as Router, Switch, Route, useParams } from "react-router-dom";
-import { ProjectSelectComponent } from "./ProjectSelectComponent";
-import { ModalComponent, ModalProperties } from "./ModalComponent";
-import { ProjectComponent } from "./ProjectComponent";
-import { MapComponent } from "./MapComponent";
-import { StorySchema } from "../services/store";
+import React, { useState } from "react"
+import { HashRouter as Router, Switch, Route, useParams } from "react-router-dom"
+import { ProjectSelectComponent } from "./ProjectSelectComponent"
+import { ModalComponent, ModalProperties } from "./ModalComponent"
+import { ProjectComponent } from "./ProjectComponent"
+import { MapComponent } from "./MapComponent"
+import { StorySchema } from "../services/store"
+import './../global'
 
 import './styles/main.scss'
 
@@ -14,7 +15,8 @@ const MainComponent = () => {
   const [stories, setStories] = useState<StorySchema[]>([])
   const [selectedStory, setSelectedStory] = useState<string>(null)
 
-  function showModal(title: string, text: string, cancelable : boolean = false) : Promise<boolean> {
+  // set global function
+  window.showModal = (title: string, text: string, cancelable : boolean = false) : Promise<boolean> => {
     return new Promise( (resolve) => {
       if (cancelable)
         setModal({title: title, text: text,
@@ -25,8 +27,6 @@ const MainComponent = () => {
         setModal({title: title, text: text, onAccept: () => { setModal(null); resolve(true) }})
     })
   }
-
-  window.showModal = showModal;
 
   return (
     <div className='content'>

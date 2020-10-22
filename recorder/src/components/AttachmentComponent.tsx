@@ -4,7 +4,7 @@ import { AttachmentSchema } from "../services/store";
 import { TextInputComponent } from "./TextInputComponent";
 import { DialogBoxComponent } from "./DialogBoxComponent";
 import { Api } from "../services/api";
-import { dateFromNow } from "../utils/utils";
+import './../global'
 
 import './styles/attachment.scss'
 import './styles/upload.scss'

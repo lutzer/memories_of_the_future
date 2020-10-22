@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import './styles/project.scss'
-import { ProjectSchema, StorySchema } from "../services/store";
-import { Link, useParams } from "react-router-dom";
+import { StorySchema } from "../services/store";
 import _ from "lodash";
 
 import './styles/story.scss'
 import { AudioPlayerComponent } from "./AudioRecorderComponent";
-import { AudioRecording } from "../media/recorder";
 import { dateFromNow } from "../utils/utils";
 import { AttachmentComponent } from "./AttachmentComponent";
 

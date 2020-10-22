@@ -1,3 +1,6 @@
+/// resolves svg import errors in vs code
+/// <reference path="./../custom.d.ts" />
+
 import React, { useState, useEffect } from "react";
 import { getAudioRecorder, AudioRecording, AudioRecorder } from '../media/recorder'
 import { ProgressBarComponent } from "./ProgressBarComponent";

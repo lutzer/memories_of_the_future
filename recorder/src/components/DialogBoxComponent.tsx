@@ -1,5 +1,4 @@
 import React, { useState, useEffect, FunctionComponent } from "react";
-import { useHistory } from "react-router-dom";
 import './styles/dialog.scss'
 
 type Properties = {
