@@ -1,6 +1,5 @@
-import React, {Fragment, useState, useEffect } from "react";
-import { Map, TileLayer, Marker, CircleMarker, Viewport } from 'react-leaflet'
-import L, { GeoJSONOptions } from 'leaflet'
+import React, {useState, useEffect, createRef } from "react";
+import ReactMapGL, { Marker } from "react-map-gl";
 import _ from 'lodash'
 import { config } from "../config";
 
@@ -8,15 +7,6 @@ import './styles/location.scss'
 import './../../node_modules/leaflet/dist/leaflet.css'
 import '../assets/marker-icon.png'
 import './styles/input.scss'
-
-// type GeolocationPosition = { lat: number, lng: number }
-
-const markerIcon = L.icon({
-  iconUrl: 'assets/marker-icon.png',
-  shadowUrl: null,
-  iconSize: [25, 41],
-  iconAnchor: [13, 39]
-});
 
 type GeolocationPosition = {
   coords: {
@@ -30,49 +20,50 @@ type GeolocationPosition = {
   }
 }
 
-const LocationMarker = ({geoLoc, zoom} : {geoLoc: GeolocationPosition, zoom : number}) => {
-
-  function calculateAccuracyRadius() {
-    console.log(zoom)
-    return geoLoc.coords.accuracy * zoom / 16
-  }
-
+const LocationMarker = ({location} : {location : [number, number]}) => {
   return(
-    <Fragment>
-      {/* <CircleMarker
-        radius={calculateAccuracyRadius()}
-        fillColor='#00a2ff'
-        fillOpacity={0.3}
-        stroke={false}
-        center={[geoLoc.coords.latitude, geoLoc.coords.longitude]}
-        /> */}
-      <CircleMarker
-        radius={8}
-        color='#ffffff'
-        weight={2}
-        fillOpacity={1.0}
-        fillColor='#00a2ff'
-        center={[geoLoc.coords.latitude, geoLoc.coords.longitude]}/>
-    </Fragment>
+    <Marker
+    longitude={location[0]}
+    latitude={location[1]}>
+      <div className='marker'>
+        <div className ='innerCircle'/>
+      </div>
+    </Marker>
   )
 }
 
+type Viewport = {
+  latitude: number
+  longitude: number
+  zoom: number
+}
+
 const LocationPickerComponent = ({location, onPick} : {location? : [number, number], onPick : (loc : [number, number]) => void}) => {
-  const [viewport, setViewport] = useState<Viewport>({ center: config.defaultLocation, zoom: 15 })
+  const [viewport, setViewport] = useState<Viewport>({ 
+    latitude: config.defaultLocation[0], 
+    longitude : config.defaultLocation[1], 
+    zoom: 15 
+  })
   const [dragged, setDragged] = useState(false)
   const [geolocation, setGeolocation] = useState<GeolocationPosition>(null)
   const [watchId, setWatchId] = useState<number>(null)
 
+  // center on current location, if no location picked already
+  useEffect( () => {
+    if (!location)
+      watchLocation()
+  }, [])
+
   // update viewport when there is a new location set
   useEffect( () => {
     if (location)
-      setViewport(Object.assign({}, viewport, { center: location }))
+      setViewport(Object.assign({}, viewport, { longitude: location[0], latitude: location[1] }))
   },[location])
 
   // update viewpoert on new geolocation
   useEffect( () => {
     if (geolocation && !dragged)
-      setViewport(Object.assign({}, viewport, { center: [ geolocation.coords.latitude, geolocation.coords.longitude ] }))
+      setViewport(Object.assign({}, viewport, { latitude: geolocation.coords.latitude, longitude: geolocation.coords.longitude }))
   },[geolocation, watchId])
 
   // cleanup location listener
@@ -88,22 +79,22 @@ const LocationPickerComponent = ({location, onPick} : {location? : [number, numb
     setWatchId(navigator.geolocation.watchPosition(setGeolocation))
   }
 
+  function onPickButtonClicked() {
+    onPick([viewport.longitude, viewport.latitude])
+  }
+
   return(
     <div className='location_picker'>
-      <Map 
-        viewport={viewport}
-        ondrag={() => setDragged(true)}
-        onViewportChanged={setViewport}
-        zoomControl={false}>
-        <TileLayer
-          url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-        />
-        { location && <Marker
-          icon={markerIcon}
-          position={location}
-        /> }
-        { geolocation && <LocationMarker geoLoc={geolocation} zoom={viewport.zoom}/> }
-      </Map>
+      <ReactMapGL
+        width="100%"
+        height="100%"
+        {...viewport}
+        onTouchMove={() => setDragged(true)}
+        onViewportChange={setViewport}
+        mapStyle={config.mapboxStyle}
+        mapboxApiAccessToken={config.mapboxToken}>
+        { location && <LocationMarker location={location}/>}
+      </ReactMapGL>
       <div className='crosshair'>
         <svg width='50' height='50'>
           <line x1='0' x2='50' y1='25' y2='25' stroke='black' opacity='0.5' strokeWidth='1'/> 
@@ -112,7 +103,7 @@ const LocationPickerComponent = ({location, onPick} : {location? : [number, numb
       </div>
       <div className='button-group'>
         <button onClick={() => watchLocation()}>Your Location</button>
-        <button onClick={() => onPick(viewport.center)}>Pick Location</button>
+        <button onClick={() => onPickButtonClicked()}>Pick Location</button>
       </div>
     </div>
   )

@@ -1,16 +1,28 @@
+@import '_vars.scss';
+
 .location_picker {
   position:relative;
   height:100%;
   width: 100%;
 
-  .leaflet-container {
-    position: absolute;
-    top:0px;
-    bottom: 0px;
-    left:0px;
-    right:0px;
-    width: 100%;
-    margin: 0;
+  .mapboxgl-map {
+    border-radius: $border-radius;
+  }
+
+  .marker {
+    transform: translate(-50%, -50%);
+    height:14px;
+    width: 14px;
+    border-radius: 50%;
+    padding: 5px;
+    background: change-color($button-dark-color, $alpha: 0.4);
+
+    .innerCircle {
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
+      background: $button-dark-color;
+    }
   }
 
   .crosshair {

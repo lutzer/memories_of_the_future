@@ -45,7 +45,7 @@ const MapComponent = ({ stories = [], selected = null, showButtons = true }: Map
         onViewportChange={(viewport) => {
           setViewport(viewport);
         }}
-        mapStyle="mapbox://styles/tommasuki/ckemlgukz2ekk19lq0udzo4n7"
+        mapStyle={config.mapboxStyle}
       > 
       
         {stories.map((story) => (
@@ -57,7 +57,7 @@ const MapComponent = ({ stories = [], selected = null, showButtons = true }: Map
             <div className="markerBorder" style = {{backgroundColor: story.color + "55"}}  onClick = {() => onMarkerClick(story.id) }>
              <div style = {{backgroundColor: story.color}} className = 'storyBtn'/>
             </div>
-          </Marker>   
+        </Marker>   
           
         ))}
           

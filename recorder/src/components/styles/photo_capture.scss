@@ -23,13 +23,13 @@ $box-height : 200px;
 
   .input {
     position: absolute;
-    bottom: 0px;
+    bottom: $standard-spacing;
     width: 100%;
     left: 0px;
     text-align: center;
 
-    .button {
-      display: inline;
-    }
+    // button {
+    //   margin: 0 auto;
+    // }
   }
 }
