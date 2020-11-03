@@ -22,8 +22,8 @@ type GeolocationPosition = {
 const LocationMarker = ({location} : {location : [number, number]}) => {
   return(
     <Marker
-    longitude={location[0]}
-    latitude={location[1]}>
+    latitude={location[0]}
+    longitude={location[1]}>
       <div className='marker'>
         <div className ='innerCircle'/>
       </div>
@@ -56,7 +56,7 @@ const LocationPickerComponent = ({location, onPick} : {location? : [number, numb
   // update viewport when there is a new location set
   useEffect( () => {
     if (location)
-      setViewport(Object.assign({}, viewport, { longitude: location[0], latitude: location[1] }))
+      setViewport(Object.assign({}, viewport, { latitude: location[0], longitude: location[1] }))
   },[location])
 
   // update viewpoert on new geolocation
@@ -79,7 +79,7 @@ const LocationPickerComponent = ({location, onPick} : {location? : [number, numb
   }
 
   function onPickButtonClicked() {
-    onPick([viewport.longitude, viewport.latitude])
+    onPick([viewport.latitude, viewport.longitude])
   }
 
   return(

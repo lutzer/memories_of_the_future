@@ -6,11 +6,11 @@
 	 xml:space="preserve">
 <g id="Ebene_1">
 	
-		<line fill="none" stroke="#000000" stroke-width="7" stroke-linecap="round" stroke-miterlimit="10" x1="517.053" y1="298.392" x2="327.873" y2="298.392"/>
+		<line fill="none" stroke="#286FFF" stroke-width="7" stroke-linecap="round" stroke-miterlimit="10" x1="517.053" y1="298.392" x2="327.873" y2="298.392"/>
 </g>
 <g id="Ebene_2">
 	
-		<polyline fill="none" stroke="#000000" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+		<polyline fill="none" stroke="#286FFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
 		400.221,222.168 324.835,297.528 400.443,373.112 	"/>
 </g>
 </svg>

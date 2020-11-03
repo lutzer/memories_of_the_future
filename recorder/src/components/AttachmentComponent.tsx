@@ -147,7 +147,7 @@ const AttachmentInputComponent = ({ storyId, projectName, onCancel, onComplete }
         <DialogBoxComponent>
           <div className='upload'>
             <div className='center-item'>
-                <div className='input-element'>
+                <div className='input-element password'>
                   <input type='password' 
                   placeholder='Enter password'
                   onChange={(e) => setPassword(e.target.value)}/>

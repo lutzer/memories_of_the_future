@@ -1,12 +1,13 @@
 import Koa from 'koa'
 import koaJson from 'koa-json'
-import cors from '@koa/cors';
+import cors from '@koa/cors'
 
 import { config } from './config'
 import { router } from './router'
-import { staticRouter } from './staticRouter'
 import { connectSocket } from './socket'
-import { Server } from 'http';
+import { Server } from 'http'
+import serve from 'koa-static'
+import mount  from 'koa-mount'
 
 const devMode = process.argv.includes('-dev')
 
@@ -25,7 +26,8 @@ if (devMode) {
 app.use(cors());
 
 // serve static routes
-app.use(staticRouter.routes())
+app.use(mount('/', serve(config.staticDirectory)))
+app.use(mount('/files/', serve(config.fileDirectory)))
 
 // serve api routes
 app.use(router.routes())

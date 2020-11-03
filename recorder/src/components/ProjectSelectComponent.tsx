@@ -28,7 +28,7 @@ const ProjectNameInputComponent = ({onAccept, showError} :
       <div className='error'>
         { showError }
       </div>
-      <div className='input-element'>
+      <div className='input-element bright'>
         <div className='input-text-with-button'>
           <input type='text' 
             placeholder='Enter project name' 
