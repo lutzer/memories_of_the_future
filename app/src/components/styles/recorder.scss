@@ -1,0 +1,64 @@
+.recorder {
+  width: 100%;
+
+  .recording-time {
+    display: flex;
+    align-items: center;
+    height: 40px;
+
+    .record-circle {
+      width: 30px;
+      height: 30px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        opacity: 0.4;
+      }
+    }
+
+    .time {
+      // padding: 5px;
+    }
+
+    .bar {
+      flex: 1 1 auto;
+      padding: 0 10px;
+    }
+
+    .number {
+      padding-right: 5px;
+      font-style: normal;
+    }
+  }
+}
+
+.audio-player {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  text-align: center;
+  width:100%;
+  height: 40px;
+
+  .play-button {
+    width: 30px;
+    height: 30px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      opacity: 1;
+    }
+  }
+
+  .bar {
+    flex: 1 1 0;
+    padding: 0 10px 0 5px;
+  }
+
+  .number {
+    padding-right: 5px;
+    font-style: normal;
+  }
+}

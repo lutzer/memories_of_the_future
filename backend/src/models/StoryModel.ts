@@ -1,11 +1,10 @@
 import { AttachmentModelSchema } from './AttachmentModel'
-import { BaseModel } from './BaseModel'
+import { BaseModel, BaseSchema } from './BaseModel'
 import _ from 'lodash'
 
 import { config } from './../config' 
 
 type StoryModelSchema = {
-  id : string,
   projectId : string,
   location : [ number, number ]
   
@@ -18,7 +17,7 @@ type StoryModelSchema = {
   color : string,
   createdAt : number,
   attachments: AttachmentModelSchema[]
-}
+} & BaseSchema
 
 // hashes a string to a number from [0..range]
 function hashString(str, range) {

@@ -1,1 +1,0 @@
-declare var showModal : (title: string, text: string, cancelable? : boolean) => Promise<boolean>

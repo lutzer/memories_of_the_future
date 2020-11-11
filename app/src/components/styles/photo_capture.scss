@@ -1,0 +1,35 @@
+@import '_vars.scss';
+
+$box-height : 200px;
+
+.photo_capture {
+  position: relative;
+  height: $box-height;
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+  overflow: hidden;
+  border-radius: $border-radius;
+
+  .photo {
+    
+    img {
+      object-fit: cover;
+      min-height: $box-height;
+      width: 100%;
+      margin-bottom: -3px;
+    }
+  }
+
+  .input {
+    position: absolute;
+    bottom: $standard-spacing;
+    width: 100%;
+    left: 0px;
+    text-align: center;
+
+    // button {
+    //   margin: 0 auto;
+    // }
+  }
+}

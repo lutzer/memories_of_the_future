@@ -34,6 +34,7 @@ app.use(router.routes())
 
 function startServer() : Promise<Server> {
   return new Promise<Server>( (resolve) => {
+    // start backend
     const server = app.listen(config.port, () => {
     app.context.io = connectSocket(server)
     resolve(server)

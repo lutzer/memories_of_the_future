@@ -1,0 +1,32 @@
+@import '_vars.scss';
+
+.dialog-box-overlay {
+  position:fixed;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,255,255,0.8);
+  @include flex-column;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.dialog-box {
+  display: flex;
+  max-width: 80%;
+
+  // &.closed {
+  //   bottom: -$slider-height;
+  // }
+
+  h3 {
+    margin: $standard-spacing 0;
+    text-align: center;
+  }
+
+  .inner-container {
+    padding: $outer-margin;
+    min-width: 200px;
+  }
+}

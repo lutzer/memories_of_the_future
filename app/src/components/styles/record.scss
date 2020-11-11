@@ -1,0 +1,116 @@
+@import '_vars.scss';
+
+.records-list {
+  @include flex-column;
+  padding: 10px;
+  overflow: scroll;
+  height:100%;
+
+  &:after {
+    @include after-content;
+  }
+
+  &.center {
+    justify-content: center;
+  }
+
+  .item {
+    background-color: $list-item-color;
+    text-align: left;
+    width: 100%;
+    margin: 10px 0px;
+    border-radius: $border-radius;
+
+    .item-content {
+      margin: 10px;
+    }
+
+    .author {
+      font-style: italic;
+    }
+
+    &.uploaded {
+      opacity: 0.5
+    }
+  }
+
+  .center-item {
+    justify-self: center;
+    text-align: center;
+    color: #666;
+    width: 100%;
+
+    .input-element {
+      width: 80%;
+      margin: 0 auto;
+    }
+  }
+
+  .line {
+    width: 100%;
+    border-top: 1px solid #000;
+    opacity: 0.1;
+  }
+}
+
+.record {
+  @include flex-column;
+  padding: 10px;
+  overflow:scroll;
+  height:100%;
+
+  &:after {
+    @include after-content;
+  }
+
+  &.center {
+    justify-content: center;
+  }
+  
+
+  .item {
+    text-align: left;
+    width: 100%;
+    margin: 5px 0px;
+
+    .createdAt {
+      margin: 0;
+      font-style: italic;
+      text-align: center;
+      opacity: 0.4;
+    }
+
+
+    &.location {
+      height: 200px;
+    }
+
+    &.camera {
+      background-color: $input-box-color;
+      border-radius: $border-radius;
+    }
+
+    &.recorder {
+      background-color: $input-box-color;
+      border-radius: $border-radius;
+
+      .recorder {
+        width: auto;
+        padding: 5px;
+      }
+    }
+
+    &.saved {
+      p {
+        margin: 0;
+        font-style: italic;
+        text-align: center;
+        opacity: 0.4;
+      }
+    }
+
+    
+
+  }
+
+}

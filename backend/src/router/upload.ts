@@ -86,7 +86,7 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
     // cleanup files if there was en error
     await Promise.all(uploadList.map( async (path) => {
       await deleteFile(path)
-    }))
+    })).catch( (err) => console.log(err))
     context.throw( err instanceof ApiError ? err.statusCode : 400, err.message)
   } 
 })

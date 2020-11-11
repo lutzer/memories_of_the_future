@@ -1,0 +1,51 @@
+@import '_vars.scss';
+
+.attachment-component {
+
+  .input-element {
+    background-color: white;
+  }
+
+  .input-element.password {
+    background-color: $input-box-color;
+  }
+
+  .image-added {
+      
+    .remove-button {
+      width: 100%;
+      background-color: red;
+    }
+  }
+
+  .attachment-list {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 20px;
+    }
+
+    .author {
+      opacity: 0.3;
+      text-align: right;
+      margin-top: 5px;
+    }
+
+    .text {
+      text-align: justify;
+      margin-bottom: 5px;
+    }
+
+    .image {
+      width: 100%;
+      text-align: center;
+  
+      img {
+        max-height: 400px;
+        max-width: 100%;
+        border-radius: $border-radius;
+      }
+    }
+  }
+}

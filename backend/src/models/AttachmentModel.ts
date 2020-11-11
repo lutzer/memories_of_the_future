@@ -1,13 +1,12 @@
-import { BaseModel } from './BaseModel'
+import { BaseModel, BaseSchema } from './BaseModel'
 
 type AttachmentModelSchema = {
-  id : string,
   storyId : string,
   text : string,
   author: string,
   image : string,
   createdAt : number
-}
+} & BaseSchema
 
 class AttachmentModel extends BaseModel {
 

@@ -1,0 +1,33 @@
+$outer-margin: 10px;
+
+$header-height: 40px;
+$content-width: 500px;
+$item-shadow: 6px 6px black;
+$item-shadow-clicked: 4px 4px gray;
+$border-radius: 5px;
+
+$icon-size: 32px;
+$icon-size-big: 42px;
+$icon-padding: 4px;
+
+$standard-spacing: 10px;
+
+$text-color: #286FFF;
+$list-item-color: #E0E2E2;
+$button-color: #F57D8D;
+$button-text-color: #286FFF;
+$button-dark-color: #F57D8D;
+$input-box-color: #E0E2E2;
+
+@mixin flex-column {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+@mixin after-content {
+  content: ' ';
+  display: block;
+  margin-bottom: 3em;
+}

@@ -8,8 +8,9 @@ const config = {
 
   adminLogin: 'admin',
   adminPassword: 'password',
+  adminPort: 3001,
 
-  staticDirectory : resolve(__dirname, '../../recorder/dist/'),
+  staticDirectory : resolve(__dirname, '../../app/dist/'),
   databaseFile: resolve(__dirname,'../data/data.json'),
 
   fileDirectory : resolve(__dirname, '../data/files/'),

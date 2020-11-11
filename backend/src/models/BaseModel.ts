@@ -1,8 +1,12 @@
 import { v1 as uuidv1 } from 'uuid';
 
+type BaseSchema = {
+  id: string
+}
+
 class BaseModel {
 
-  data : any = {
+  data : BaseSchema = {
     id : uuidv1()
   }
     
@@ -16,4 +20,4 @@ class BaseModel {
 }
 
 
-export { BaseModel }
+export { BaseModel, BaseSchema }

@@ -1,15 +1,14 @@
-import { BaseModel } from './BaseModel'
+import { BaseModel, BaseSchema } from './BaseModel'
 import { generateRandomString } from './../utils'
 
 type ProjectModelSchema = {
-  id : string,
   name : string,
   description : string,
   password: string,
   visible : boolean,
   color : string,
   createdAt : number
-}
+} & BaseSchema
 
 class ProjectModel extends BaseModel {
 

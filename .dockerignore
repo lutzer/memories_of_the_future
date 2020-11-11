@@ -1,0 +1,8 @@
+.git
+.DS_Store
+!.keep
+app/node_modules
+app/dist
+backend/node_modules
+backend/dist
+backend/data

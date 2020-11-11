@@ -8,13 +8,17 @@
 
 ## Deployment
 
-### Server
+### With docker:
 
-*TODO: write deploy script*
+```
+# clone this repository locally and create docker container
+docker build -t drl/motf .
+# run container and map private docker ports to public ports
+docker run -p 3000:3000 -p 3001:3001 -d drl/motf
 
-* run `npm install` in web and backend folder
-* run `npm run build` in web and backend folder
-* run `npm run server` in backend folder
+# (you can enter the docker container with)
+docker exec -it <instanece> /bin/sh
+```
 
 ## Development
 
@@ -26,14 +30,8 @@
 * `npm test` to run unit tests
 * `npm run build` to build server to dist directory
 
-### Web Interface
-* `cd web`
-* run `npm install`
-* run `npm start` to start webpack dev webserver
-* build to dist dir with `npm run build`
-
-### Recorder
-* `cd recorder`
+### APP
+* `cd app`
 * install dependencies: `npm install`
 * run `npm start` to start dev app server
 * run `npm run build` to build to dist folder
