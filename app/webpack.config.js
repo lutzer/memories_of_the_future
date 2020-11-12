@@ -110,7 +110,7 @@ module.exports = (env, argv) => {
     } : {},
     devServer: {
       host: 'localhost',
-      port: 3001,
+      port: 3002,
       open: true,
       https: true,
       stats: {

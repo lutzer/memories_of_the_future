@@ -4,7 +4,6 @@ import _ from 'lodash'
 import { config } from "../config";
 
 import './styles/location.scss'
-import '../assets/marker-icon.png'
 import './styles/input.scss'
 
 type GeolocationPosition = {
