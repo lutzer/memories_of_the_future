@@ -10,6 +10,7 @@
     "serve": "npx webpack -p --mode=production && npx serve dist"
   },
   "dependencies": {
+    "@turf/bbox": "^6.0.1",
     "audio-recorder-polyfill": "^0.3.6",
     "base-64": "^0.1.0",
     "date-fns": "^2.14.0",

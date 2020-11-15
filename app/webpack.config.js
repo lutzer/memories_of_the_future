@@ -36,7 +36,8 @@ module.exports = (env, argv) => {
       }),
       new CopyPlugin([
         { from: 'src/manifest.json', to: '' },
-        { from: 'src/assets/favicon.ico', to: ''}
+        { from: 'src/assets/favicon.ico', to: ''},
+        { from: 'src/assets/logo.png', to: 'assets'}
       ]),
       isDevelopment ? () => {} : new GenerateSW({
         swDest: 'service-worker.js',

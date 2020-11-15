@@ -1,26 +1,26 @@
 # Memories of the Future
 
-## Requirements
-
-* node and npm/npx must be installed
-* node version >= 12.x
-* audio conversion requires ffmpeg to be installed
-
 ## Deployment
 
-### With docker:
-
-```
-# clone this repository locally and create docker container
+### with docker
+```shell
+# clone this repository locally
+git clone https://github.com/lutzer/memories_of_the_future.git
+# create docker container
 docker build -t drl/motf .
 # run container and map private docker ports to public ports
-docker run -p 3000:3000 -p 3001:3001 -d drl/motf
+docker run -p 3000:3000 -p 3001:3001 -d drl/motf --name motf
 
-# (you can enter the docker container with)
-docker exec -it <instanece> /bin/sh
+# you can enter the docker container with
+docker exec -it motf /bin/sh
 ```
 
 ## Development
+
+### Requirements
+* node and npm/npx must be installed
+* node version >= 12.x
+* audio conversion requires ffmpeg to be installed
 
 ### Backend
 * `cd backend`
@@ -30,7 +30,7 @@ docker exec -it <instanece> /bin/sh
 * `npm test` to run unit tests
 * `npm run build` to build server to dist directory
 
-### APP
+### App
 * `cd app`
 * install dependencies: `npm install`
 * run `npm start` to start dev app server

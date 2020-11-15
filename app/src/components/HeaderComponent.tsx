@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from "react";
 import './styles/header.scss'
 
-import logoImg from './../assets/logo.svg'
+import logoImg from './../assets/logo_text.svg'
 
 const HeaderComponent = ({ backButtonLink = null} : { backButtonLink? : string}) => {
   
