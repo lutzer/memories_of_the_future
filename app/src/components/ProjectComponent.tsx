@@ -25,10 +25,11 @@ function handleDbError(err : any) {
 
 type Props = {
   onStoriesChanged : (record : StorySchema[]) => void,
-  onStorySelected : (id: string) => void
+  onStorySelected : (id: string) => void,
+  socket : SocketIOClient.Socket
 }
 
-const ProjectComponent = ({onStorySelected, onStoriesChanged} : Props ) => {
+const ProjectComponent = ({onStorySelected, onStoriesChanged, socket} : Props ) => {
   const [ project, setProject ] = useState<ProjectSchema>(null)
   const [ records, setRecords ] = useState<RecordSchema[]>([])
   const [ stories, setStories ] = useState<StorySchema[]>([])
@@ -54,16 +55,15 @@ const ProjectComponent = ({onStorySelected, onStoriesChanged} : Props ) => {
 
   // connect socket
   useEffect( () => {
-    if (!project)
+    if (!project || !socket)
       return
-    const socket = Socket.connect()
     socket.on('/update/project/' + project.id, (data : any) => {
       loadProject(project.name)
     })
     return () => {
-      socket.disconnect()
+      socket.removeAllListeners()
     }
-  },[project])
+  },[project, socket])
 
   // on story changed callback
   useEffect( () => {

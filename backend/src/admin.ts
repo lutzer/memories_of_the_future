@@ -46,9 +46,9 @@ const storyModel : DataEditor.DataModel = new DataEditor.DataModel({
       id : { type: 'string' },
       projectId : { type: 'string'},
       location : { type: 'array', minItems: 2 },
-      author : { type: 'string' },
+      author : { type: 'string', maxLength: 32 },
       title : { type: 'string', minLength: 3 },
-      text : { type: 'string' },
+      text : { type: 'string', maxLength: 1024 },
       image : { type: ['string','null'] },
       recording : { type: ['string','null'] },
 
@@ -56,7 +56,8 @@ const storyModel : DataEditor.DataModel = new DataEditor.DataModel({
       createdAt : { type: 'number' }
     },
     primaryKey : 'id',
-    required: ['projectId', 'title']
+    required: ['projectId', 'title'],
+    titleTemplate: '${author}:${title}'
   },
   adapter: new LowDbAdapter('stories')
 })
@@ -67,14 +68,15 @@ const projectModel : DataEditor.DataModel = new DataEditor.DataModel({
     properties: {
       id : { type: 'string' },
       name : { type: 'string', minLength: 3 },
-      description : { type: 'string', minLength: 3 },
+      description : { type: 'string', minLength: 3, maxLength: 1024 },
       password: { type: 'string', minLength: 3 },
       visible : { type: 'boolean' },
       color : { type: 'string' },
       createdAt : { type: 'number' }
     },
     primaryKey: 'id',
-    required : ['name', 'description', 'password']
+    required : ['name', 'description', 'password'],
+    titleTemplate: '${name}'
   },
   adapter: new LowDbAdapter('projects')
 })
@@ -85,13 +87,14 @@ const attachmentModel : DataEditor.DataModel = new DataEditor.DataModel({
     properties: {
       id : { type: 'string' },
       storyId : { type: 'string' },
-      text : { type: 'string' },
-      author: { type: 'string', minLength: 3 },
+      text : { type: 'string', maxLength: 1024 },
+      author: { type: 'string', minLength: 3, maxLength: 32 },
       image : { type: 'string' },
       createdAt : { type: 'number' }
     },
     primaryKey: 'id',
-    required : ['storyId', 'author']
+    required : ['storyId', 'author'],
+    titleTemplate: '${author}:${id}'
   },
   adapter: new LowDbAdapter('attachments')
 })

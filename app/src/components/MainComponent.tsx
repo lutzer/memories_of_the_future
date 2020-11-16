@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { HashRouter as Router, Switch, Route, useParams } from "react-router-dom"
 import { ProjectSelectComponent } from "./ProjectSelectComponent"
 import { ModalComponent, ModalProperties } from "./ModalComponent"
@@ -8,12 +8,23 @@ import { StorySchema } from "../services/store"
 import './../global'
 
 import './styles/main.scss'
+import { Socket } from "../services/socket"
 
 const MainComponent = () => {
 
   const [modal, setModal] = useState<ModalProperties>(null)
   const [stories, setStories] = useState<StorySchema[]>([])
   const [selectedStory, setSelectedStory] = useState<string>(null)
+  const [socket, setSocket] = useState<SocketIOClient.Socket>(null)
+  
+  useEffect( () => {
+    setSocket(Socket.connect())
+    return () => {
+      if (!socket.disconnected)
+        socket.disconnect()
+      setSocket(null)
+    }
+  },[])
 
   // set global function
   window.showModal = (title: string, text: string, cancelable : boolean = false) : Promise<boolean> => {
@@ -34,7 +45,7 @@ const MainComponent = () => {
         <Switch>
           <Route path='/:projectName/'>
             <MapComponent stories={stories} selected={selectedStory} showButtons={true}/>
-            <ProjectComponent onStorySelected={(id) => setSelectedStory(id)} onStoriesChanged={setStories}/>
+            <ProjectComponent socket={socket} onStorySelected={(id) => setSelectedStory(id)} onStoriesChanged={setStories}/>
           </Route>
           <Route path="/">
             <MapComponent stories={[]} showButtons={false}/>
