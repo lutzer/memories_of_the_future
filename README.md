@@ -8,13 +8,13 @@
 git clone https://github.com/lutzer/memories_of_the_future.git
 # edit docker-compose.yml and set ADMIN_USERNAME and ADMIN_PASSWORD
 nano docker-compose.yml
-# create docker container
+# build docker image
 docker-compose build
 # run docker container in detached mode
 docker-compose up -d
 
 # you can enter the docker container with
-docker exec -it motf /bin/sh
+docker exec -it memories_of_the_future_server_1 /bin/sh
 ```
 
 ## Development
