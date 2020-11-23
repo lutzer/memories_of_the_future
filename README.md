@@ -9,7 +9,7 @@ git clone https://github.com/lutzer/memories_of_the_future.git
 # create docker container
 docker build -t drl/motf .
 # run container and map private docker ports to public ports
-docker run -p 3000:3000 -p 3001:3001 -d drl/motf --name motf
+docker run -p 3000:3000 -p 3001:3001 --name motf -d drl/motf
 
 # you can enter the docker container with
 docker exec -it motf /bin/sh
