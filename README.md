@@ -6,10 +6,12 @@
 ```shell
 # clone this repository locally
 git clone https://github.com/lutzer/memories_of_the_future.git
+# edit docker-compose.yml and set ADMIN_USERNAME and ADMIN_PASSWORD
+nano docker-compose.yml
 # create docker container
-docker build -t drl/motf .
-# run container and map private docker ports to public ports
-docker run -p 3000:3000 -p 3001:3001 --name motf -d drl/motf
+docker-compose build
+# run docker container in detached mode
+docker-compose up -d
 
 # you can enter the docker container with
 docker exec -it motf /bin/sh
