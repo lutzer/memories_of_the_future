@@ -8,6 +8,7 @@ import { connectSocket } from './socket'
 import { Server } from 'http'
 import serve from 'koa-static'
 import mount  from 'koa-mount'
+import fs from 'fs'
 
 const devMode = process.argv.includes('-dev')
 
@@ -34,6 +35,12 @@ app.use(router.routes())
 
 function startServer() : Promise<Server> {
   return new Promise<Server>( (resolve) => {
+    // create data directories if they dont exist
+    if (!fs.existsSync(config.fileDirectory))
+      fs.mkdirSync(config.fileDirectory)
+    if (!fs.existsSync(config.uploadTmpDirectory))
+      fs.mkdirSync(config.uploadTmpDirectory)
+
     // start backend
     const server = app.listen(config.port, () => {
     app.context.io = connectSocket(server)

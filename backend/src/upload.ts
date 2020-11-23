@@ -42,8 +42,7 @@ const compressImage = async function(path : string, newPath : string) : Promise<
 async function handleImageUpload(file: FileUpload, filename: string) : Promise<string> {
   if (!_.includes(['.gif','.png','.jpg','.jpeg'], extname(file.name)))
     throw new Error('File format not supported')
-  // const newPath = config.fileDirectory + '/' + storyId + '.jpg'
-  // await compressImage(file.path, newPath)
+  
   // move file
   const newPath = config.fileDirectory + '/' + filename + extname(file.name)
   await copyFile(file.path, newPath)

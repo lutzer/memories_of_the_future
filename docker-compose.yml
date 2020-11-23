@@ -1,0 +1,11 @@
+services:
+  webapp:
+    build: .
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    volumes:
+      - ./data:/usr/src/app/data
+    environment:
+      admin_username: admin
+      admin_password: password

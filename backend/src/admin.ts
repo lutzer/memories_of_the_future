@@ -57,7 +57,11 @@ const storyModel : DataEditor.DataModel = new DataEditor.DataModel({
     },
     primaryKey : 'id',
     required: ['projectId', 'title'],
-    titleTemplate: '${author}:${title}'
+    titleTemplate: '<%= author %>:<%= title %>',
+    links: [ 
+      { model: 'projects', key: 'projectId', foreignKey: 'id'},
+      { model: 'attachments', key: 'id', foreignKey: 'storyId'},
+    ]
   },
   adapter: new LowDbAdapter('stories')
 })
@@ -76,7 +80,8 @@ const projectModel : DataEditor.DataModel = new DataEditor.DataModel({
     },
     primaryKey: 'id',
     required : ['name', 'description', 'password'],
-    titleTemplate: '${name}'
+    titleTemplate: '<%= name %>',
+    links: [ { model: 'stories', key: 'id', foreignKey: 'projectId'}]
   },
   adapter: new LowDbAdapter('projects')
 })
@@ -94,7 +99,7 @@ const attachmentModel : DataEditor.DataModel = new DataEditor.DataModel({
     },
     primaryKey: 'id',
     required : ['storyId', 'author'],
-    titleTemplate: '${author}:${id}'
+    titleTemplate: '<%= author %>:<%= id %>'
   },
   adapter: new LowDbAdapter('attachments')
 })

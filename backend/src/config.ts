@@ -6,15 +6,15 @@ const config = {
   apiBasePath : '/api',
   fileBasePath : '/files',
 
-  adminLogin: 'admin',
-  adminPassword: 'password',
+  adminLogin: process.env.ADMIN_LOGIN || 'admin',
+  adminPassword: process.env.ADMIN_PASSWORD || 'password',
   adminPort: 3001,
 
   staticDirectory : resolve(__dirname, '../../app/dist/'),
-  databaseFile: resolve(__dirname,'../data/data.json'),
+  databaseFile: resolve(__dirname,'../../data/data.json'),
 
-  fileDirectory : resolve(__dirname, '../data/files/'),
-  uploadTmpDirectory: resolve(__dirname, '../data/tmp/'),
+  fileDirectory : resolve(__dirname, '../../data/files/'),
+  uploadTmpDirectory: resolve(__dirname, '../../data/tmp/'),
   uploadMaxFilesize: 1024 * 1024 * 30, // 30 mbytes
 
   markerColors: 
