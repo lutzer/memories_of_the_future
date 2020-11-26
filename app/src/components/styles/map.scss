@@ -21,14 +21,27 @@
   padding: 5px;
 
   &.selected {
-    height: 25px;
-    width:25px;
+    animation: pulse 2s infinite;
   }
 
   .storyMarkerInner {
     height: 100%;
     width: 100%;
     border-radius: 50%;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: translate(-50%, -50%) scale(0.9);
+    }
+  
+    50% {
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+  
+    100% {
+      transform: translate(-50%, -50%) scale(0.9);
+    }
   }
 
 }

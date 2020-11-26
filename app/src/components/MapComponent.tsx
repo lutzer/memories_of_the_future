@@ -1,10 +1,10 @@
 
-import React, { DOMElement, useEffect, useRef, useState } from "react";
-import { StorySchema } from "../services/store";
-import ReactMapGL, { FlyToInterpolator, Marker, ViewportProps, WebMercatorViewport } from "react-map-gl";
-import { config } from "../config";
+import React, { DOMElement, useEffect, useRef, useState } from "react"
+import { StorySchema } from "../services/store"
+import ReactMapGL, { FlyToInterpolator, LinearInterpolator, Marker, ViewportProps, WebMercatorViewport } from "react-map-gl"
+import { config } from "../config"
 import { useHistory, useParams } from 'react-router-dom'
-import { HeaderComponent } from "./HeaderComponent";
+import { HeaderComponent } from "./HeaderComponent"
 import bbox from '@turf/bbox'
 
 import './styles/map.scss'
@@ -16,11 +16,26 @@ type MapProps = {
   projectView: boolean
 }
 
+type ViewportTransitionProps = {
+  transitionDuration: number
+  transitionInterpolator: LinearInterpolator
+}
+
 function calculateBoundingBox(locations : [number, number][]) {
   return bbox({
     "type": "MultiPoint",
     "coordinates": locations
   })
+}
+
+const smoothTransition : ViewportTransitionProps = {
+  transitionDuration: 500,
+  transitionInterpolator: new LinearInterpolator()
+} 
+
+const noTransition : ViewportTransitionProps = {
+  transitionDuration: null,
+  transitionInterpolator: null
 }
 
 // function cubicInOut(t : number) {
@@ -51,10 +66,8 @@ const MapComponent = ({ stories = [], selected = null, projectView = true }: Map
     height: 10,
     latitude: 52.51763153076172,
     longitude: 13.40965747833252,
-    zoom: 3
-    // transitionDuration: 1000
-    // transitionInterpolator: new FlyToInterpolator()
-    // transitionEasing: cubicInOut
+    zoom: 3,
+    ...noTransition
   });
 
   function onMarkerClick (id : string) {
@@ -68,18 +81,28 @@ const MapComponent = ({ stories = [], selected = null, projectView = true }: Map
     }))
   }
 
+  function onViewportChange(props : ViewportProps) {
+    setViewport({...viewport,
+      latitude: props.latitude,
+      longitude: props.longitude,
+      zoom: props.zoom,
+      ...noTransition
+    })
+  }
+
   // on new stories loaded
   useEffect(() => {
     if (!_.isEmpty(stories)) {
       const bbox = calculateBoundingBox(stories.map((story) => story.location))
-      const boundingViewport = new WebMercatorViewport({width: viewport.width, height: viewport.height})
+      const boundingViewport = new WebMercatorViewport(viewport)
         .fitBounds([[bbox[1], bbox[0]], [bbox[3], bbox[2]]], {
           padding: 50
         })
       setViewport({...viewport,
         latitude: boundingViewport.latitude,
         longitude: boundingViewport.longitude,
-        zoom: (boundingViewport.zoom > config.mapMaxZoom) ? config.mapMaxZoom : boundingViewport.zoom
+        zoom: (boundingViewport.zoom > config.mapMaxZoom) ? config.mapMaxZoom : boundingViewport.zoom,
+        ...smoothTransition
       })
     }
   },[stories])
@@ -88,8 +111,17 @@ const MapComponent = ({ stories = [], selected = null, projectView = true }: Map
   useEffect(() => {
     if (!_.isEmpty(stories) && selected) {
       const story = stories.find((story) => story.id === selected)
+      const coords = new WebMercatorViewport({ 
+        latitude: story.location[0], 
+        longitude: story.location[1], 
+        zoom: viewport.zoom
+      }).unproject([0.5,viewport.height* 0.2])
       if (story) {
-        setViewport({...viewport, latitude: story.location[0], longitude: story.location[1]})
+        setViewport({...viewport,
+          latitude: coords[1], 
+          longitude: coords[0],
+          ...smoothTransition
+        })
       }
     }
   },[selected])
@@ -112,7 +144,7 @@ const MapComponent = ({ stories = [], selected = null, projectView = true }: Map
       <ReactMapGL
         {...viewport}
         mapboxApiAccessToken={config.mapboxToken}
-        onViewportChange={setViewport}
+        onViewportChange={(props) => onViewportChange(props)}
         mapStyle={config.mapboxStyle}
         maxZoom={config.mapMaxZoom}
         // transitionDuration={200}
