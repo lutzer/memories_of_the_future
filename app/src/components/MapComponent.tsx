@@ -72,12 +72,15 @@ const MapComponent = ({ stories = [], selected = null, projectView = true }: Map
   useEffect(() => {
     if (!_.isEmpty(stories)) {
       const bbox = calculateBoundingBox(stories.map((story) => story.location))
-      setViewport(
-        new WebMercatorViewport({width: viewport.width, height: viewport.height})
+      const boundingViewport = new WebMercatorViewport({width: viewport.width, height: viewport.height})
         .fitBounds([[bbox[1], bbox[0]], [bbox[3], bbox[2]]], {
           padding: 50
         })
-      )
+      setViewport({...viewport,
+        latitude: boundingViewport.latitude,
+        longitude: boundingViewport.longitude,
+        zoom: (boundingViewport.zoom > config.mapMaxZoom) ? config.mapMaxZoom : boundingViewport.zoom
+      })
     }
   },[stories])
 
@@ -111,6 +114,7 @@ const MapComponent = ({ stories = [], selected = null, projectView = true }: Map
         mapboxApiAccessToken={config.mapboxToken}
         onViewportChange={setViewport}
         mapStyle={config.mapboxStyle}
+        maxZoom={config.mapMaxZoom}
         // transitionDuration={200}
         // transitionInterpolator={new FlyToInterpolator()}
         > 
