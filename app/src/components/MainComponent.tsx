@@ -44,11 +44,11 @@ const MainComponent = () => {
       <Router>
         <Switch>
           <Route path='/:projectName/'>
-            <MapComponent stories={stories} selected={selectedStory} showButtons={true}/>
+            <MapComponent stories={stories} selected={selectedStory} projectView={true}/>
             <ProjectComponent socket={socket} onStorySelected={(id) => setSelectedStory(id)} onStoriesChanged={setStories}/>
           </Route>
           <Route path="/">
-            <MapComponent stories={[]} showButtons={false}/>
+            <MapComponent stories={[]} projectView={false}/>
             <ProjectSelectComponent/>
           </Route>
         </Switch>

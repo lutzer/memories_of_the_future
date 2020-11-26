@@ -13,7 +13,7 @@ import _ from "lodash";
 type MapProps = {
   stories?: StorySchema[],
   selected?: string,
-  showButtons: boolean
+  projectView: boolean
 }
 
 function calculateBoundingBox(locations : [number, number][]) {
@@ -41,7 +41,7 @@ const StoryMarker = ({ story, selected, onClick } :
   )
 }
 
-const MapComponent = ({ stories = [], selected = null, showButtons = true }: MapProps) => {
+const MapComponent = ({ stories = [], selected = null, projectView = true }: MapProps) => {
   const container = useRef<HTMLDivElement>(null);
   const history = useHistory() 
   const { projectName } = useParams <{projectName : string}> ()
@@ -92,16 +92,20 @@ const MapComponent = ({ stories = [], selected = null, showButtons = true }: Map
   },[selected])
 
   // listen to window resizes
-  useEffect(() => {
-    handleResize()   
+  useEffect(() => {  
     window.addEventListener('resize', handleResize)
     return () => {
       window.removeEventListener('resize', handleResize)
     }
   },[])
 
+  // resize when view changes
+  useEffect(() => {
+    handleResize()
+  }, [projectView])
+
   return (
-    <div className={'map-container' + (_.isEmpty(stories) ? ' fullscreen' : '')}  ref={container}>
+    <div className={'map-container' + (projectView ? '' : ' fullscreen')}  ref={container}>
       <ReactMapGL
         {...viewport}
         mapboxApiAccessToken={config.mapboxToken}

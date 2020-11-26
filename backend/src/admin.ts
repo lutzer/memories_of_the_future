@@ -53,7 +53,7 @@ const storyModel : DataEditor.DataModel = new DataEditor.DataModel({
       recording : { type: ['string','null'] },
 
       color : { type: 'string' },
-      createdAt : { type: 'number' }
+      createdAt : { type: 'number', default: 0 }
     },
     primaryKey : 'id',
     required: ['projectId', 'title'],
@@ -76,7 +76,7 @@ const projectModel : DataEditor.DataModel = new DataEditor.DataModel({
       password: { type: 'string', minLength: 3 },
       visible : { type: 'boolean' },
       color : { type: 'string' },
-      createdAt : { type: 'number' }
+      createdAt : { type: 'number', default: 0 }
     },
     primaryKey: 'id',
     required : ['name', 'description', 'password'],
@@ -95,7 +95,7 @@ const attachmentModel : DataEditor.DataModel = new DataEditor.DataModel({
       text : { type: 'string', maxLength: 1024 },
       author: { type: 'string', minLength: 3, maxLength: 32 },
       image : { type: 'string' },
-      createdAt : { type: 'number' }
+      createdAt : { type: 'number', default: 0 }
     },
     primaryKey: 'id',
     required : ['storyId', 'author'],
