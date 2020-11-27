@@ -3,6 +3,8 @@
 .menubar {
   position: absolute;
   bottom:0;
+  padding: 0 0 env(safe-area-inset-bottom) 0;
+  padding: 0 0 env(safe-area-inset-bottom) 0;
   width:100%;
   overflow:hidden;
   height:$menubar-height;
