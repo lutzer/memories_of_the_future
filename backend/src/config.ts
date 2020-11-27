@@ -23,7 +23,7 @@ const config = {
     '#853445', '#21397f', '#0266b2', '#0000fe', '#8acdd5', 
     '#008b5a', '#08f49f', '#90bf21', '#73733d', '#014e48'],
 
-  imageMaxSideSize : 1024,
+  imageWidth : 1024,
   imageQuality: 80
 }
 

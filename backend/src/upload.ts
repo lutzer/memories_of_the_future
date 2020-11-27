@@ -4,7 +4,6 @@ import _ from 'lodash'
 import { deleteFile, moveFile, copyFile } from './utils'
 import { config } from './config'
 import { extname, parse } from 'path'
-import Jimp from 'jimp'
 
 const execCommand = promisify(exec)
 
@@ -26,17 +25,9 @@ const convertToMp3 = async function(path : string, extension : string = null) : 
   return newPath
 }
 
-const compressImage = async function(path : string, newPath : string) : Promise<void> {
-  const image = await Jimp.read(path)
-  const height = image.getHeight()
-  const width = image.getWidth()
-  // resize Image
-  if (height > width)
-    await image.resize(width/height*config.imageMaxSideSize, config.imageMaxSideSize);
-  else
-    await image.resize(config.imageMaxSideSize, height/width * config.imageMaxSideSize);
-  await image.quality(config.imageQuality);
-  await image.writeAsync(newPath);
+const compressImage = async function(path : string, newPath : string) : Promise<string> {
+  await execCommand(`convert ${path} -resize ${config.imageWidth} -quality ${config.imageQuality} ${newPath}`)
+  return newPath
 }
 
 async function handleImageUpload(file: FileUpload, filename: string) : Promise<string> {
@@ -45,7 +36,7 @@ async function handleImageUpload(file: FileUpload, filename: string) : Promise<s
   
   // move file
   const newPath = config.fileDirectory + '/' + filename + extname(file.name)
-  await copyFile(file.path, newPath)
+  await compressImage(file.path, newPath)
   await deleteFile(file.path)
   return newPath
 }

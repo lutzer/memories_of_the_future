@@ -1,5 +1,9 @@
 FROM mhart/alpine-node:14
+
+# install required packages
 RUN apk add  --no-cache ffmpeg
+RUN apk add imagemagick
+
 WORKDIR /usr/src/app
 
 # install dependencies
