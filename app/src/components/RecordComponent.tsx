@@ -67,7 +67,7 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
   }
 
   const uploadEnabled = function() {
-    return record.recording && record.image && record.location && record.title.length > 3
+    return (record.recording || record.image || record.text) && record.location && record.title.length > 3
   }
 
   return (

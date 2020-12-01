@@ -3,10 +3,18 @@
 .map-container {
   position: absolute;
   top: 0;
-  bottom: $menubar-height;
   left: 0;
   right: 0;
+  bottom: 0;
   background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%);
+
+  @include media-desktop {
+    bottom: 0;
+  }
+
+  @include media-phone {
+    bottom: $menubar-height;
+  }
 
   &.fullscreen {
     bottom: 0;

@@ -16,8 +16,10 @@ class ApiException extends Error {
 
 async function uploadStoryFiles(id: string, story: RecordSchema, password: string, controller?: AbortController) : Promise<Response> {
   var data = new FormData()
-  data.append('recording', story.recording.blob, getFilename(story.recording.blob))
-  data.append('image', story.image, getFilename(story.image))
+  if (story.recording)
+    data.append('recording', story.recording.blob, getFilename(story.recording.blob))
+  if (story.image)
+    data.append('image', story.image, getFilename(story.image))
 
   let response = await fetch(config.apiAdress + 'upload/story/' + id, {
     method: 'POST',
@@ -81,10 +83,12 @@ class Api {
     let serverId = json.story.id
 
     // upload files
-    response = await uploadStoryFiles(serverId, record, password, controller) 
-    if (response.status != 200) {
-      let text = await response.text()
-      throw new ApiException(response.status, text)
+    if (record.image || record.recording) {
+      response = await uploadStoryFiles(serverId, record, password, controller) 
+      if (response.status != 200) {
+        let text = await response.text()
+        throw new ApiException(response.status, text)
+      }
     }
     //return new id
     return serverId

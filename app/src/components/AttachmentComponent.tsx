@@ -107,7 +107,7 @@ const AttachmentInputComponent = ({ storyId, projectName, onCancel, onComplete }
   }
 
   function isDisabled() {
-    return !((text.length > 5 || image) && author.length > 2)
+    return !((text.length > 3 || image) && author.length > 3)
   }
 
   function onFileInputChange(e : React.ChangeEvent<HTMLInputElement>) {

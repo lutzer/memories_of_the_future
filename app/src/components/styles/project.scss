@@ -53,8 +53,9 @@
 }
 
 .project-info {
-  padding: 10px;
-  overflow:scroll;
+  padding: 0 10px;
+  overflow-y:scroll;
+  overflow-x:hidden;
   height:100%;
 
   p {
@@ -63,10 +64,6 @@
 
   .story-list {
     width:100%;
-
-    &:after {
-      @include after-content;
-    }
 
     ul {
       list-style-type: none;

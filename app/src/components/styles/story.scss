@@ -1,7 +1,8 @@
 @import '_vars.scss';
 
 .story {
-  overflow:scroll;
+  overflow-y:scroll;
+  overflow-x:none;
   height:100%;
 
   .item {
@@ -69,10 +70,6 @@
       max-width: 100%;
       border-radius: $border-radius;
     }
-  }
-
-  &:after {
-    @include after-content;
   }
 }
 

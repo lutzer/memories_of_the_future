@@ -87,7 +87,7 @@ const SlideContainerComponent : FunctionComponent<Properties> = ({fullscreen = t
       </div>
       <DragHandleComponent onDrag={onDragged} threshold={window.innerHeight * 0.1}/>
       <div className='slide-inner-container'>
-        
+        <div className='slide-inner-header'></div>
         {children}
       </div>
     </div>

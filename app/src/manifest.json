@@ -1,6 +1,6 @@
 {
   "name": "Memories of the Future",
-  "short_name": "motf_recorder",
+  "short_name": "MotF",
   "lang": "en-US",
   "start_url": "/index.html",
   "display": "standalone",

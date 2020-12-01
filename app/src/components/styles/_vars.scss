@@ -21,6 +21,8 @@ $button-text-color: #0000FF;
 $button-dark-color: #F57D8D;
 $input-box-color: #E0E2E2;
 
+$menubar-desktop-bottom: 30px;
+
 @mixin flex-column {
   display: flex;
   align-items: center;
@@ -32,4 +34,18 @@ $input-box-color: #E0E2E2;
   content: ' ';
   display: block;
   margin-bottom: 3em;
+}
+
+$media-breakpoint: 650px;
+
+@mixin media-desktop {
+  @media (min-width: $media-breakpoint) {
+    @content;
+  }
+}
+
+@mixin media-phone {
+  @media (max-width: $media-breakpoint) {
+    @content
+  }
 }

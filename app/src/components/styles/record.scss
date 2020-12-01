@@ -2,13 +2,10 @@
 
 .records-list {
   @include flex-column;
-  padding: 10px;
-  overflow: scroll;
+  padding: 0 10px 10px 10px;
+  overflow-y:scroll;
+  overflow-x:none;
   height:100%;
-
-  &:after {
-    @include after-content;
-  }
 
   &.center {
     justify-content: center;
@@ -55,13 +52,10 @@
 
 .record {
   @include flex-column;
-  padding: 10px;
-  overflow:scroll;
+  padding: 0 10px 10px 10px;
+  overflow-y:scroll;
+  overflow-x:none;
   height:100%;
-
-  &:after {
-    @include after-content;
-  }
 
   &.center {
     justify-content: center;
