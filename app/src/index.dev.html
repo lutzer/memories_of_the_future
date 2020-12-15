@@ -25,13 +25,16 @@
             }*/
         </script>
         <script>
+            console.log('<%= JSON.stringify(htmlWebpackPlugin.files.js) %>')
+            
             if (!window.MediaRecorder) {
                 document.write(
-                    decodeURI('%3Cscript defer src="/polyfill.bundle.js">%3C/script>')
+                    decodeURI('%3Cscript defer src="<%= htmlWebpackPlugin.files.js[1] %>">%3C/script>')
                 )
             }
         </script>
         <script src="./../node_modules/react/umd/react.development.js"></script>
         <script src="./../node_modules/react-dom/umd/react-dom.development.js"></script>
+        <script src="<%= htmlWebpackPlugin.files.js[0] %>"></script>
     </body>
 </html>

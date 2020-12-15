@@ -37,7 +37,11 @@ module.exports = (env, argv) => {
       new CopyPlugin([
         { from: 'src/manifest.json', to: '' },
         { from: 'src/assets/favicon.ico', to: ''},
-        { from: 'src/assets/logo.png', to: 'assets'}
+        { from: 'src/assets/logo.png', to: 'assets'},
+        { from: 'node_modules/opus-media-recorder/OggOpusEncoder.wasm', to: 'opus'},
+        { from: 'node_modules/opus-media-recorder/WebMOpusEncoder.wasm', to: 'opus'},
+        { from: 'node_modules/opus-media-recorder/encoderWorker.js', to: 'opus'}
+        
       ]),
       isDevelopment ? () => {} : new GenerateSW({
         swDest: 'service-worker.js',
@@ -47,7 +51,8 @@ module.exports = (env, argv) => {
       new HtmlWebpackPlugin({
         template: isDevelopment ? 'src/index.dev.html' : 'src/index.production.html',
         filename: 'index.html',
-        excludeChunks: ['polyfill']
+        inject: false,
+        hash: true
       })
     ],
     module: {

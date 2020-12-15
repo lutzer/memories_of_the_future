@@ -37,7 +37,7 @@ const StoryListComponent = ( {project, stories} : { project: ProjectSchema, stor
           { stories.map((story, index) => {
             return (
             <Link key={index} to={`/${project.name}/stories/${story.id}`}>
-              <li>
+              <li style={{ background: story.color + '44'}}>
                 <h4>{story.title}</h4>
                 <div className='date'>{dateFromNow(story.createdAt)}</div>
               </li>

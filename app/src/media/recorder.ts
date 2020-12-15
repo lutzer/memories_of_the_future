@@ -1,6 +1,5 @@
 const TIMESLICE_DURATION : number = undefined
 
-
 type AudioRecorder = {
   start: () => void,
   stop: () => Promise<AudioRecording>,
