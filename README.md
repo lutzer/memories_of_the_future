@@ -38,3 +38,17 @@ docker exec -it memories_of_the_future_server_1 /bin/sh
 * run `npm start` to start dev app server
 * run `npm run build` to build to dist folder
 * run `npm test` to run unit tests
+
+### TODO
+
+* mozilla blocksatz fixen
+* IPhone zoom fixen
+* IPhone Media Recorder fixen
+* entfernen von eintrag mit fehlerhaftem bild
+* mozilla groesse fixen
+* ortungs punkt einfuegen
+- Map —> ursprünglich sollte die Monochrome Map zu diesem Design, allerdings gefällt mir der Stil mit der bunten Map sehr gut. Euch auch? Lassen wir es so?
+* Die Farbpalette der Punkte gefällt mir noch nicht. Ich würde nochmal eine Variante mit nur RGB Farben zusammen stellen.
+* Probleme mit unterschiedlichen Browsern. Z.B. sind die Texte bei mir bei Firefox nicht im Blocksatz und es kommt eine Fehlermeldung wenn ich Bilder hochladen will.
+* Location Button fehlt noch
+* Wie sieht das mini symbol der app aus? (Also das kleine Symbol wenn man die app auf den Bildschirm lädt oder das symbol oben in der Tableiste

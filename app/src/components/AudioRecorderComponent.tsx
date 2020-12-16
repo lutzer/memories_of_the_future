@@ -24,61 +24,67 @@ const AudioPlayerComponent = ({audioData = null, audioUrl = null} : AudioPlayerp
   const [playhead, setPlayhead] = useState<number>(0)
   const [playing, setPlaying] = useState<boolean>(false)
   const [duration, setDuration] = useState(0)
+  const [reload, setReload] = useState(false)
 
-  //load from blob
+  // load audio from url or blob
   useEffect( () => {
-    if (audioData && _.has(audioData, 'blob')) {
-      const url = URL.createObjectURL(audioData.blob)
-      const audioObj = new Audio(url)
-      setAudio(audioObj)
-      setDuration(audioData.duration)
-      audioObj.onended = resetAudio
-    }
-  },[audioData])
-
-  // load from url
-  useEffect( () => {
+    var audioObj : HTMLAudioElement = null
     if (audioUrl) {
-      const audioObj = new Audio(audioUrl)
+      audioObj = new Audio(audioUrl)
+    } else if (audioData && _.has(audioData, 'blob')) {
+      const url = URL.createObjectURL(audioData.blob)
+      audioObj = new Audio(url)
+    }
+
+    // setup event handlers
+    if (audioObj) {
+      function durationChangeHandler(e : Event) {
+        const ele = e.target as HTMLAudioElement
+        setDuration(ele.duration == Infinity ? 0 : ele.duration * 1000)
+      }
+      function timeUpdateHandler(e: Event) {
+        const ele = e.target as HTMLAudioElement
+        setPlayhead(ele.duration == Infinity ? 0 : ele.currentTime * 1000)
+      }
+      function endedHandler(e: Event) {
+        const ele = e.target as HTMLAudioElement
+        setPlaying(false)
+        setPlayhead(0)
+        ele.currentTime = 0
+      }
+      audioObj.addEventListener('durationchange',durationChangeHandler)
+      audioObj.addEventListener('ended', endedHandler)
+      audioObj.addEventListener('timeupdate', timeUpdateHandler)
       setAudio(audioObj)
-      audioObj.addEventListener('loadeddata', () => setDuration(audioObj.duration * 1000))
-      audioObj.onended = resetAudio
+
+      // cleanup event handlers
+      return function() {
+        audioObj.removeEventListener('durationchange', durationChangeHandler)
+        audioObj.removeEventListener('ended', endedHandler)
+        audioObj.removeEventListener('timeupdate', timeUpdateHandler)
+      }
     }
-  },[audioUrl])
+  },[audioUrl, audioData, reload])
 
-
-
-  useEffect( () => {
-    if (!audio)
-      return
-
-    var watchId : NodeJS.Timeout = null
-    if (playing) {
-      audio.play()
-      watchId = setInterval(() => {
-        setPlayhead(audio ? audio.currentTime * 1000 : 0)
-      },50)
-    } else {
-      audio.pause()
+  async function onPlayerClicked() {
+    try {
+      if (audio.paused) {
+        setPlaying(true)
+        await audio?.play()
+      } else {
+        setPlaying(false)
+        await audio?.pause()
+      }
+    } catch (err) {
+      setReload(!reload)
     }
-    return function cleanup() {
-      if (audio) audio.pause()
-      if (watchId) clearInterval(watchId)
-    }
-  },[playing])
-
-  function resetAudio() {
-    setPlaying(false)
-    setPlayhead(duration)
-    if (audio)
-      audio.currentTime = 0
   }
 
   const timeString = playhead > 0 ? convertSecondsToMinuteString(playhead / 1000) : convertSecondsToMinuteString(duration / 1000)
   const progress = audio ? playhead / duration : 0
 
   return(
-    <div className='audio-player' onClick={() => setPlaying(!playing)}>
+    <div className='audio-player' onClick={() => onPlayerClicked()}>
       <div className='play-button'>
         { playing? <img src={pauseButton}/> : <img src={playArrow}/> }
       </div>
