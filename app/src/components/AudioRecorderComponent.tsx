@@ -26,6 +26,10 @@ const AudioPlayerComponent = ({audioData = null, audioUrl = null} : AudioPlayerp
   const [duration, setDuration] = useState(0)
   const [reload, setReload] = useState(false)
 
+  function reloadData() {
+    setReload(!reload)
+  }
+
   // load audio from url or blob
   useEffect( () => {
     var audioObj : HTMLAudioElement = null
@@ -44,13 +48,14 @@ const AudioPlayerComponent = ({audioData = null, audioUrl = null} : AudioPlayerp
       }
       function timeUpdateHandler(e: Event) {
         const ele = e.target as HTMLAudioElement
-        setPlayhead(ele.duration == Infinity ? 0 : ele.currentTime * 1000)
+        setPlayhead(ele.currentTime ? ele.currentTime * 1000 : 0)
       }
       function endedHandler(e: Event) {
         const ele = e.target as HTMLAudioElement
         setPlaying(false)
         setPlayhead(0)
-        ele.currentTime = 0
+        // fix for safari
+        if (duration == 0) reloadData()
       }
       audioObj.addEventListener('durationchange',durationChangeHandler)
       audioObj.addEventListener('ended', endedHandler)
@@ -76,12 +81,13 @@ const AudioPlayerComponent = ({audioData = null, audioUrl = null} : AudioPlayerp
         await audio?.pause()
       }
     } catch (err) {
-      setReload(!reload)
+      showModal('Error', err.message)
     }
   }
 
   const timeString = playhead > 0 ? convertSecondsToMinuteString(playhead / 1000) : convertSecondsToMinuteString(duration / 1000)
-  const progress = audio ? playhead / duration : 0
+  const progress = duration > 0 ? playhead / duration : (playing ? 1.0 : 0.0)
+  
 
   return(
     <div className='audio-player' onClick={() => onPlayerClicked()}>
