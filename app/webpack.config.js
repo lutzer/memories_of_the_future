@@ -112,7 +112,7 @@ module.exports = (env, argv) => {
       "react-dom": "ReactDOM"
     } : {},
     devServer: {
-      host: '192.168.178.176',
+      host: '127.0.0.1',
       port: 3002,
       open: true,
       https: true,
@@ -122,10 +122,10 @@ module.exports = (env, argv) => {
       },
       proxy: [{
         context: ['/api', '/files'],
-        target: 'http://192.168.178.176:3000'
+        target: 'http://127.0.0.1:3000'
       },{
         context: ['/socket.io'],
-        target: 'http://192.168.178.176:3000',
+        target: 'http://127.0.0.1:3000',
         ws: true
       }]
     },
