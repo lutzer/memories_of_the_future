@@ -1,3 +1,6 @@
+import { getOpusMediaRecorder } from './opusRecorder'
+
+
 const TIMESLICE_DURATION : number = undefined
 
 type AudioRecorder = {
@@ -11,13 +14,16 @@ type AudioRecording = {
   duration: number
 }
 
+
 const getAudioRecorder = () : Promise<AudioRecorder> =>
 new Promise(async (resolve, reject) => {
-  let mediaRecorder : MediaRecorder = null
+  let mediaRecorder : any = null
 
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
-    mediaRecorder = new MediaRecorder(stream);
+    // const stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+    // let options = { mimeType: 'audio/ogg' };
+    // mediaRecorder = new MediaRecorder(stream, options);
+    mediaRecorder = await getOpusMediaRecorder()
   } catch (err) {
     reject(err)
     return
@@ -27,11 +33,11 @@ new Promise(async (resolve, reject) => {
   var startTimeOfRecording : number = null;
   var endTimeOfRecording : number = null;
 
-  mediaRecorder.addEventListener("dataavailable", event => {
+  mediaRecorder.addEventListener("dataavailable", (event : BlobEvent) => {
     audioChunks.push(event.data);
   });
 
-  mediaRecorder.addEventListener("error", (err) => {
+  mediaRecorder.addEventListener("error", (err : MediaRecorderErrorEvent) => {
     reject(err)
   });
 
