@@ -41,14 +41,14 @@ docker exec -it memories_of_the_future_server_1 /bin/sh
 
 ### TODO
 
-* mozilla blocksatz fixen
-* IPhone Media Recorder fixen, absoielen geht, aufnahme nicht
+* [x] IPhone Media Recorder fixen, absoielen geht, aufnahme nicht
 * entfernen von eintrag mit fehlerhaftem bild
-* mozilla map groesse fixen
-* mozilla data storage problem
-* ortungs punkt einfuegen
-- Map —> ursprünglich sollte die Monochrome Map zu diesem Design, allerdings gefällt mir der Stil mit der bunten Map sehr gut. Euch auch? Lassen wir es so?
-* Die Farbpalette der Punkte gefällt mir noch nicht. Ich würde nochmal eine Variante mit nur RGB Farben zusammen stellen.
-* Probleme mit unterschiedlichen Browsern. Z.B. sind die Texte bei mir bei Firefox nicht im Blocksatz und es kommt eine Fehlermeldung wenn ich Bilder hochladen will.
-* Location Button fehlt noch
-* Wie sieht das mini symbol der app aus? (Also das kleine Symbol wenn man die app auf den Bildschirm lädt oder das symbol oben in der Tableiste
+* [x] mozilla map groesse fixen
+* [ ] mozilla data storage problem
+* [ ]ortungs punkt einfuegen
+- [ ] Map —> ursprünglich sollte die Monochrome Map zu diesem Design, allerdings gefällt mir der Stil mit der bunten Map sehr gut. Euch auch? Lassen wir es so?
+* [?]Die Farbpalette der Punkte gefällt mir noch nicht. Ich würde nochmal eine Variante mit nur RGB Farben zusammen stellen.
+* [x] Probleme mit unterschiedlichen Browsern. Z.B. sind die Texte bei mir bei Firefox nicht im Blocksatz und es kommt eine Fehlermeldung wenn ich Bilder hochladen will.
+* [ ] Location Button fehlt noch
+* [x] Wie sieht das mini symbol der app aus? (Also das kleine Symbol wenn man die app auf den Bildschirm lädt oder das symbol oben in der Tableiste
+* [ ] Upload von Firefox Bildern geht nicht

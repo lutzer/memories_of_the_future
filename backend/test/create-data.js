@@ -54,7 +54,7 @@ describe('Create Test Data', () => {
 
   it('should add another project with 20 random stories', async () => {
 
-    const authors = ['Peter','Nitsa','Lutz','Erich','Sidra','Tuukka','Hannah','Mara','Sunke']
+    const authors = ['Peter','Nitsa','Lutz','Erich','Sidra','Tuukka','Hannah','Mara','Sunke','Maan','Chris','Shruti','Tomma','Malte','Bianca']
 
     let project = await postProject({
       name : "Project1",
