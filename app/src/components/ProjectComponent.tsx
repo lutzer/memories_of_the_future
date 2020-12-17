@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import _ from "lodash";
 import { useParams, Switch, Route, useHistory } from "react-router-dom";
 import { ProjectSchema, StorySchema, Store, RecordSchema } from "../services/store";
@@ -99,16 +99,21 @@ const ProjectComponent = ({onStorySelected, onStoriesChanged, socket} : Props ) 
     }
   }
 
-  async function updateRecord(record : RecordSchema) {
+  function updateRecord(record : RecordSchema) {
+    throttledUpdateRecord(record)
+    setRecords(_.map(records, (data) => {
+      return data.id == record.id ? record : data
+    }))
+  }
+
+  async function updateRecordInDb(record : RecordSchema) {
     try {
       await Store.updateRecord(record)
-      setRecords(_.map(records, (data) => {
-        return data.id == record.id ? record : data
-      }))
     } catch (err) {
       handleDbError(err)
     }
   }
+  const throttledUpdateRecord = useCallback(_.throttle(updateRecordInDb, 1000), [])
 
   async function onRecordUploaded(record : RecordSchema, serverId : string) {
     try {
