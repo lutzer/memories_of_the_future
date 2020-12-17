@@ -36,11 +36,17 @@ type Viewport = {
   zoom: number
 }
 
-const LocationPickerComponent = ({location, onPick} : {location? : [number, number], onPick : (loc : [number, number]) => void}) => {
+type Properties = {
+  location? : [number, number], 
+  defaultLocation : [number, number], 
+  onPick : (loc : [number, number]) => void
+}
+
+const LocationPickerComponent = ({location, defaultLocation, onPick} : Properties) => {
   const [viewport, setViewport] = useState<Viewport>({ 
-    latitude: config.defaultLocation[0], 
-    longitude : config.defaultLocation[1], 
-    zoom: 15 
+    latitude: defaultLocation[0], 
+    longitude : defaultLocation[1], 
+    zoom: 15
   })
   const [dragged, setDragged] = useState(false)
   const [geolocation, setGeolocation] = useState<GeolocationPosition>(null)

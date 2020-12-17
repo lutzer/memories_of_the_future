@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams, useHistory, Link } from "react-router-dom";
 import { getDatabase } from "../services/storage";
 import { AudioRecorderComponent } from "./AudioRecorderComponent";
 import { AudioRecording } from "../media/recorder";
-import { PhotoCaptureComponent, PhotoViewComponent } from "./PhotoCaptureComponent";
+import { ImageBlob, PhotoCaptureComponent, PhotoViewComponent } from "./PhotoCaptureComponent";
 import { LocationPickerComponent } from "./LocationPickerComponent";
 import { TextInputComponent } from "./TextInputComponent";
 import _ from "lodash";
@@ -18,9 +18,10 @@ type Properties = {
   onDelete : (id : string) => void
   onChange : (record: RecordSchema) => void
   record: RecordSchema
+  defaultLocation : [number, number]
 }
 
-const RecordComponent = ({record, onDelete, onChange} : Properties) => {
+const RecordComponent = ({record, onDelete, onChange, defaultLocation} : Properties) => {
   const history = useHistory();
   const [ recordData, setRecordData ] = useState(record)
   const [ saved, isSaved ] = useState(false)
@@ -41,25 +42,25 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
     isSaved(true)
   }
 
-  function saveImage(image: Blob) {
+  function saveImage(image: ImageBlob) {
     setRecordData(Object.assign({}, record, { image: image } ))
     isSaved(true)
   }
 
-  async function deleteImage() {
+  function deleteImage() {
     setRecordData(Object.assign({}, record, { image: null}))
     isSaved(true)
   }
 
-  const updateText = _.debounce( async (text : string) => {
+  function updateText(text : string) {
     setRecordData(Object.assign({}, record, { text: text}))
     isSaved(true)
-  },500)
+  }
 
-  const updateTitle = _.debounce( async (title : string) => {
+  function updateTitle(title : string) {
     setRecordData(Object.assign({}, record, { title: title}))
     isSaved(true)
-  },500)
+  }
 
   async function updateLocation(loc : [number, number]) {
     setRecordData(Object.assign({}, record, { location: loc}))
@@ -67,7 +68,7 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
   }
 
   const uploadEnabled = function() {
-    return (record.recording || record.image || record.text) && record.location && record.title.length > 3
+    return (record.recording || record.image || record.text) && record.location && record.title.length > 2
   }
 
   return (
@@ -91,7 +92,7 @@ const RecordComponent = ({record, onDelete, onChange} : Properties) => {
             <PhotoCaptureComponent imageData={record.image} onCapture={saveImage} onDelete={deleteImage}/>
           </div>
           <div className='item location'> 
-            <LocationPickerComponent location={record.location} onPick={updateLocation}/>
+            <LocationPickerComponent location={record.location} defaultLocation={defaultLocation} onPick={updateLocation}/>
           </div>
           { saved &&
           <div className='item saved'>

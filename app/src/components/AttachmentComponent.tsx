@@ -88,7 +88,7 @@ const AttachmentInputComponent = ({ storyId, projectName, onCancel, onComplete }
 
   useEffect(() => {
     if (state == State.UPLOADING) {
-      Api.addAttachment({ text: text, author: author, storyId: storyId}, image, password, projectName).then(() => {
+      Api.addAttachment({ id: null, image: null, createdAt: null, text: text, author: author, storyId: storyId}, image, password, projectName).then(() => {
         onComplete()
         // clearState()
       }).catch( (err) => {
@@ -107,7 +107,8 @@ const AttachmentInputComponent = ({ storyId, projectName, onCancel, onComplete }
   }
 
   function isDisabled() {
-    return !((text.length > 3 || image) && author.length > 3)
+    // return (text.length > 3 || image) && author.length > 2
+    return author.length < 3 || (text.length < 3 && !image)
   }
 
   function onFileInputChange(e : React.ChangeEvent<HTMLInputElement>) {

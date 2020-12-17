@@ -134,7 +134,7 @@ const ProjectComponent = ({onStorySelected, onStoriesChanged, socket} : Props ) 
           <Route path={`/${projectName}/records/:storyId`}  render={({match}) => {
             return(
               <SlideContainerComponent closePath={`/${projectName}/`}>
-                <RecordComponent record={_.find(records,{id : match.params.storyId})} onDelete={(id) => deleteRecord(id)} onChange={(record) => updateRecord(record)}/>
+                <RecordComponent record={_.find(records,{id : match.params.storyId})} onDelete={(id) => deleteRecord(id)} defaultLocation={project.location} onChange={(record) => updateRecord(record)}/>
               </SlideContainerComponent>
             )
           }}/>

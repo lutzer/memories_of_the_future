@@ -1,4 +1,4 @@
-import { openDB, deleteDB, IDBPDatabase } from 'idb';
+import { openDB, IDBPDatabase } from 'idb';
 import { v4 as uuidv4 } from 'uuid';
 import { RecordSchema, ProjectSchema } from './store';
 
@@ -44,8 +44,6 @@ function initDatabase(db : IDBPDatabase) {
   if (db.objectStoreNames.contains(STORE_NAME_FILES))
     db.deleteObjectStore(STORE_NAME_FILES)
   db.createObjectStore(STORE_NAME_FILES)
-
-  
 }
 
 const getDatabase = async () : Promise<Database> => {
@@ -68,6 +66,7 @@ const getDatabase = async () : Promise<Database> => {
     async function writeRecord(record : RecordSchema) : Promise<RecordSchema> {
       record.id = record.id ? record.id : uuidv4()
       record.modifiedAt = Date.now()
+      console.log('write', record)
       await db.put(STORE_NAME_RECORDS, record)
       return record
     }

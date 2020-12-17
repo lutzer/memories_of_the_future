@@ -75,7 +75,7 @@ const projectModel : DataEditor.DataModel = new DataEditor.DataModel({
       description : { type: 'string', minLength: 3, maxLength: 1024 },
       password: { type: 'string', minLength: 3 },
       visible : { type: 'boolean' },
-      color : { type: 'string' },
+      location : { type: 'array', minItems: 2, maxItems: 2 },
       createdAt : { type: 'number', default: 0 }
     },
     primaryKey: 'id',

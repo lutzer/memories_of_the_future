@@ -42,10 +42,10 @@ docker exec -it memories_of_the_future_server_1 /bin/sh
 ### TODO
 
 * mozilla blocksatz fixen
-* IPhone zoom fixen
-* IPhone Media Recorder fixen
+* IPhone Media Recorder fixen, absoielen geht, aufnahme nicht
 * entfernen von eintrag mit fehlerhaftem bild
-* mozilla groesse fixen
+* mozilla map groesse fixen
+* mozilla data storage problem
 * ortungs punkt einfuegen
 - Map —> ursprünglich sollte die Monochrome Map zu diesem Design, allerdings gefällt mir der Stil mit der bunten Map sehr gut. Euch auch? Lassen wir es so?
 * Die Farbpalette der Punkte gefällt mir noch nicht. Ich würde nochmal eine Variante mit nur RGB Farben zusammen stellen.

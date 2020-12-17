@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import './styles/photo_capture.scss'
 
-const PhotoViewComponent = ({imageData} : {imageData? : Blob}) => {
+type ImageBlob = Blob
+
+const PhotoViewComponent = ({imageData} : {imageData? : ImageBlob}) => {
   const [image, setImage] = useState(null)
 
   useEffect( () => {
@@ -28,7 +30,7 @@ const PhotoViewComponent = ({imageData} : {imageData? : Blob}) => {
 }
 
 
-const PhotoCaptureComponent = ({imageData, onCapture, onDelete} : {imageData? : Blob, onCapture : (blob: Blob) => void, onDelete : () => void}) => {
+const PhotoCaptureComponent = ({imageData, onCapture, onDelete} : {imageData? : ImageBlob, onCapture : (img: ImageBlob) => void, onDelete : () => void}) => {
   const [image, setImage] = useState(null)
 
   useEffect( () => {
@@ -67,3 +69,4 @@ const PhotoCaptureComponent = ({imageData, onCapture, onDelete} : {imageData? : 
 }
 
 export { PhotoCaptureComponent, PhotoViewComponent }
+export type { ImageBlob }

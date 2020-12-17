@@ -1,39 +1,15 @@
 import { Api } from "./api"
 import { getDatabase } from "./storage"
 import { AudioRecording } from "../media/recorder"
+import { AttachmentModelSchema, ProjectModelSchema, StoryModelSchema } from '../../../backend/src/models/Schemas'
+import { ImageBlob } from "../components/PhotoCaptureComponent"
 import _ from "lodash"
 
-type ProjectSchema = {
-  id: string,
-  name : string,
-  description: string,
-  color: string,
-  createdAt: number
-}
+type ProjectSchema = ProjectModelSchema
 
-type StorySchema = {
-  id: string,
-  projectId : string,
-  createdAt: number,
-  author: string,
-  title: string,
-  text: string,
-  recording: string,
-  image : string,
-  color: string,
-  location : [ number, number ],
-  visible: boolean,
-  attachments : AttachmentSchema[]
-}
+type StorySchema = StoryModelSchema
 
-type AttachmentSchema = {
-  id? : string,
-  storyId : string,
-  text : string,
-  author: string,
-  image?: string,
-  createdAt? : number
-}
+type AttachmentSchema = AttachmentModelSchema
 
 type RecordSchema = {
   id: string,
@@ -45,7 +21,7 @@ type RecordSchema = {
   text?: string,
   title : string,
   recording?: AudioRecording,
-  image? : Blob,
+  image? : ImageBlob,
   location? : [ number, number ]
   uploaded: boolean
 }

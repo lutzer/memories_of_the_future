@@ -1,14 +1,6 @@
-import { BaseModel, BaseSchema } from './BaseModel'
+import { BaseModel } from './BaseModel'
 import { generateRandomString } from './../utils'
-
-type ProjectModelSchema = {
-  name : string,
-  description : string,
-  password: string,
-  visible : boolean,
-  color : string,
-  createdAt : number
-} & BaseSchema
+import { ProjectModelSchema } from './Schemas'
 
 class ProjectModel extends BaseModel {
 
@@ -18,7 +10,7 @@ class ProjectModel extends BaseModel {
     description : '',
     password : generateRandomString(),
     visible : true,
-    color : '#ff0000',
+    location: [52.508239, 13.329132],
     createdAt : Date.now()
   }
 
