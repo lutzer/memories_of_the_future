@@ -32,42 +32,45 @@ const AudioPlayerComponent = ({audioData = null, audioUrl = null} : AudioPlayerp
 
   // load audio from url or blob
   useEffect( () => {
+    function durationChangeHandler(e : Event) {
+      const ele = e.target as HTMLAudioElement
+      setDuration(ele.duration == Infinity ? 0 : ele.duration * 1000)
+    }
+
+    function timeUpdateHandler(e: Event) {
+      const ele = e.target as HTMLAudioElement
+      setPlayhead(ele.currentTime ? ele.currentTime * 1000 : 0)
+    }
+
+    function endedHandler(e: Event) {
+      const ele = e.target as HTMLAudioElement
+      setPlaying(false)
+      setPlayhead(0)
+      // fix for safari
+      if (duration == 0) reloadData()
+    }
+
     var audioObj : HTMLAudioElement = null
     if (audioUrl) {
       audioObj = new Audio(audioUrl)
-    } else if (audioData && _.has(audioData, 'blob')) {
-      const url = URL.createObjectURL(audioData.blob)
-      audioObj = new Audio(url)
-    }
-
-    // setup event handlers
-    if (audioObj) {
-      function durationChangeHandler(e : Event) {
-        const ele = e.target as HTMLAudioElement
-        setDuration(ele.duration == Infinity ? 0 : ele.duration * 1000)
-      }
-      function timeUpdateHandler(e: Event) {
-        const ele = e.target as HTMLAudioElement
-        setPlayhead(ele.currentTime ? ele.currentTime * 1000 : 0)
-      }
-      function endedHandler(e: Event) {
-        const ele = e.target as HTMLAudioElement
-        setPlaying(false)
-        setPlayhead(0)
-        // fix for safari
-        if (duration == 0) reloadData()
-      }
       audioObj.addEventListener('durationchange',durationChangeHandler)
       audioObj.addEventListener('ended', endedHandler)
       audioObj.addEventListener('timeupdate', timeUpdateHandler)
       setAudio(audioObj)
-
-      // cleanup event handlers
-      return function() {
-        audioObj.removeEventListener('durationchange', durationChangeHandler)
-        audioObj.removeEventListener('ended', endedHandler)
-        audioObj.removeEventListener('timeupdate', timeUpdateHandler)
-      }
+    } else if (audioData && _.has(audioData, 'blob')) {
+      const url = URL.createObjectURL(audioData.blob)
+      audioObj = new Audio(url)
+      setDuration(audioData.duration)
+      audioObj.addEventListener('ended', endedHandler)
+      audioObj.addEventListener('timeupdate', timeUpdateHandler)
+      setAudio(audioObj)
+    }
+      
+    // cleanup event handlers
+    return function() {
+      audioObj.removeEventListener('durationchange', durationChangeHandler)
+      audioObj.removeEventListener('ended', endedHandler)
+      audioObj.removeEventListener('timeupdate', timeUpdateHandler)
     }
   },[audioUrl, audioData, reload])
 

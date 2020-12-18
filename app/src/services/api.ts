@@ -14,20 +14,31 @@ class ApiException extends Error {
   }
 }
 
-async function uploadStoryFiles(id: string, story: RecordSchema, password: string, controller?: AbortController) : Promise<Response> {
-  var data = new FormData()
-  if (story.recording)
+async function uploadStoryFiles(id: string, story: RecordSchema, password: string, controller?: AbortController) : Promise<void> {
+  // send recording
+  if (story.recording) {
+    var data = new FormData()
     data.append('recording', story.recording.blob, getFilename(story.recording.blob))
-  if (story.image)
+    let response = await fetch(config.apiAdress + 'upload/story/' + id, {
+      method: 'POST',
+      headers: new Headers( generateAuthHeader(story.projectName, password)),
+      body: data,
+      signal: controller ? controller.signal : null
+    })
+    if (response.status != 200) throw new ApiException(response.status, await response.text())
+  }
+  // send image
+  if (story.image) {
+    var data = new FormData()
     data.append('image', story.image, getFilename(story.image))
-
-  let response = await fetch(config.apiAdress + 'upload/story/' + id, {
-    method: 'POST',
-    headers: new Headers( generateAuthHeader(story.projectName, password)),
-    body: data,
-    signal: controller ? controller.signal : null
-  })
-  return response
+    let response = await fetch(config.apiAdress + 'upload/story/' + id, {
+      method: 'POST',
+      headers: new Headers( generateAuthHeader(story.projectName, password)),
+      body: data,
+      signal: controller ? controller.signal : null
+    })
+    if (response.status != 200) throw new ApiException(response.status, await response.text())
+  }
 }
 
 async function uploadAttachmentImage(id: string, image: Blob, password: string, projectName: string, controller?: AbortController) : Promise<Response> {
@@ -83,13 +94,8 @@ class Api {
     let serverId = json.story.id
 
     // upload files
-    if (record.image || record.recording) {
-      response = await uploadStoryFiles(serverId, record, password, controller) 
-      if (response.status != 200) {
-        let text = await response.text()
-        throw new ApiException(response.status, text)
-      }
-    }
+    await uploadStoryFiles(serverId, record, password, controller) 
+      
     //return new id
     return serverId
   }

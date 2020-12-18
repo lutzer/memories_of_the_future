@@ -13,10 +13,15 @@ function getFilename(blob: Blob) : string {
       return 'image.png'
     case 'audio/wav':
       return 'audio.wav'
+    case 'audio/webm':
+      return 'audio.webm'
     case 'audio/webm;codecs=opus':
       return 'audio.webm'
+    case 'audio/ogg':
+      return 'audio.ogg'
     case 'audio/ogg;codecs=opus':
       return 'audio.ogg'
+
     default:
       return 'unknown.txt'
   }

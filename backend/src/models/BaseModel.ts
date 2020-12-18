@@ -1,8 +1,6 @@
 import { v1 as uuidv1 } from 'uuid';
+import { BaseSchema } from './Schemas';
 
-type BaseSchema = {
-  id: string
-}
 
 class BaseModel {
 

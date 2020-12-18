@@ -56,7 +56,8 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
       handleImageUpload(file, 'story_' + story.id).catch((err) => {
         console.error("Error uploading file: " + file.name,err)
         deleteFile(file.path)
-      }).then( (path : string) => {
+      }).then( async (path : string) => {
+        const db = await getDatabase()
         db.get('stories').find({id : story.id}).set('image', getFileUrl(path)).write()
       }).then( () => {
         sendUpdate(context.io, { projectId : project.id, storyId: story.id})
@@ -74,7 +75,8 @@ router.post('/upload/story/:id', errorMiddleware, upload.fields([
       .catch((err) => {
         console.error("Error uploading file: " + file.name,err)
         deleteFile(file.path)
-      }).then( (path : string) => {
+      }).then( async (path : string) => {
+        const db = await getDatabase()
         return db.get('stories').find({id : story.id}).set('recording', getFileUrl(path)).write()
       }).then( () => {
         sendUpdate(context.io, { projectId : project.id, storyId: story.id})

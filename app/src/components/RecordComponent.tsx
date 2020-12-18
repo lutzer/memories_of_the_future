@@ -33,38 +33,38 @@ const RecordComponent = ({record, onDelete, onChange, defaultLocation} : Propert
   },[recordData])
 
   function saveRecording(recording: AudioRecording) {
-    setRecordData(Object.assign({} ,record, { recording: recording}))
     isSaved(true)
+    setRecordData(Object.assign({} ,record, { recording: recording}))
   }
 
   function deleteRecording() {
-    setRecordData(Object.assign({}, record, { recording: null}))
     isSaved(true)
+    setRecordData(Object.assign({}, record, { recording: null}))
   }
 
   function saveImage(image: ImageBlob) {
-    setRecordData(Object.assign({}, record, { image: image } ))
     isSaved(true)
+    setRecordData(Object.assign({}, record, { image: image } ))
   }
 
   function deleteImage() {
-    setRecordData(Object.assign({}, record, { image: null}))
     isSaved(true)
+    setRecordData(Object.assign({}, record, { image: null}))
   }
 
   function updateText(text : string) {
-    setRecordData(Object.assign({}, record, { text: text}))
     isSaved(true)
+    setRecordData(Object.assign({}, record, { text: text}))
   }
 
   function updateTitle(title : string) {
-    setRecordData(Object.assign({}, record, { title: title}))
     isSaved(true)
+    setRecordData(Object.assign({}, record, { title: title}))
   }
 
   async function updateLocation(loc : [number, number]) {
-    setRecordData(Object.assign({}, record, { location: loc}))
     isSaved(true)
+    setRecordData(Object.assign({}, record, { location: loc}))
   }
 
   const uploadEnabled = function() {

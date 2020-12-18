@@ -1,3 +1,5 @@
+/// <reference path="../../node_modules/@types/dom-mediacapture-record/index.d.ts" />
+
 const TIMESLICE_DURATION : number = undefined
 
 type AudioRecorder = {
@@ -11,13 +13,30 @@ type AudioRecording = {
   duration: number
 }
 
+function getSupportedMimeType() : string {
+  var types = [
+    'audio/webm',
+    'audio/ogg',
+    'audio/wav'
+  ];
+
+  for (var i in types) {
+    if (MediaRecorder.isTypeSupported(types[i])) return types[i]
+  }
+  return ''
+}
+
+
+
 const getAudioRecorder = () : Promise<AudioRecorder> =>
 new Promise(async (resolve, reject) => {
   let mediaRecorder : MediaRecorder = null
 
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
-    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder = new MediaRecorder(stream, {
+      mimeType: getSupportedMimeType()
+    });
   } catch (err) {
     reject(err)
     return
