@@ -29,7 +29,7 @@ class StoryModel extends BaseModel {
     image : null,
     recording : null,
 
-    color : '#ff0000',
+    color : '#ffffff',
     createdAt : Date.now(),
     attachments : []
   }

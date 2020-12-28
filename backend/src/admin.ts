@@ -33,6 +33,7 @@ class LowDbAdapter implements DataEditor.Adapter {
   }
   async create(data: any): Promise<object> {
     data.id = uuidv1()
+    data.createdAt = Date.now()
     const db = await getDatabase()
     db.get(this.path).push(data).write()
     return data;
@@ -43,7 +44,7 @@ const storyModel : DataEditor.DataModel = new DataEditor.DataModel({
   schema: {
     $id: 'stories',
     properties: {
-      id : { type: 'string' },
+      id : { type: 'string', autoIncrement: true  },
       projectId : { type: 'string'},
       location : { type: 'array', minItems: 2 },
       author : { type: 'string', maxLength: 32 },
@@ -53,7 +54,7 @@ const storyModel : DataEditor.DataModel = new DataEditor.DataModel({
       recording : { type: ['string','null'] },
 
       color : { type: 'string' },
-      createdAt : { type: 'number', default: 0 }
+      createdAt : { type: 'number', autoIncrement: true }
     },
     primaryKey : 'id',
     required: ['projectId', 'title'],
@@ -70,13 +71,13 @@ const projectModel : DataEditor.DataModel = new DataEditor.DataModel({
   schema : {
     $id: 'projects',
     properties: {
-      id : { type: 'string' },
+      id : { type: 'string', autoIncrement: true },
       name : { type: 'string', minLength: 3 },
       description : { type: 'string', minLength: 3, maxLength: 1024 },
       password: { type: 'string', minLength: 3 },
       visible : { type: 'boolean' },
       location : { type: 'array', minItems: 2, maxItems: 2 },
-      createdAt : { type: 'number', default: 0 }
+      createdAt : { type: 'number', autoIncrement: true }
     },
     primaryKey: 'id',
     required : ['name', 'description', 'password'],
@@ -90,12 +91,12 @@ const attachmentModel : DataEditor.DataModel = new DataEditor.DataModel({
   schema : {
     $id: 'attachments',
     properties: {
-      id : { type: 'string' },
+      id : { type: 'string', autoIncrement: true  },
       storyId : { type: 'string' },
       text : { type: 'string', maxLength: 1024 },
       author: { type: 'string', minLength: 3, maxLength: 32 },
       image : { type: 'string' },
-      createdAt : { type: 'number', default: 0 }
+      createdAt : { type: 'number', autoIncrement: true }
     },
     primaryKey: 'id',
     required : ['storyId', 'author'],

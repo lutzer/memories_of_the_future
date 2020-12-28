@@ -35,7 +35,7 @@
     "lodash": "^4.17.15",
     "lowdb": "^1.0.0",
     "multer": "^1.4.2",
-    "node-data-editor": "^0.0.13",
+    "node-data-editor": "^0.0.14",
     "socket.io": "^2.3.0",
     "uuid": "^7.0.3"
   },
