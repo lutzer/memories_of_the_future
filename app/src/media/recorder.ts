@@ -17,7 +17,8 @@ function getSupportedMimeType() : string {
   var types = [
     'audio/webm',
     'audio/ogg',
-    'audio/wav'
+    'audio/wav',
+    'audio/m4a'
   ];
 
   for (var i in types) {

@@ -25,6 +25,7 @@ describe('File Upload', () => {
     const mp3File = 'files/sound-mp3.mp3'
     const oggFile = 'files/sound-ogg.ogg'
     const wavFile = 'files/sound-wav.wav'
+    const m4aFile = 'files/sound-m4a.m4a'
 
     it('should be able to handle an image and place it in the files folder', async () => {
       const fileCopy = 'files/copy.png'
@@ -86,7 +87,7 @@ describe('File Upload', () => {
       const fileCopy = 'files/copy.wav'
       await copyFile(resolve(__dirname, wavFile), resolve(__dirname, fileCopy))
       const file = {
-        type : 'image',
+        type : 'audio',
         name: 'copy.wav',
         path : resolve(__dirname, fileCopy)
       }
@@ -95,6 +96,20 @@ describe('File Upload', () => {
       expect(extname(path)).to.equal('.mp3')
       await deleteFile(path)
     });
+
+    it('should be able to convert an m4a file and place it in the files folder', async () => {
+      const fileCopy = 'files/copy.m4a'
+      await copyFile(resolve(__dirname, m4aFile), resolve(__dirname, fileCopy))
+      const file = {
+        type : 'audio',
+        name: 'copy.m4a',
+        path : resolve(__dirname, fileCopy)
+      }
+      let path = await handleAudioUpload(file, '1')
+      expect(fs.existsSync(path)).to.be.true
+      expect(extname(path)).to.equal('.mp3')
+      await deleteFile(path)
+    }).timeout(5000)
   })
 
   describe('File Upload Routes', () => {
@@ -217,6 +232,21 @@ describe('File Upload', () => {
         expect(result.body.story.recording.slice(-4)).to.equal('.mp3')
         uploads.push(result.body.story.recording)
       })
+
+      it('should be able to upload a m4a recording and convert it to mp3', async () => {
+        let { storyId, project } = await createStory()
+        // upload  file
+        result = await connect().post('/api/upload/story/'+storyId).attach(
+          'recording', fs.readFileSync(__dirname + '/files/sound-m4a.m4a'), 'sound-m4a.m4a'
+        ).auth(project.name, project.password)
+        expect(result).to.have.status(200);
+        // wait for audio conversion
+        await sleep(3000)
+        result =  await connect().get('/api/stories/' + storyId)
+        expect(result).to.have.status(200);
+        expect(result.body.story.recording.slice(-4)).to.equal('.mp3')
+        uploads.push(result.body.story.recording)
+      }).timeout(5000)
 
       it('should be able to upload an image and recording at the same time', async () => {
         let { storyId, project } = await createStory()

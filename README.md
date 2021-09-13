@@ -23,6 +23,7 @@ docker exec -it memories_of_the_future_server_1 /bin/sh
 * node and npm/npx must be installed
 * node version >= 12.x
 * audio conversion requires ffmpeg to be installed
+* image compression requires imagemagick to be installed
 
 ### Backend
 * `cd backend`
