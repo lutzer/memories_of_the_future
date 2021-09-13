@@ -12,6 +12,7 @@ describe('Audio File Conversion', () => {
   const mp3File = __dirname + '/files/sound-mp3.mp3'
   const webmFile = __dirname + '/files/sound-webm.webm'
   const m4aFile = __dirname + '/files/sound-m4a.m4a'
+  const mp4File = __dirname + '/files/sound-mp4.mp4'
 
   it('convertToMp3 should convert wav to mp3', async () => {
     let path = await convertToMp3(wavFile)
@@ -36,6 +37,13 @@ describe('Audio File Conversion', () => {
 
   it('convertToMp3 should handle webm as well', async () => {
     let path = await convertToMp3(webmFile)
+    expect(path).to.be.string
+    expect(fs.existsSync(path)).to.be.true
+    fs.unlinkSync(path)
+  })
+
+  it('convertToMp3 should handle mp4 as well', async () => {
+    let path = await convertToMp3(mp4File)
     expect(path).to.be.string
     expect(fs.existsSync(path)).to.be.true
     fs.unlinkSync(path)

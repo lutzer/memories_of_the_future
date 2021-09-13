@@ -12,9 +12,15 @@ const moveFile = promisify(fs.rename)
 const copyFile = promisify(fs.copyFile)
 
 const fileFilter = function (req, file, cb) {
+
+  // fix for ios safari recordings
+  if (file.mimetype == 'audio/mp4') {
+    file.originalname = 'recording.mp4'
+  }
+
   // accept image and sound files only
-  if (!file.originalname.match(/\.(jpg|jpeg|png|gif|mp3|wav|ogg|webm|m4a)$/)) {
-      return cb(new Error('Only (jpg|jpeg|png|gif|mp3|wav|ogg|m4a) are allowed!'), false);
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif|mp3|wav|ogg|webm|m4a|mp4)$/)) {
+      return cb(new Error('Only (jpg|jpeg|png|gif|mp3|wav|ogg|m4a|mp4) are allowed!'), false);
   }
   cb(null, true);
 };

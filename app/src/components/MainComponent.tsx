@@ -18,6 +18,19 @@ const MainComponent = () => {
   const [socket, setSocket] = useState<SocketIOClient.Socket>(null)
   
   useEffect( () => {
+     // set global modal function
+    window.showModal = (title: string, text: string, cancelable : boolean = false) : Promise<boolean> => {
+      return new Promise( (resolve) => {
+        if (cancelable)
+          setModal({title: title, text: text,
+            onAccept: () => { setModal(null); resolve(true) },
+            onCancel: () => { setModal(null); resolve(false) }
+          })
+        else
+          setModal({title: title, text: text, onAccept: () => { setModal(null); resolve(true) }})
+      })
+    }
+
     setSocket(Socket.connect())
     return () => {
       if (!socket.disconnected)
@@ -26,18 +39,7 @@ const MainComponent = () => {
     }
   },[])
 
-  // set global function
-  window.showModal = (title: string, text: string, cancelable : boolean = false) : Promise<boolean> => {
-    return new Promise( (resolve) => {
-      if (cancelable)
-        setModal({title: title, text: text,
-          onAccept: () => { setModal(null); resolve(true) },
-          onCancel: () => { setModal(null); resolve(false) }
-        })
-      else
-        setModal({title: title, text: text, onAccept: () => { setModal(null); resolve(true) }})
-    })
-  }
+ 
 
   return (
     <div className='content'>
