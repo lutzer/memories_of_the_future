@@ -1,5 +1,7 @@
 # Memories of the Future
 
+A tool for rocording, storytelling and anotation for understanding current societal issues and anticipate future relations and meaningful encounters in public space.
+
 ## Deployment
 
 ### with docker
